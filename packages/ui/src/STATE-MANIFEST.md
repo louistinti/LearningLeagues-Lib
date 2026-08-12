@@ -4,10 +4,29 @@
 flipped by hand — only by the promotion script, which verifies eligibility
 (gates green, docs complete) and regenerates shared artefacts.
 
-## Four ownership rules
+## Four usage rules
 
-These rules settle the recurring cases in advance. When a question arises, find
-its rule; if none match, it is a doctrine gap — flag it.
+The four rules from `AGENTS.md` ("State manifest — usage rules"), restated here
+verbatim because this file is where they are exercised:
+
+1. Claim ownership (set owner + commit) **before** creating a branch.
+2. A component owned by someone else is off-limits.
+3. No owner does NOT mean free — read `notes` and `conflictsWith` first.
+4. Status moves in the same commit as the work.
+
+For **status** specifically, rule 4 is satisfied by the promotion script: it
+flips the status and commits together with the regenerated artefacts, so the
+script's commit **is** the same-commit move. The one legitimate hand write on
+status is its initial `draft` value when the row is created (the
+RFC-generation prompt does exactly this); every status **change** goes through
+the script. Every other field (owner, branch, PR, priority, RFC, notes,
+`conflictsWith`) is hand-edited, and rule 4 applies to the commit doing the
+work.
+
+## Library / product responsibility split
+
+These rows settle the recurring cases in advance. When a question arises, find
+its row; if none match, it is a doctrine gap — flag it.
 
 | Area                                                                                                      | Owner   | Rationale                                                                                                                                                                      |
 | --------------------------------------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -22,9 +41,9 @@ its rule; if none match, it is a doctrine gap — flag it.
 
 ## Component registry
 
-| Component    | Status | Ownership | RFC | Notes                        |
-| ------------ | ------ | --------- | --- | ---------------------------- |
-| _(none yet)_ | —      | —         | —   | First component: Button (M5) |
+| Component    | Status | Owner | Branch | PR  | Priority | RFC | Notes                        | `conflictsWith` |
+| ------------ | ------ | ----- | ------ | --- | -------- | --- | ---------------------------- | --------------- |
+| _(none yet)_ | —      | —     | —      | —   | —        | —   | First component: Button (M5) | —               |
 
 ---
 

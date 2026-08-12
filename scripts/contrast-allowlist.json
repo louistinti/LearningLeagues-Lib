@@ -1,0 +1,4 @@
+{
+  "description": "Time-boxed exceptions for the computed-contrast gate ONLY: a declared pair that fails its usage threshold, with a substantive reason and a named human approver. NOT for undeclared pairs (declare them), NOT for permanent design decisions (change the token or the pair's usage level instead).",
+  "entries": []
+}

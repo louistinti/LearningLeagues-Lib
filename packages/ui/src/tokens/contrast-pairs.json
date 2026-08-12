@@ -1,0 +1,113 @@
+{
+  "$comment": "HAND-WRITTEN design commitments (not generated). Every Semantic colour token carrying the TEXT_FILL scope must appear as `fg` in at least one pair — the contrast gate enforces that coverage, because an undeclared pair is a contrast nobody ever measured. `base` is required when `bg` resolves to a semi-transparent colour: the ratio is computed against the composited result. Usage levels: normal-text (4.5), large-text (3.0), ui-component (3.0).",
+  "pairs": [
+    {
+      "fg": "Semantic/fg/default",
+      "bg": "Semantic/bg/default",
+      "usage": "normal-text"
+    },
+    {
+      "fg": "Semantic/fg/default",
+      "bg": "Semantic/bg/soft",
+      "usage": "normal-text"
+    },
+    {
+      "fg": "Semantic/fg/default",
+      "bg": "Semantic/surface/default",
+      "usage": "normal-text"
+    },
+    {
+      "fg": "Semantic/fg/default",
+      "bg": "Semantic/surface/raised",
+      "usage": "normal-text"
+    },
+    {
+      "fg": "Semantic/fg/dim",
+      "bg": "Semantic/bg/default",
+      "usage": "normal-text"
+    },
+    {
+      "fg": "Semantic/fg/dim",
+      "bg": "Semantic/bg/soft",
+      "usage": "normal-text"
+    },
+    {
+      "fg": "Semantic/fg/dim",
+      "bg": "Semantic/surface/default",
+      "usage": "normal-text"
+    },
+    {
+      "fg": "Semantic/fg/dim",
+      "bg": "Semantic/surface/raised",
+      "usage": "normal-text"
+    },
+    {
+      "fg": "Semantic/fg/mute",
+      "bg": "Semantic/bg/default",
+      "usage": "normal-text"
+    },
+    {
+      "fg": "Semantic/fg/mute",
+      "bg": "Semantic/bg/soft",
+      "usage": "normal-text"
+    },
+    {
+      "fg": "Semantic/fg/mute",
+      "bg": "Semantic/surface/default",
+      "usage": "normal-text"
+    },
+    {
+      "fg": "Semantic/fg/mute",
+      "bg": "Semantic/surface/raised",
+      "usage": "normal-text"
+    },
+    {
+      "fg": "Semantic/accent/default",
+      "bg": "Semantic/bg/default",
+      "usage": "normal-text"
+    },
+    {
+      "fg": "Semantic/accent/default",
+      "bg": "Semantic/surface/default",
+      "usage": "normal-text"
+    },
+    {
+      "fg": "Semantic/accent/default",
+      "bg": "Semantic/accent/soft",
+      "base": "Semantic/surface/default",
+      "usage": "normal-text"
+    },
+    {
+      "fg": "Semantic/status/success",
+      "bg": "Semantic/bg/default",
+      "usage": "normal-text"
+    },
+    {
+      "fg": "Semantic/status/success",
+      "bg": "Semantic/status/success-soft",
+      "base": "Semantic/surface/default",
+      "usage": "normal-text"
+    },
+    {
+      "fg": "Semantic/status/danger",
+      "bg": "Semantic/bg/default",
+      "usage": "normal-text"
+    },
+    {
+      "fg": "Semantic/status/danger",
+      "bg": "Semantic/status/danger-soft",
+      "base": "Semantic/surface/default",
+      "usage": "normal-text"
+    },
+    {
+      "fg": "Semantic/status/warn",
+      "bg": "Semantic/bg/default",
+      "usage": "normal-text"
+    },
+    {
+      "fg": "Semantic/bg/default",
+      "bg": "Semantic/accent/default",
+      "usage": "normal-text"
+    }
+  ]
+}

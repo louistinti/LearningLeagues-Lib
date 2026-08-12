@@ -1,0 +1,4 @@
+{
+  "description": "Time-boxed exceptions for the accessibility-status gate ONLY: an exported component with a documented a11y failure (scope = component folder name). NOT for pending statuses (verify them), NOT for stable components (a stable component must pass, no exceptions).",
+  "entries": []
+}

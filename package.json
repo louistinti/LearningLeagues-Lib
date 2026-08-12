@@ -1,0 +1,17 @@
+{
+  "name": "learningleagues-lib",
+  "private": true,
+  "version": "0.0.0",
+  "description": "AI-first component library for LearningLeagues. Root manifest — will become the install proxy for packages/ui (see AGENTS.md, Distribution contract).",
+  "engines": {
+    "node": ">=24 <25",
+    "pnpm": ">=11"
+  },
+  "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "prettier": "3.6.2"
+  }
+}

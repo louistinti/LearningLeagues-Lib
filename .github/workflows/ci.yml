@@ -1,0 +1,29 @@
+# The single required CI job. Every blocking gate lives INSIDE this job —
+# a separate job is advisory until someone edits branch protection by hand.
+# The token-diff gate (label-driven) will be the one exception, in its own
+# workflow, per the blueprint.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  conformity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Package-manager version is set explicitly here on purpose (the pin
+      # lives in `engines`, not `packageManager` — see AGENTS.md, Distribution
+      # contract). Grep for the version when bumping: no gate catches drift.
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.21.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Format gate
+        run: pnpm format:check

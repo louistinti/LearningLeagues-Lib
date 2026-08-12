@@ -1,0 +1,6 @@
+node_modules/
+dist/
+reports/
+pnpm-lock.yaml
+# Dated snapshots are history, never rewritten (blueprint §2.6 exemption).
+process/archives/

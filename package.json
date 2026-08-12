@@ -14,9 +14,14 @@
     "tokens:normalize": "node scripts/extract-tokens/normalize.ts",
     "tokens:transform": "node scripts/extract-tokens/transform.ts",
     "tokens:build": "pnpm tokens:normalize && pnpm tokens:transform",
-    "tokens:check": "node scripts/extract-tokens/normalize.ts --check && node scripts/extract-tokens/transform.ts --check",
+    "tokens:check": "node scripts/check-drift.ts",
     "validate:theme": "node scripts/validate-theme.ts",
-    "diff:tokens": "node scripts/diff-tokens.ts"
+    "diff:tokens": "node scripts/diff-tokens.ts",
+    "gate:drift": "node scripts/check-drift.ts",
+    "gate:lint-tokens": "node scripts/check-token-lint.ts",
+    "gate:contrast": "node scripts/check-contrast.ts",
+    "gate:a11y": "node scripts/check-a11y-status.ts",
+    "conformity": "node scripts/check-conformity.ts"
   },
   "devDependencies": {
     "prettier": "3.6.2"

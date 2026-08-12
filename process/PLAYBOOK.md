@@ -7,23 +7,34 @@ Rule: every gate script, generator and prompt added to this repository gets its
 row here **in the same commit**. (Enforced by the playbook anti-drift gate from
 Milestone 4.)
 
-| Task                                        | Command / prompt                    | Exit check                                        |
-| ------------------------------------------- | ----------------------------------- | ------------------------------------------------- |
-| Format the repository                       | `pnpm format`                       | `pnpm format:check` exits 0                       |
-| Check formatting (CI gate)                  | `pnpm format:check`                 | exit 0                                            |
-| Extract tokens from Figma (stage 1)         | `scripts/extract-tokens/extract.md` | raw export committed + provenance entry           |
-| Regenerate token artefacts (stages 2–3)     | `pnpm tokens:build`                 | `pnpm tokens:check` exits 0                       |
-| Check token artefact drift (CI gate)        | `pnpm tokens:check`                 | exit 0                                            |
-| Validate theme schema (CI gate)             | `pnpm validate:theme`               | exit 0 + `reports/validate-theme.md`              |
-| Diff tokens vs base (CI gate, label-driven) | `pnpm diff:tokens [--base <ref>]`   | exit 0, or expected-red awaiting `token-approved` |
+| Task                                        | Command / prompt                     | Exit check                                        |
+| ------------------------------------------- | ------------------------------------ | ------------------------------------------------- |
+| Format the repository                       | `pnpm format`                        | `pnpm format:check` exits 0                       |
+| Check formatting (CI gate)                  | `pnpm format:check`                  | exit 0                                            |
+| Extract tokens from Figma (stage 1)         | `scripts/extract-tokens/extract.md`  | raw export committed + provenance entry           |
+| Regenerate token artefacts (stages 2–3)     | `pnpm tokens:build`                  | `pnpm tokens:check` exits 0                       |
+| Check token artefact drift (CI gate)        | `pnpm tokens:check` (= `gate:drift`) | exit 0 + `reports/drift.md`                       |
+| Validate theme schema (CI gate)             | `pnpm validate:theme`                | exit 0 + `reports/validate-theme.md`              |
+| Diff tokens vs base (CI gate, label-driven) | `pnpm diff:tokens [--base <ref>]`    | exit 0, or expected-red awaiting `token-approved` |
+| Lint for hardcoded design values            | `pnpm gate:lint-tokens`              | exit 0 + `reports/token-lint.md`                  |
+| Compute contrast from resolved tokens       | `pnpm gate:contrast`                 | exit 0 + `reports/contrast.md`                    |
+| Check a11y status consistency               | `pnpm gate:a11y`                     | exit 0 + `reports/a11y-status.md`                 |
+| Run EVERY blocking gate (the CI job)        | `pnpm conformity`                    | exit 0 + `reports/conformity.md`                  |
 
-Note: the blueprint's `sync` stage is deferred until a build/dist exists —
-`transform` currently writes the library stylesheet directly. The gate
-aggregator (one per-component report) arrives with Milestone 3.
+Notes:
+
+- The blueprint's `sync` stage is deferred until a build/dist exists —
+  `transform` currently writes the library stylesheet directly.
+- `pnpm conformity` is the single required CI step and never short-circuits.
+  The token diff gate stays outside it on purpose: expected-red, human label.
+- Adding a generator = add it to `GENERATORS` in `scripts/check-drift.ts` in
+  the same commit. Adding a gate = add it to `GATES` in
+  `scripts/check-conformity.ts`, a row here, and a red/green proof in
+  `process/PROOF-OF-BLOCKING.md` — same commit.
+- Allowlists (`scripts/*-allowlist.json`) follow the blueprint §5.3 shape and
+  load through the validated loader (`scripts/lib/allowlist.ts`).
 
 ## Planned (do not invent ahead of the milestone)
 
-- Milestone 3: token lint, computed contrast, accessibility status gates,
-  artefact drift, the aggregator (single required CI job).
 - Milestone 4: RFC prompts, deterministic scaffold, state manifest, playbook
-  anti-drift gate.
+  anti-drift gate, detector unit tests.

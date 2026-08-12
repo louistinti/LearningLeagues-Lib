@@ -36,8 +36,22 @@ approval label.
 | Owner | Louis Tinthilier                     |
 
 The Figma variables were bootstrapped ONCE from the site's historical
-`styles.css` values (code → Figma, a one-time seeding). From that point on the
-flow is strictly Figma → code; the historical CSS is reference, not source.
+`styles.css` values (code → Figma, a one-time seeding, 2026-08-12). From that
+point on the flow is strictly Figma → code; the historical CSS is reference,
+not source.
+
+Constraint (verified 2026-08-12): the Figma plan allows **one mode per
+variable collection** (`addMode` throws "Limited to 1 modes only"). The density
+axis is therefore modeled as two explicit variables
+(`Spacing/density/base-compact` = 8, `Spacing/density/base-aere` = 10) and the
+accent axis as the six `Primitives/accent/*` variables; the transform stage of
+the token pipeline emits the `[data-density]` / `[data-accent]` CSS blocks from
+them. If the plan ever gains multi-mode, revisit — do not half-migrate.
+
+Seeded inventory: Primitives 32 / Semantic 18 (aliases only) / Spacing 12 /
+Layout 7 / Typography 3 — 72 variables, every one carrying WEB code syntax in
+the `--ll-*` namespace — plus 8 text styles (`type/*`) and 1 effect style
+(`shadow/lg`).
 
 ## Design language ("Hextech editorial")
 

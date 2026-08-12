@@ -50,8 +50,14 @@ them. If the plan ever gains multi-mode, revisit — do not half-migrate.
 
 Seeded inventory: Primitives 32 / Semantic 18 (aliases only) / Spacing 12 /
 Layout 7 / Typography 3 — 72 variables, every one carrying WEB code syntax in
-the `--ll-*` namespace — plus 8 text styles (`type/*`) and 1 effect style
+the `--ll-*` namespace — plus text styles (`type/*`) and 1 effect style
 (`shadow/lg`).
+
+Arbitration (Louis, 2026-08-12): the seeded `type/eyebrow` text style was
+deleted in Figma — one mono utility style is enough; the eyebrow treatment
+(uppercase, wide tracking) is a usage of `type/meta`-family typography, not a
+separate style. The site's `.eyebrow` pattern is therefore a candidate design
+gap to list in the first RFC that needs it, not a token.
 
 ## Design language ("Hextech editorial")
 

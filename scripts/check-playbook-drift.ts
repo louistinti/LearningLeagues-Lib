@@ -37,6 +37,14 @@ function walkScripts(dir: string): string[] {
 }
 
 const scripts = walkScripts(SCRIPTS);
+
+// One location for per-operation executable pipelines (blueprint §2):
+// every prompt in .github/prompts must be indexed in the playbook too.
+const PROMPTS_DIR = ".github/prompts";
+if (existsSync(PROMPTS_DIR)) {
+  scripts.push(...readdirSync(PROMPTS_DIR).filter((n) => /\.prompt\.md$/.test(n)));
+}
+
 const playbook = existsSync(PLAYBOOK) ? readFileSync(PLAYBOOK, "utf8") : "";
 
 // The playbook may reference a script by filename OR by a pnpm alias whose
@@ -58,7 +66,7 @@ mkdirSync("reports", { recursive: true });
 const verdict = errors.length === 0 ? "PASS" : "FAIL";
 writeFileSync(
   REPORT,
-  `# check-playbook-drift — ${verdict}\n\nScanned ${scripts.length} script(s) in ${SCRIPTS}/.\n\n` +
+  `# check-playbook-drift — ${verdict}\n\nScanned ${scripts.length} file(s) in ${SCRIPTS}/ and ${PROMPTS_DIR}/.\n\n` +
     (found.length
       ? `## Referenced (${found.length})\n\n${found.map((s) => `- ${s}`).join("\n")}\n\n`
       : "") +

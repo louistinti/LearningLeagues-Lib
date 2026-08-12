@@ -12,6 +12,8 @@ importers:
         specifier: 3.6.2
         version: 3.6.2
 
+  packages/ui: {}
+
 packages:
 
   prettier@3.6.2:

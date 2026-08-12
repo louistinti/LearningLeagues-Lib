@@ -1,0 +1,7 @@
+{
+  "name": "@learningleagues/ui",
+  "version": "0.0.0",
+  "private": true,
+  "description": "LearningLeagues component library. Tokens are generated from Figma — see src/tokens/PROVENANCE.md.",
+  "type": "module"
+}

@@ -71,9 +71,9 @@
   --ll-z-nav: 40;
   --ll-z-menu: 50;
   --ll-z-overlay: 100;
-  --ll-font-display: "EB Garamond", "Iowan Old Style", Georgia, serif;
-  --ll-font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --ll-font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --ll-font-display: 'EB Garamond', 'Iowan Old Style', Georgia, serif;
+  --ll-font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --ll-font-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
   --ll-s: 8px;
 }
 

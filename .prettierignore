@@ -4,3 +4,8 @@ reports/
 pnpm-lock.yaml
 # Dated snapshots are history, never rewritten (blueprint §2.6 exemption).
 process/archives/
+# Generated token artefacts: their bytes are owned by the generator, and a
+# formatter rewriting them is drift by construction (drift gate proved it).
+packages/ui/src/tokens/raw/
+packages/ui/src/tokens/tokens.json
+packages/ui/src/tokens/tokens.css

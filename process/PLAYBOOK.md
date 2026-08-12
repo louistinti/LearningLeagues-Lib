@@ -7,19 +7,23 @@ Rule: every gate script, generator and prompt added to this repository gets its
 row here **in the same commit**. (Enforced by the playbook anti-drift gate from
 Milestone 4.)
 
-| Task                                        | Command / prompt                     | Exit check                                        |
-| ------------------------------------------- | ------------------------------------ | ------------------------------------------------- |
-| Format the repository                       | `pnpm format`                        | `pnpm format:check` exits 0                       |
-| Check formatting (CI gate)                  | `pnpm format:check`                  | exit 0                                            |
-| Extract tokens from Figma (stage 1)         | `scripts/extract-tokens/extract.md`  | raw export committed + provenance entry           |
-| Regenerate token artefacts (stages 2–3)     | `pnpm tokens:build`                  | `pnpm tokens:check` exits 0                       |
-| Check token artefact drift (CI gate)        | `pnpm tokens:check` (= `gate:drift`) | exit 0 + `reports/drift.md`                       |
-| Validate theme schema (CI gate)             | `pnpm validate:theme`                | exit 0 + `reports/validate-theme.md`              |
-| Diff tokens vs base (CI gate, label-driven) | `pnpm diff:tokens [--base <ref>]`    | exit 0, or expected-red awaiting `token-approved` |
-| Lint for hardcoded design values            | `pnpm gate:lint-tokens`              | exit 0 + `reports/token-lint.md`                  |
-| Compute contrast from resolved tokens       | `pnpm gate:contrast`                 | exit 0 + `reports/contrast.md`                    |
-| Check a11y status consistency               | `pnpm gate:a11y`                     | exit 0 + `reports/a11y-status.md`                 |
-| Run EVERY blocking gate (the CI job)        | `pnpm conformity`                    | exit 0 + `reports/conformity.md`                  |
+| Task                                        | Command / prompt                                 | Exit check                                                  |
+| ------------------------------------------- | ------------------------------------------------ | ----------------------------------------------------------- |
+| Format the repository                       | `pnpm format`                                    | `pnpm format:check` exits 0                                 |
+| Check formatting (CI gate)                  | `pnpm format:check`                              | exit 0                                                      |
+| Extract tokens from Figma (stage 1)         | `.github/prompts/extract-tokens.prompt.md`       | raw export committed + provenance entry                     |
+| Regenerate token artefacts (stages 2–3)     | `pnpm tokens:build`                              | `pnpm tokens:check` exits 0                                 |
+| Check token artefact drift (CI gate)        | `pnpm tokens:check` (= `gate:drift`)             | exit 0 + `reports/drift.md`                                 |
+| Validate theme schema (CI gate)             | `pnpm validate:theme`                            | exit 0 + `reports/validate-theme.md`                        |
+| Diff tokens vs base (CI gate, label-driven) | `pnpm diff:tokens [--base <ref>]`                | exit 0, or expected-red awaiting `token-approved`           |
+| Lint for hardcoded design values            | `pnpm gate:lint-tokens`                          | exit 0 + `reports/token-lint.md`                            |
+| Compute contrast from resolved tokens       | `pnpm gate:contrast`                             | exit 0 + `reports/contrast.md`                              |
+| Check a11y status consistency               | `pnpm gate:a11y`                                 | exit 0 + `reports/a11y-status.md`                           |
+| Run EVERY blocking gate (the CI job)        | `pnpm conformity`                                | exit 0 + `reports/conformity.md`                            |
+| Check playbook index (CI gate)              | `pnpm gate:playbook` (part of conformity)        | exit 0 + `reports/playbook-drift.md`                        |
+| Scaffold a new component                    | `node scripts/scaffold.ts <Name>`                | shell created (intentionally red)                           |
+| Generate an RFC for a new component         | `.github/prompts/rfc-generation.prompt.md`       | RFC in `draft` + manifest row + closed questions listed     |
+| Implement a component from its approved RFC | `.github/prompts/component-generation.prompt.md` | `pnpm conformity` verdict quoted; RFC arbitration untouched |
 
 Notes:
 
@@ -36,5 +40,4 @@ Notes:
 
 ## Planned (do not invent ahead of the milestone)
 
-- Milestone 4: RFC prompts, deterministic scaffold, state manifest, playbook
-  anti-drift gate, detector unit tests.
+- Milestone 4 (remaining): detector unit tests.

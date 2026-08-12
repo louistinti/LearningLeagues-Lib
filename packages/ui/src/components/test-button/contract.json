@@ -1,0 +1,8 @@
+{
+  "status": "draft",
+  "exported": false,
+  "a11y": {
+    "status": "pending",
+    "notes": "Pending accessibility review. Check: semantic structure (ARIA roles, labels), keyboard interaction (all interactive states reachable without pointer), component-specific decisions (e.g. disabled state behaviour)."
+  }
+}

@@ -108,8 +108,18 @@ generated data.
 
 ## State manifest — usage rules (active from Milestone 4)
 
-`ROADMAP.json` will hold per-component: status, owner, branch, PR, priority,
-notes, `conflictsWith`. Four rules:
+The state manifest is `packages/ui/src/STATE-MANIFEST.md` — hand-edited
+markdown, delivered in Milestone 4. Its component registry holds per-component:
+status, owner, branch, PR, priority, RFC path, notes, `conflictsWith`.
+
+The blueprint (`process/archives/2026-08-12-system-blueprint.md` §2.4) named a
+root `ROADMAP.json` for this role; the markdown manifest is the adaptation the
+blueprint itself invites ("the schema is arbitrary. The four rules are the
+substance"). No `ROADMAP.json` exists and none is planned. If machine-checkable
+state is ever needed, it must be a GENERATED artefact derived from this
+manifest — never a second hand-edited file.
+
+Four rules:
 
 1. Claim ownership (set owner + commit) **before** creating a branch.
 2. A component owned by someone else is off-limits.

@@ -99,3 +99,14 @@ Never include general "best practices" that apply to all components. -->
 - [ ] Design sign-off (design lead)
 - [ ] Product adoption clear (consuming side)
 - [ ] Implementation approach reviewed
+
+---
+
+## 7. Arbitration log
+
+<!-- AGENT RECORDS, HUMAN DECIDES. One entry per arbitration, verbatim — the
+     question as asked (closed, with options and consequences), the human's
+     answer as given, the date. Never paraphrase, never backfill. -->
+
+| Date | Question (as asked) | Decision (verbatim) | Decided by |
+| ---- | ------------------- | ------------------- | ---------- |

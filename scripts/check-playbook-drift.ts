@@ -16,8 +16,8 @@ const found: string[] = [];
 
 // Scripts that MUST be referenced in the playbook.
 const scriptPatterns = [
-  /^check-[a-z-]+\.ts$/, // gates
-  /^generate-[a-z-]+\.ts$/, // generators
+  /^check-[a-z0-9-]+\.ts$/, // gates (digits: check-a11y-status.ts)
+  /^generate-[a-z0-9-]+\.ts$/, // generators
 ];
 const promptPatterns = [/^[a-z-]+-prompt\.md$/]; // prompts
 const allPatterns = [...scriptPatterns, ...promptPatterns];
@@ -39,12 +39,19 @@ function walkScripts(dir: string): string[] {
 const scripts = walkScripts(SCRIPTS);
 const playbook = existsSync(PLAYBOOK) ? readFileSync(PLAYBOOK, "utf8") : "";
 
+// The playbook may reference a script by filename OR by a pnpm alias whose
+// command runs that file (package.json is the mechanical link between the two).
+const pnpmScripts: Record<string, string> =
+  JSON.parse(readFileSync("package.json", "utf8")).scripts ?? {};
+function isReferenced(file: string): boolean {
+  if (playbook.includes(file) || playbook.includes(file.replace(/\.ts$/, ""))) return true;
+  return Object.entries(pnpmScripts).some(
+    ([alias, cmd]) => cmd.includes(file) && playbook.includes(`pnpm ${alias}`),
+  );
+}
 for (const script of scripts) {
-  if (playbook.includes(script) || playbook.includes(script.replace(/\.ts$/, ""))) {
-    found.push(script);
-  } else {
-    errors.push(`${script}: added to the repository but not referenced in ${PLAYBOOK}`);
-  }
+  if (isReferenced(script)) found.push(script);
+  else errors.push(`${script}: added to the repository but not referenced in ${PLAYBOOK}`);
 }
 
 mkdirSync("reports", { recursive: true });

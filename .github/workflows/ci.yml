@@ -27,3 +27,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - name: Format gate
         run: pnpm format:check
+      - name: Generated-artefact drift (tokens)
+        run: pnpm tokens:check
+      - name: Theme schema gate
+        run: pnpm validate:theme

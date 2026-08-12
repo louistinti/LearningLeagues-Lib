@@ -1,0 +1,4 @@
+# The generated token artefacts are external input owned by the design lead.
+# A human review is required on every change to them (token lock, layer 2 of 3:
+# provenance log + code ownership + approval label).
+/packages/ui/src/tokens/ @louistinti

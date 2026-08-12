@@ -1,0 +1,79 @@
+# NO paths filter, on purpose: this is meant to be a REQUIRED check, and a
+# required check that never runs leaves every unrelated PR eternally pending.
+# On a PR touching no token the gate finds 0 changes, reports pass, posts nothing.
+#
+# labeled/unlabeled are NOT decoration: the gate reads the approval label from
+# the event payload. Without them, applying the label triggers nothing, and a
+# manual re-run replays the ORIGINAL payload — still without the label.
+# unlabeled is the symmetric case: removing the label restores the red.
+name: Token gate
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+# One run per PR: a push immediately followed by the label would otherwise race
+# two runs into creating two sticky comments.
+concurrency:
+  group: token-gate-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  token-diff:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # so the base version resolves
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.21.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      # Fails until a HUMAN applies the approval label. Never a session: the
+      # label attests to a comparison against the real Figma export, which no
+      # automation can perform.
+      - name: Token diff against base
+        env:
+          APPROVED: ${{ contains(github.event.pull_request.labels.*.name, 'token-approved') }}
+        run: node scripts/diff-tokens.ts --base origin/${{ github.base_ref }}
+
+      # The approver must read the before/after where they approve. Sticky
+      # comment, updated in place on every push. continue-on-error: a fork PR
+      # gets a read-only token, and a missing comment must never be the reason
+      # a PR goes red.
+      - name: Publish the diff on the PR
+        if: always()
+        continue-on-error: true
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const marker = '<!-- token-gate -->';
+            let body;
+            try { body = fs.readFileSync('reports/token-diff.md', 'utf8'); } catch { return; }
+            if (body.includes('No token changes')) body = null;
+            const { data: comments } = await github.rest.issues.listComments({
+              ...context.repo, issue_number: context.issue.number, per_page: 100 });
+            const existing = comments.find(c => c.body && c.body.includes(marker));
+            if (!body) {
+              if (existing) await github.rest.issues.deleteComment({ ...context.repo, comment_id: existing.id });
+              return;
+            }
+            if (body.length > 60000) body = body.slice(0, 60000) + '\n\n_(truncated — full report in the workflow artifact)_';
+            const full = `${marker}\n${body}`;
+            if (existing) await github.rest.issues.updateComment({ ...context.repo, comment_id: existing.id, body: full });
+            else await github.rest.issues.createComment({ ...context.repo, issue_number: context.issue.number, body: full });
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: token-diff-report
+          path: reports/

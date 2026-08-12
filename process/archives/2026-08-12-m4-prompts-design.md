@@ -91,6 +91,32 @@ baseline for this lot. Two causes, fixed in a preliminary commit:
   are unaffected (token-lint walks `packages`+`docs`; playbook-drift walks
   `scripts`).
 
+## Addendum — review findings (2026-08-12, after the record above was committed)
+
+Appended, not rewritten: the body above stays as first agreed. Two defects
+found on re-review against the blueprint, both folded into commit 0:
+
+1. **The scaffold clobbers an approved RFC.** `scaffold.ts` writes every file
+   unconditionally, including the `<Name>.rfc.md` stub (`Status: draft`). The
+   circuit requires the approved RFC to exist in the component folder
+   *before* scaffolding (blueprint §4.1, step 4 before step 5), so a scaffold
+   run would overwrite the approval and the arbitration log. Fix: the
+   scaffold never overwrites an existing file (idempotent by construction).
+   Related: the ORCHESTRATION scaffold trigger's fix order
+   "… → contract.json → RFC" is reworded — the RFC is a precondition the
+   scaffold must not touch, not a violation to fix afterwards.
+2. **Missing format-gate re-proof.** Commit 0 touches `.prettierignore`, the
+   format gate's scan surface; the ORCHESTRATION trigger requires that gate
+   re-proved red/green in `PROOF-OF-BLOCKING.md`, in addition to the
+   token-lint re-proof already planned.
+
+Watch items (not defects): coordinate the commit-A `AGENTS.md` edit with the
+parallel state-manifest reconciliation session; the component-generation
+prompt must reference the manifest path that lands. The
+consuming-repos-unavailable STOP allows the human to arbitrate "proceed
+without usage data", recorded in the RFC arbitration log — a STOP hands the
+decision to the human, it does not dead-end the circuit.
+
 ## Index and proofs (same commits as their files)
 
 - One `PLAYBOOK.md` row per prompt (commit B) and the updated extract row

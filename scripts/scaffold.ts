@@ -9,7 +9,7 @@
 //   - <ComponentName>.meta.ts (variant grid, intentionally red)
 //   - contract.json (machine contract, required by a11y gate; status: draft, a11y: pending)
 //   - <ComponentName>.rfc.md (RFC stub, points to templates/RFC-BLANK.md)
-import { writeFileSync, mkdirSync } from "node:fs";
+import { writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { join } from "node:path";
 
 const [, , name] = process.argv;
@@ -23,8 +23,18 @@ const kebab = name
 const dir = join("packages/ui/src/components", kebab);
 mkdirSync(dir, { recursive: true });
 
+// Never overwrite: the RFC (approved BEFORE scaffolding, blueprint §4.1) and
+// any implementer edit must survive a re-run. Skips are printed, not silent.
+function writeIfAbsent(path: string, content: string): void {
+  if (existsSync(path)) {
+    console.log(`  skipped (exists): ${path}`);
+    return;
+  }
+  writeFileSync(path, content);
+}
+
 // index.ts — entry point
-writeFileSync(
+writeIfAbsent(
   join(dir, "index.ts"),
   `export { ${name} } from "./${name}";
 export type { ${name}Props } from "./${name}";
@@ -35,7 +45,7 @@ export type { ${name}Props } from "./${name}";
 // Violations: token-lint (var(ll-background) is invalid syntax),
 // token-lint (inline style with hardcoded #ff0000),
 // contrast (red text on red background, ratio ~1).
-writeFileSync(
+writeIfAbsent(
   join(dir, `${name}.tsx`),
   `import React from "react";
 
@@ -57,13 +67,11 @@ export function ${name}({ children }: ${name}Props) {
 );
 
 // ComponentName.meta.ts — intentionally red
-// Violation: token-lint (hardcoded pixel value instead of token).
+// Violation: token-lint (arbitrary pixel value instead of a token).
 // This file scaffolds no variants yet; the implementer must define them.
-writeFileSync(
+writeIfAbsent(
   join(dir, `${name}.meta.ts`),
-  `import { ${name} } from "./${name}";
-
-export const meta = {
+  `export const meta = {
   name: "${name}",
   description:
     "TODO: describe what ${name} does and what problem it solves.",
@@ -71,13 +79,13 @@ export const meta = {
   notes: "Scaffold is intentionally red (token-lint, contrast). Fix violations in ${name}.tsx, add variants, then promote to draft.",
 };
 
-// Intentional violation: inline style with hardcoded padding.
-export const exampleRed = <${name}>Padding is 12px hardcoded, not a token</${name}>;
+// Intentional violation: arbitrary pixel value instead of a spacing token.
+export const exampleRedClass = "p-[12px]";
 `,
 );
 
 // contract.json — required by a11y gate; intentionally pending
-writeFileSync(
+writeIfAbsent(
   join(dir, "contract.json"),
   JSON.stringify(
     {
@@ -95,7 +103,7 @@ writeFileSync(
 );
 
 // ComponentName.rfc.md — stub pointing to the blank template
-writeFileSync(
+writeIfAbsent(
   join(dir, `${name}.rfc.md`),
   `# RFC: ${name}
 
@@ -120,7 +128,7 @@ _2–3 sentences: what this component is, what problem it solves, why now._
 );
 
 console.log(`✓ scaffold: ${name} (${kebab}) — intentionally red
-  Violations: token-lint (invalid var syntax, hardcoded #ff0000 and 12px), contrast (~1.0 on red/red)
+  Violations: token-lint (invalid var syntax, hardcoded #ff0000, arbitrary p-[12px]), contrast (~1.0 on red/red)
   Fix in: ${name}.tsx
   Variants in: ${name}.meta.ts
   Accessibility: review contract.json, fill RFC

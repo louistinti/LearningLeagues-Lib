@@ -1,12 +1,10 @@
-import { TestButton } from "./TestButton";
-
 export const meta = {
   name: "TestButton",
-  description:
-    "TODO: describe what TestButton does and what problem it solves.",
+  description: "TODO: describe what TestButton does and what problem it solves.",
   variants: [],
-  notes: "Scaffold is intentionally red (token-lint, contrast). Fix violations in TestButton.tsx, add variants, then promote to draft.",
+  notes:
+    "Scaffold is intentionally red (token-lint, contrast). Fix violations in TestButton.tsx, add variants, then promote to draft.",
 };
 
-// Intentional violation: inline style with hardcoded padding.
-export const exampleRed = <TestButton>Padding is 12px hardcoded, not a token</TestButton>;
+// Intentional violation: arbitrary pixel value instead of a spacing token.
+export const exampleRedClass = "p-[12px]";

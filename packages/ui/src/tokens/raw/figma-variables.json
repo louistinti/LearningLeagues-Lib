@@ -5,7 +5,7 @@
     "fileKey": "6zp7CvEjdiFXzwh6ZGGwB8",
     "fileName": "Lib"
   },
-  "exportedAt": "2026-08-12",
+  "exportedAt": "2026-08-14",
   "collections": [
     {
       "id": "VariableCollectionId:3:2",
@@ -1170,6 +1170,38 @@
       ],
       "codeSyntax": {
         "WEB": "var(--ll-s)"
+      },
+      "valuesByMode": {
+        "3:2": 10
+      }
+    },
+    {
+      "id": "VariableID:19:2",
+      "name": "s-275",
+      "variableCollectionId": "VariableCollectionId:3:4",
+      "resolvedType": "FLOAT",
+      "scopes": [
+        "WIDTH_HEIGHT",
+        "GAP"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--ll-s-275)"
+      },
+      "valuesByMode": {
+        "3:2": 22
+      }
+    },
+    {
+      "id": "VariableID:19:3",
+      "name": "s-125",
+      "variableCollectionId": "VariableCollectionId:3:4",
+      "resolvedType": "FLOAT",
+      "scopes": [
+        "WIDTH_HEIGHT",
+        "GAP"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--ll-s-125)"
       },
       "valuesByMode": {
         "3:2": 10

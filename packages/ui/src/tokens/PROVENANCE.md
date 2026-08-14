@@ -12,6 +12,14 @@ the `token-approved` label.
 
 ## Entries
 
+- **2026-08-14** — Button RFC arbitration: two Spacing variables added in
+  Figma then re-extracted — `s-275` = 22 (`--ll-s-275`, button padding-x) and
+  `s-125` = 10 (`--ll-s-125`, icon-label gap). The site's button one-offs
+  (22px/10px) canonised on the existing naming arithmetic (2.75×8, 1.25×8);
+  decision recorded verbatim in `components/button/Button.rfc.md` §7. Decided
+  by: Louis Tinthilier. Delivered by: M5 agent session (sup. Louis
+  Tinthilier).
+
 - **2026-08-12** — Contrast arbitration: `neutral/fg-mute` `#6e7a94` → `#7d89a3`
   and `alpha/danger-soft` opacity 14% → 12%, changed in Figma then re-extracted
   (2 variables patched in the raw export, values read back from the file).

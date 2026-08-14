@@ -62,13 +62,13 @@ API.
 | type    | `"button" \| "submit" \| "reset"` | `"button"`  | no       | Native button type (explicit default: a bare `<button>` inside a form submits). |
 | onClick | `(e: MouseEvent) => void`         | —           | no       | Native click handler, forwarded.                                                |
 
-Open (arbitration): `disabled` — not observed on the site; adding it commits
-the library to a disabled visual + a11y treatment.
+`disabled`: arbitrated out of v1 (§7, 2026-08-14) — returns via RFC when a
+real product usage demands it.
 
 ### 3.2 Slots / Children
 
-`children`: the label content (text). Icon slot: open arbitration question —
-not drafted in v1.
+`children`: the label content (text). Icon slot: arbitrated out of v1 (§7,
+2026-08-14).
 
 ### 3.3 Events / Callbacks
 
@@ -96,9 +96,11 @@ outline offset 3px, on both variants.
   pseudo-elements/box-shadow, invisible to assistive tech.
 - The hover brightening keeps the same text-on-accent pair; contrast is
   computed by the gate from resolved tokens, never declared here.
-- Disabled treatment: deferred to arbitration (§7) — if accepted, the choice
-  between `disabled` and `aria-disabled` (focusable but inert) must be
-  recorded there.
+- Disabled treatment: out of v1 by arbitration (§7) — a future RFC adding it
+  must record the choice between `disabled` and `aria-disabled` (focusable
+  but inert).
+- Both variants share `type/button` at weight 600 (§7) — a deliberate
+  deviation from the site's 400-weight ghost.
 
 ---
 

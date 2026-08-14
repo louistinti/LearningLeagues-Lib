@@ -47,7 +47,7 @@
   --ll-fg-mute: var(--ll-neutral-fg-mute);
   --ll-rule: var(--ll-alpha-rule);
   --ll-grid-line: var(--ll-alpha-grid-line);
-  --ll-accent: var(--ll-accent-or);
+  --ll-accent: var(--ll-accent-ambre);
   --ll-accent-soft: var(--ll-alpha-gold-soft);
   --ll-success: var(--ll-status-success);
   --ll-danger: var(--ll-status-danger);

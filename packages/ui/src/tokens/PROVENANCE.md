@@ -12,6 +12,15 @@ the `token-approved` label.
 
 ## Entries
 
+- **2026-08-14** — Default accent arbitration: `Semantic accent/default`
+  realiased from `accent/or` to `accent/ambre` in Figma, then re-extracted.
+  Measured motivation: the landing and 5 other pages run `data-accent="ambre"`;
+  no page uses `or` as its accent. `or` stays available as a selectable accent
+  and tier colour; `accent/soft` deliberately keeps the gold-fixed alias
+  (matches the site's `--gold-soft`). Contrast gate re-run: PASS (21 pairs).
+  Decision verbatim in `components/button/Button.rfc.md` §7. Decided by:
+  Louis Tinthilier. Delivered by: M5 agent session (sup. Louis Tinthilier).
+
 - **2026-08-14** — Button RFC arbitration: two Spacing variables added in
   Figma then re-extracted — `s-275` = 22 (`--ll-s-275`, button padding-x) and
   `s-125` = 10 (`--ll-s-125`, icon-label gap). The site's button one-offs

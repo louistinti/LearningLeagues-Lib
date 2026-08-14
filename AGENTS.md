@@ -78,7 +78,9 @@ merger — single-human team).
     accent-dependent semantic token must resolve under every axis value.
   - **Density axis** — `[data-density="aere" | "compact"]` swaps the base
     spacing unit. The host application owns setting these attributes; the bare
-    root defaults to `data-accent="or"`, `data-density="compact"` semantics.
+    root defaults to `data-accent="ambre"`, `data-density="compact"` semantics
+    (ambre since 2026-08-14 — the measured product default; no page uses `or`
+    as its accent).
 - The generated stylesheet is external input, like a vendored dependency: it has
   a provenance log, a CODEOWNERS rule, and a token-diff gate requiring a human
   approval label (Milestone 2).

@@ -56,19 +56,21 @@ API.
 
 ### 3.1 Properties
 
-| Name    | Type                              | Default     | Required | Description                                                                     |
-| ------- | --------------------------------- | ----------- | -------- | ------------------------------------------------------------------------------- |
-| variant | `"primary" \| "ghost"`            | `"primary"` | no       | Visual style; primary carries corner brackets.                                  |
-| type    | `"button" \| "submit" \| "reset"` | `"button"`  | no       | Native button type (explicit default: a bare `<button>` inside a form submits). |
-| onClick | `(e: MouseEvent) => void`         | —           | no       | Native click handler, forwarded.                                                |
+| Name    | Type                              | Default     | Required | Description                                                                                                           |
+| ------- | --------------------------------- | ----------- | -------- | --------------------------------------------------------------------------------------------------------------------- |
+| variant | `"primary" \| "ghost"`            | `"primary"` | no       | Visual style; primary carries corner brackets.                                                                        |
+| href    | `string`                          | —           | no       | When set, renders an `<a href>` with identical chrome (all 11 measured site usages navigate). `type` is then ignored. |
+| type    | `"button" \| "submit" \| "reset"` | `"button"`  | no       | Native button type when no `href` (explicit default: a bare `<button>` inside a form submits).                        |
+| onClick | `(e: MouseEvent) => void`         | —           | no       | Native click handler, forwarded on both renderings.                                                                   |
 
 `disabled`: arbitrated out of v1 (§7, 2026-08-14) — returns via RFC when a
 real product usage demands it.
 
 ### 3.2 Slots / Children
 
-`children`: the label content (text). Icon slot: arbitrated out of v1 (§7,
-2026-08-14).
+`children`: the label as inline content — text and inline SVG glyphs, exactly
+as the site's measured usages do (Explore's arrow is an inline `<svg>` child).
+A dedicated icon slot API stays out of v1 (§7, 2026-08-14).
 
 ### 3.3 Events / Callbacks
 
@@ -80,9 +82,11 @@ Native `<button>` events only; `onClick` forwarded, nothing synthesized.
 
 ### 4.1 Semantic structure
 
-Renders a native `<button type="...">`. Label is the text content — no ARIA
-role or `aria-label` needed for the label-only v1; the uppercase treatment is
-CSS (`text-transform`), so assistive tech reads the author's original casing.
+Renders a native `<button type="...">`, or a native `<a href>` when `href` is
+set (§7): link semantics are kept deliberately — announced as a link,
+activated with Enter (Space scrolls, as for any link). No ARIA role
+overrides in either rendering; the uppercase treatment is CSS
+(`text-transform`), so assistive tech reads the author's original casing.
 
 ### 4.2 Keyboard interaction
 
@@ -130,10 +134,11 @@ outline offset 3px, on both variants.
      question as asked (closed, with options and consequences), the human's
      answer as given, the date. Never paraphrase, never backfill. -->
 
-| Date       | Question (as asked)                                                                                                              | Decision (verbatim)                                                                                                                                                                                              | Decided by       |
-| ---------- | -------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
-| 2026-08-14 | Typo bouton : le site dit mono 12px weight 600 ; l'échelle n'a que type/meta (11px Regular). Où va la vérité ?                   | Round 1: "On se base sur le site, y a un décalage entre les token et figma ? Pourquoi ?" — after the L01 explanation (the site never had these as tokens), round 2: "Style type/button dans Figma (Recommended)" | Louis Tinthilier |
-| 2026-08-14 | Espacements hors échelle : padding-x 22px et gap icône-label 10px (échelle : s-2=16, s-15=12, s-3=24).                           | Round 1: "Non non on refait tout comme le site, je sais pas pq on a pas les token du site sur figma" — round 2: "Nouveaux tokens s-275 et s-125 (Recommended)" (naming arithmetic holds: 2.75×8=22, 1.25×8=10)   | Louis Tinthilier |
-| 2026-08-14 | Hover primary : accent éclairci (color-mix 88% + blanc) et glow shadow — aucun token dédié n'existe.                             | "sjuit lke site" [suit le site] — the site already derives it from the token (`color-mix(in oklab, var(--accent) 88%, white)`), so: derived in component CSS from `--ll-accent`, no new token                    | Louis Tinthilier |
-| 2026-08-14 | Périmètre API v1 — disabled et slot icône, absents du site, à trancher :                                                         | "Ni l'un ni l'autre (Recommended)" — v1 minimal strict (variant/type/onClick/children); both return via RFC when a real product usage demands them                                                               | Louis Tinthilier |
-| 2026-08-14 | Graisse du label Ghost : le site a Primary 600 / Ghost 400 ; type/button porte le 600. Le Ghost garde 400 ou tout passe en 600 ? | "Tout en 600 ça reste les boutons \"primaires\" et \"secondaires\"" — one type/button style for both variants; deliberate deviation from the site's ghost weight                                                 | Louis Tinthilier |
+| Date       | Question (as asked)                                                                                                                   | Decision (verbatim)                                                                                                                                                                                              | Decided by       |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| 2026-08-14 | Typo bouton : le site dit mono 12px weight 600 ; l'échelle n'a que type/meta (11px Regular). Où va la vérité ?                        | Round 1: "On se base sur le site, y a un décalage entre les token et figma ? Pourquoi ?" — after the L01 explanation (the site never had these as tokens), round 2: "Style type/button dans Figma (Recommended)" | Louis Tinthilier |
+| 2026-08-14 | Espacements hors échelle : padding-x 22px et gap icône-label 10px (échelle : s-2=16, s-15=12, s-3=24).                                | Round 1: "Non non on refait tout comme le site, je sais pas pq on a pas les token du site sur figma" — round 2: "Nouveaux tokens s-275 et s-125 (Recommended)" (naming arithmetic holds: 2.75×8=22, 1.25×8=10)   | Louis Tinthilier |
+| 2026-08-14 | Hover primary : accent éclairci (color-mix 88% + blanc) et glow shadow — aucun token dédié n'existe.                                  | "sjuit lke site" [suit le site] — the site already derives it from the token (`color-mix(in oklab, var(--accent) 88%, white)`), so: derived in component CSS from `--ll-accent`, no new token                    | Louis Tinthilier |
+| 2026-08-14 | Périmètre API v1 — disabled et slot icône, absents du site, à trancher :                                                              | "Ni l'un ni l'autre (Recommended)" — v1 minimal strict (variant/type/onClick/children); both return via RFC when a real product usage demands them                                                               | Louis Tinthilier |
+| 2026-08-14 | Graisse du label Ghost : le site a Primary 600 / Ghost 400 ; type/button porte le 600. Le Ghost garde 400 ou tout passe en 600 ?      | "Tout en 600 ça reste les boutons \"primaires\" et \"secondaires\"" — one type/button style for both variants; deliberate deviation from the site's ghost weight                                                 | Louis Tinthilier |
+| 2026-08-14 | Tes boutons du site naviguent (ce sont des liens `<a href>` habillés en bouton). Le composant Button v1 doit-il savoir être un lien ? | "Oui : prop href (Recommended)" — with `href` Button renders an `<a>` with identical chrome, else a native `<button>`; the 11 measured usages become replaceable                                                 | Louis Tinthilier |

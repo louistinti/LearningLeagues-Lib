@@ -21,7 +21,7 @@ everything else.
 | ----- | --------------------------------------------------------- | ----------------------------------------------------------- |
 | 1     | `process/PROJECT-CONTEXT.md`                              | Mission, team, products, design source. Tool-agnostic.      |
 | 2     | `AGENTS.md` (this file)                                   | Rules, contracts, gates, conventions. Wins on conflict.     |
-| 3     | `process/LEARNINGS-ACTIVE.md`                             | Open lessons a human is still catching. Read before coding. |
+| 3     | `process/LEARNINGS.md`                                    | Open lessons a human is still catching. Read before coding. |
 | 4     | `process/ORCHESTRATION.md`                                | Obligations indexed by trigger event. Re-consult per event. |
 | 5     | `process/PLAYBOOK.md`                                     | Task → command routing.                                     |
 | 6     | The touched component's own machine contract (`.meta.ts`) | Per-component truth.                                        |
@@ -123,8 +123,10 @@ manifest — never a second hand-edited file.
 
 Four rules:
 
-1. Claim ownership (set owner + commit) **before** creating a branch.
-2. A component owned by someone else is off-limits.
+1. Claim ownership (set owner in the registry) in your branch's **first
+   commit, pushed immediately** — main is push-protected; visibility comes
+   from the pushed branch. One component, one working session at a time.
+2. A component owned by another session is off-limits.
 3. No owner does NOT mean free — read `notes` and `conflictsWith` first.
 4. Status moves in the same commit as the work.
 

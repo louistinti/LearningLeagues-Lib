@@ -1,12 +1,20 @@
-# LEARNINGS — ACTIVE
+# LEARNINGS
 
-Open lessons: things only a human is catching today. Three lines per entry, no
-more. An entry leaves for the archive the day a named test, script or workflow
-step goes red on its recurrence — then name that gate in the archive entry.
+One file, two sections. **Active**: open lessons only a human is catching
+today — three lines per entry, no more. An entry moves to **Archive** the day
+a named test, script or workflow step goes red on its recurrence — then name
+that gate in the archived entry, verbatim, never rewritten. Identifiers are
+stable across the move.
 
-- **[L01](LEARNINGS-ARCHIVE.md#l01)** — The historical site CSS mixes tokens and hardcoded values freely (e.g. font sizes, letter-spacings inline in class rules).
+## Active
+
+- **L01** — The historical site CSS mixes tokens and hardcoded values freely (e.g. font sizes, letter-spacings inline in class rules).
   - Rule: when extracting a component from the site, every raw value is either mapped to an existing token or flagged as a design gap — never copied.
   - Gate: token lint (`check-token-lint.ts`) now covers the library side; the extraction judgement itself (site → RFC) is still human-only, so the lesson stays active.
+
+- **L02** — The very first repo-wide text tool (prettier) rewrote the dated blueprint archive on its first run.
+  - Rule: every repository-wide scanner or formatter added later (language gate, lint) must carry an explicit `process/archives/` exemption at the moment it is added.
+  - Gate: None; the prettier case is covered by `.prettierignore`, but nothing catches the NEXT scanner shipping without the exemption.
 
 - **L04** — Two gate-proof injections silently failed to land (an env assignment placed after the command instead of before; `git checkout --` used to "restore" a file that was never tracked), producing one false red and nearly one false green.
   - Rule: a proof injection is verified to have landed before its verdict is trusted, and untracked fixtures are restored explicitly — `git checkout` restores only tracked files.
@@ -20,6 +28,17 @@ step goes red on its recurrence — then name that gate in the archive entry.
   - Rule: an intentional red is proved by injection-then-revert, never by a committed fixture the required job scans.
   - Gate: the required job's green-on-merge requirement is itself the gate, now that no permanent red is committed.
 
-- **[L02](LEARNINGS-ARCHIVE.md#l02)** — The very first repo-wide text tool (prettier) rewrote the dated blueprint archive on its first run.
-  - Rule: every repository-wide scanner or formatter added later (language gate, lint) must carry an explicit `process/archives/` exemption at the moment it is added.
-  - Gate: None; the prettier case is covered by `.prettierignore`, but nothing catches the NEXT scanner shipping without the exemption.
+## Archive (closed, verbatim)
+
+<a id="l03"></a>
+
+- **L03** (2026-08-12, retired same day) — Prettier reformatted the generated
+  `tokens.css`/`tokens.json` at commit time, making the committed artefact drift
+  from its generator's exact bytes; the drift gate then stayed red after a
+  restore, and a gate-proof injection silently failed to match the reformatted
+  text (validating a gate requires verifying the injection actually landed).
+  - Rule: a generated file's bytes are owned by its generator — every generated
+    artefact is added to `.prettierignore` (and to any future formatter's
+    ignore) the moment it is introduced.
+  - Gate: `pnpm tokens:check` in the required CI job goes red if any formatter
+    (or hand) rewrites the token artefacts.

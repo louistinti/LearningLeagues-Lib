@@ -10,6 +10,10 @@ it cannot prove the change genuinely came from Figma. That guarantee comes from
 the human reviewer comparing the entry against the real export before applying
 the `token-approved` label.
 
+**Scope.** An entry records export date, source and deliverer. For the design
+decision behind a change, point to its RFC arbitration log (§7) — the single
+source — rather than restating it here.
+
 ## Entries
 
 - **2026-08-14** — Default accent arbitration: `Semantic accent/default`

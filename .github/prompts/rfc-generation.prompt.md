@@ -22,7 +22,7 @@ Read, in this order, before writing anything:
 
 1. `process/PROJECT-CONTEXT.md`
 2. `AGENTS.md` — wins on conflict with any other document
-3. `process/LEARNINGS-ACTIVE.md`
+3. `process/LEARNINGS.md`
 4. `process/ORCHESTRATION.md` — re-consult at each trigger event below
 5. `process/PLAYBOOK.md`
 6. `packages/ui/src/STATE-MANIFEST.md`
@@ -34,7 +34,8 @@ Read, in this order, before writing anything:
    first (rule 3).
 2. Add or complete the row: component (kebab-case), status `draft`, owner,
    RFC path (Step 2's path).
-3. Commit the claim **before** creating the working branch (rule 1). Run
+3. Make the claim your working branch's **first commit and push it** (rule 1
+   — main is push-protected; the pushed branch is the visibility). Run
    `git branch --show-current` immediately before that commit.
 
 ## Step 2 — Create the RFC from the template

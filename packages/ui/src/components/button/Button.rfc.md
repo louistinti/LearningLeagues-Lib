@@ -1,6 +1,6 @@
 # RFC: Button
 
-> **Status:** draft
+> **Status:** approved
 > **Author:** M5 agent session (sup. Louis Tinthilier)
 > **Date:** 2026-08-14
 > **Design node:** `16:18` — [link](https://www.figma.com/design/6zp7CvEjdiFXzwh6ZGGwB8/Lib?node-id=16-18)

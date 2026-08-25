@@ -27,6 +27,11 @@ const GATES: { name: string; command: string; args?: string[]; shell?: boolean }
     command: process.execPath,
     args: ["scripts/check-playbook-drift.ts"],
   },
+  {
+    name: "Detector unit tests",
+    command: process.execPath,
+    args: ["scripts/check-detectors.ts"],
+  },
 ];
 
 const results = GATES.map((g) => {

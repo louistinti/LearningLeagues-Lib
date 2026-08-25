@@ -21,6 +21,7 @@ Milestone 4.)
 | Check a11y status consistency               | `pnpm gate:a11y`                                 | exit 0 + `reports/a11y-status.md`                           |
 | Run EVERY blocking gate (the CI job)        | `pnpm conformity`                                | exit 0 + `reports/conformity.md`                            |
 | Check playbook index (CI gate)              | `pnpm gate:playbook` (part of conformity)        | exit 0 + `reports/playbook-drift.md`                        |
+| Run the detectors' unit suite (CI gate)     | `pnpm gate:detectors` (part of conformity)       | exit 0 + `reports/detectors.md`                             |
 | Scaffold a new component                    | `node scripts/scaffold.ts <Name>`                | shell created (intentionally red)                           |
 | Generate an RFC for a new component         | `.github/prompts/rfc-generation.prompt.md`       | RFC in `draft` + manifest row + closed questions listed     |
 | Implement a component from its approved RFC | `.github/prompts/component-generation.prompt.md` | `pnpm conformity` verdict quoted; RFC arbitration untouched |
@@ -40,4 +41,4 @@ Notes:
 
 ## Planned (do not invent ahead of the milestone)
 
-- Milestone 4 (remaining): detector unit tests.
+- Nothing pending — next items are decided at the next milestone's start.

@@ -22,6 +22,7 @@
     "gate:contrast": "node scripts/check-contrast.ts",
     "gate:a11y": "node scripts/check-a11y-status.ts",
     "gate:playbook": "node scripts/check-playbook-drift.ts",
+    "gate:detectors": "node scripts/check-detectors.ts",
     "conformity": "node scripts/check-conformity.ts"
   },
   "devDependencies": {

@@ -9,8 +9,10 @@ flipped by hand — only by the promotion script, which verifies eligibility
 The four rules from `AGENTS.md` ("State manifest — usage rules"), restated here
 verbatim because this file is where they are exercised:
 
-1. Claim ownership (set owner + commit) **before** creating a branch.
-2. A component owned by someone else is off-limits.
+1. Claim ownership (set owner in the registry) in your branch's **first
+   commit, pushed immediately** — main is push-protected; visibility comes
+   from the pushed branch. One component, one working session at a time.
+2. A component owned by another session is off-limits.
 3. No owner does NOT mean free — read `notes` and `conflictsWith` first.
 4. Status moves in the same commit as the work.
 

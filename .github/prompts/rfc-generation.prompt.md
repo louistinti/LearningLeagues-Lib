@@ -48,6 +48,12 @@ Read, in this order, before writing anything:
    commitment.
 3. Leave every `HUMAN ONLY` block (§5, §6) and §7 Arbitration log untouched
    for now.
+4. In the same folder, create the honest draft `contract.json` — the a11y
+   gate requires one in every component folder, and `draft` + not exported +
+   a11y `pending` is its legal pre-scaffold state:
+   `{ "status": "draft", "exported": false, "a11y": { "status": "pending",
+"notes": "RFC stage — not scaffolded yet." } }`
+   (The scaffold never overwrites it later.)
 
 ## Step 3 — Product usage analysis, or STOP
 

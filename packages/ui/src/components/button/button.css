@@ -1,0 +1,80 @@
+/* Button chrome — Button.rfc.md §3-§4, design node 16:18.
+   Every colour and spacing value is a token, or derived live from one
+   (the hover color-mix and glow follow --ll-accent across the accent axis).
+   The type/button text style (mono 12 / 600 / 0.14em / uppercase) has no
+   extracted CSS variable yet — its values are restated verbatim from the
+   Figma style. Bracket and ring geometry (8px, 3px, 1px, 2px) is fixed
+   ornament geometry, not themable design values. */
+
+.ll-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ll-s-125);
+  padding: var(--ll-s-15) var(--ll-s-275);
+  font-family: var(--ll-font-mono);
+  font-size: 12px; /* type/button */
+  font-weight: 600; /* type/button */
+  letter-spacing: 0.14em; /* type/button */
+  text-transform: uppercase;
+  border-radius: 0;
+  cursor: pointer;
+  position: relative;
+  text-decoration: none;
+  transition:
+    background 0.18s,
+    color 0.18s,
+    border-color 0.18s,
+    box-shadow 0.18s;
+}
+
+.ll-button--primary {
+  background: var(--ll-accent);
+  color: var(--ll-bg);
+  border: 1px solid var(--ll-accent);
+}
+
+/* Corner brackets — primary's decorative signature (invisible to AT). */
+.ll-button--primary::before,
+.ll-button--primary::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-color: var(--ll-bg);
+  pointer-events: none;
+}
+.ll-button--primary::before {
+  top: 3px;
+  left: 3px;
+  border-top: 1px solid;
+  border-left: 1px solid;
+}
+.ll-button--primary::after {
+  bottom: 3px;
+  right: 3px;
+  border-bottom: 1px solid;
+  border-right: 1px solid;
+}
+
+.ll-button--primary:hover {
+  background: color-mix(in oklab, var(--ll-accent) 88%, white);
+  box-shadow:
+    0 0 0 1px var(--ll-accent),
+    0 0 24px -4px var(--ll-accent);
+}
+
+.ll-button--ghost {
+  background: transparent;
+  color: var(--ll-fg);
+  border: 1px solid var(--ll-border);
+}
+.ll-button--ghost:hover {
+  border-color: var(--ll-accent);
+  color: var(--ll-accent);
+}
+
+/* Keyboard-only focus ring (§4.2): 2px accent, 3px offset, both variants. */
+.ll-button:focus-visible {
+  outline: 2px solid var(--ll-accent);
+  outline-offset: 3px;
+}

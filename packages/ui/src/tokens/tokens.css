@@ -47,7 +47,7 @@
   --ll-fg-mute: var(--ll-neutral-fg-mute);
   --ll-rule: var(--ll-alpha-rule);
   --ll-grid-line: var(--ll-alpha-grid-line);
-  --ll-accent: var(--ll-accent-or);
+  --ll-accent: var(--ll-accent-ambre);
   --ll-accent-soft: var(--ll-alpha-gold-soft);
   --ll-success: var(--ll-status-success);
   --ll-danger: var(--ll-status-danger);
@@ -64,6 +64,8 @@
   --ll-s-6: 48px;
   --ll-s-7: 56px;
   --ll-s-8: 64px;
+  --ll-s-275: 22px;
+  --ll-s-125: 10px;
   --ll-nav-h: 64px;
   --ll-z-base: 1;
   --ll-z-toc: 30;

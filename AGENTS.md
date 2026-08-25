@@ -21,7 +21,7 @@ everything else.
 | ----- | --------------------------------------------------------- | ----------------------------------------------------------- |
 | 1     | `process/PROJECT-CONTEXT.md`                              | Mission, team, products, design source. Tool-agnostic.      |
 | 2     | `AGENTS.md` (this file)                                   | Rules, contracts, gates, conventions. Wins on conflict.     |
-| 3     | `process/LEARNINGS-ACTIVE.md`                             | Open lessons a human is still catching. Read before coding. |
+| 3     | `process/LEARNINGS.md`                                    | Open lessons a human is still catching. Read before coding. |
 | 4     | `process/ORCHESTRATION.md`                                | Obligations indexed by trigger event. Re-consult per event. |
 | 5     | `process/PLAYBOOK.md`                                     | Task → command routing.                                     |
 | 6     | The touched component's own machine contract (`.meta.ts`) | Per-component truth.                                        |

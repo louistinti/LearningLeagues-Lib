@@ -18,7 +18,7 @@ Read, in this order, before writing anything:
 
 1. `process/PROJECT-CONTEXT.md`
 2. `AGENTS.md` — wins on conflict with any other document
-3. `process/LEARNINGS-ACTIVE.md`
+3. `process/LEARNINGS.md`
 4. `process/ORCHESTRATION.md` — re-consult at each trigger event below
 5. `process/PLAYBOOK.md`
 6. `packages/ui/src/STATE-MANIFEST.md`

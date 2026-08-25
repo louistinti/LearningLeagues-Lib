@@ -18,7 +18,7 @@ stable across the move.
 
 - **L04** — Two gate-proof injections silently failed to land (an env assignment placed after the command instead of before; `git checkout --` used to "restore" a file that was never tracked), producing one false red and nearly one false green.
   - Rule: a proof injection is verified to have landed before its verdict is trusted, and untracked fixtures are restored explicitly — `git checkout` restores only tracked files.
-  - Gate: None yet; the detector unit-test suite (gate 10, Milestone 4+) is the natural home.
+  - Gate: `pnpm gate:detectors` (since 2026-08-25) locks detector behaviour and their documented blind spots; the injection-landed discipline itself remains procedural, so the lesson stays active.
 
 - **L05** — "RFC approved" is enforced at prompt level only: `component-generation.prompt.md` reads the `Status:` line, but nothing mechanical blocks code landing without an approved RFC.
   - Rule: the human reviewer checks the RFC status on every component PR until then.

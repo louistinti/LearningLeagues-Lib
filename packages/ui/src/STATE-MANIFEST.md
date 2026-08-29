@@ -45,7 +45,7 @@ its row; if none match, it is a doctrine gap — flag it.
 
 | Component | Status | Owner                      | Branch           | PR  | Priority | RFC                                               | Notes                                                                               | `conflictsWith` |
 | --------- | ------ | -------------------------- | ---------------- | --- | -------- | ------------------------------------------------- | ----------------------------------------------------------------------------------- | --------------- |
-| button    | draft  | docs-site session (Claude) | `feat/docs-site` | —   | 1        | `packages/ui/src/components/button/Button.rfc.md` | First component through the circuit (M5). Docs-site session adds contract examples. | —               |
+| button    | draft  | docs-site session (Claude) | `feat/docs-site` | #10 | 1        | `packages/ui/src/components/button/Button.rfc.md` | First component through the circuit (M5). Docs-site session adds contract examples. | —               |
 
 ---
 

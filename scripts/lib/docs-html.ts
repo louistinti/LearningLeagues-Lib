@@ -14,10 +14,7 @@ export interface ComponentDoc {
     status: string;
     rfc?: string;
     designNode?: string;
-    props?: Record<
-      string,
-      { type: string; default?: string; optional?: boolean; note?: string }
-    >;
+    props?: Record<string, { type: string; default?: string; optional?: boolean; note?: string }>;
     a11y: {
       status: string;
       semanticStructure?: string;

@@ -22,6 +22,7 @@ Milestone 4.)
 | Run EVERY blocking gate (the CI job)        | `pnpm conformity`                                | exit 0 + `reports/conformity.md`                            |
 | Check playbook index (CI gate)              | `pnpm gate:playbook` (part of conformity)        | exit 0 + `reports/playbook-drift.md`                        |
 | Run the detectors' unit suite (CI gate)     | `pnpm gate:detectors` (part of conformity)       | exit 0 + `reports/detectors.md`                             |
+| Regenerate the documentation site           | `pnpm docs:build`                                | `node scripts/generate-docs.ts --check` exits 0             |
 | Scaffold a new component                    | `node scripts/scaffold.ts <Name>`                | shell created (intentionally red)                           |
 | Generate an RFC for a new component         | `.github/prompts/rfc-generation.prompt.md`       | RFC in `draft` + manifest row + closed questions listed     |
 | Implement a component from its approved RFC | `.github/prompts/component-generation.prompt.md` | `pnpm conformity` verdict quoted; RFC arbitration untouched |

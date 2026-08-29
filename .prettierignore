@@ -12,3 +12,7 @@ process/archives/
 packages/ui/src/tokens/raw/
 packages/ui/src/tokens/tokens.json
 packages/ui/src/tokens/tokens.css
+# Generated docs-site artefacts (pnpm docs:build) — same rule as above.
+docs/index.html
+docs/components/
+docs/assets/lib.css

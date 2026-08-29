@@ -1,2 +1,7 @@
 packages:
   - "packages/*"
+# esbuild's postinstall is a fallback: the binary normally arrives via the
+# platform optionalDependency. Allowed so a platform without a prebuilt
+# package can still build (docs generator needs the binary).
+allowBuilds:
+  esbuild: true

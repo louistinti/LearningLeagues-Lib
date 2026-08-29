@@ -14,7 +14,10 @@ const EXTENSIONS = [".ts", ".tsx", ".js", ".jsx", ".css", ".html"];
 // generated tokens directory is excluded by design: tokens.css/raw hold the
 // raw values — that is their job — and contrast-pairs.json holds token names.
 const ROOTS = ["packages", "docs"];
-const EXCLUDED = [join("src", "tokens")];
+// docs/assets/lib.css is the generated copy of the token stylesheets — raw
+// values are its job, like the tokens directory. site.css and the generated
+// HTML stay scanned.
+const EXCLUDED = [join("src", "tokens"), join("docs", "assets", "lib.css")];
 
 function* walk(dir: string): Generator<string> {
   for (const name of readdirSync(dir)) {

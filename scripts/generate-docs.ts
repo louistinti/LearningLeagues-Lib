@@ -49,6 +49,13 @@ for (const slug of slugs) {
   if (!Array.isArray(meta?.variants)) fail(`${slug}: meta.variants missing`);
   if (!Array.isArray(meta?.examples) || meta.examples.length === 0)
     fail(`${slug}: meta.examples must hold at least one example (blueprint §9.1)`);
+  if (meta?.states !== undefined) {
+    if (!Array.isArray(meta.states)) fail(`${slug}: meta.states must be an array`);
+    else
+      for (const s of meta.states)
+        if (typeof s?.state !== "string" || !s.state || typeof s?.note !== "string" || !s.note)
+          fail(`${slug}: every meta.states entry needs a state name and a note (vs default)`);
+  }
   if (typeof contract?.status !== "string") fail(`${slug}: contract.status missing`);
   if (typeof contract?.a11y?.status !== "string") fail(`${slug}: contract.a11y.status missing`);
   if (errors.length) continue;
@@ -72,9 +79,43 @@ const componentCss = components
       .map((n) => readFileSync(join(COMPONENTS_DIR, c.slug, n), "utf8")),
   )
   .join("\n");
+// Docs-only forced-state mirrors: every component rule keyed on a state
+// pseudo-class is duplicated with a `.ll-docs-force-<state>` class selector, so
+// a static page can hold a component in that exact state. Mechanically derived
+// from the component css — the single source — never hand-written.
+const PSEUDO_STATES = ["hover", "focus-visible", "active"];
+function forceStateRules(css: string): string {
+  const mirrored: string[] = [];
+  for (const m of css.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+    const sel = m[1].replace(/\/\*[\s\S]*?\*\//g, "").trim();
+    if (!PSEUDO_STATES.some((s) => sel.includes(`:${s}`))) continue;
+    const forced = sel
+      .split(",")
+      .map((one) =>
+        PSEUDO_STATES.reduce(
+          (acc, s) => acc.split(`:${s}`).join(`.ll-docs-force-${s}`),
+          one.trim(),
+        ),
+      )
+      .join(",\n");
+    mirrored.push(`${forced} {${m[2]}}`);
+  }
+  if (mirrored.length === 0) return "";
+  return (
+    "\n/* Docs-only forced-state mirrors — derived by `pnpm docs:build` from the\n" +
+    " * component rules above; never hand-written. */\n" +
+    mirrored.join("\n") +
+    "\n"
+  );
+}
+
 const outputs: Record<string, string> = {
   [join(OUT, "assets", "lib.css")]:
-    CSS_BANNER + readFileSync(TOKENS_CSS, "utf8") + "\n" + componentCss,
+    CSS_BANNER +
+    readFileSync(TOKENS_CSS, "utf8") +
+    "\n" +
+    componentCss +
+    forceStateRules(componentCss),
   [join(OUT, "index.html")]: indexPage(components, accents),
 };
 for (const c of components)

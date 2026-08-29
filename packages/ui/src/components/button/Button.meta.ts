@@ -3,7 +3,17 @@ export const meta = {
   description:
     "Action trigger: accent-filled primary with corner brackets, outlined ghost. Renders a native <a> when href is set (all measured site usages navigate), a native <button> otherwise.",
   variants: [{ variant: "primary" }, { variant: "ghost" }],
-  states: ["default", "hover", "focus-visible"],
+  states: [
+    { state: "default", note: "The resting chrome — what every example renders." },
+    {
+      state: "hover",
+      note: "Versus default: primary's fill lightens toward white and an accent glow ring appears; ghost recolors its border and label to the accent. Pure CSS, never a prop (RFC §3).",
+    },
+    {
+      state: "focus-visible",
+      note: "Versus default: a 2px accent outline at 3px offset, both variants. Keyboard-only — pointer clicks never show it (RFC §4.2).",
+    },
+  ],
   examples: [
     { label: "Primary action", props: { variant: "primary" }, children: "Start a league" },
     { label: "Ghost action", props: { variant: "ghost" }, children: "View the rules" },

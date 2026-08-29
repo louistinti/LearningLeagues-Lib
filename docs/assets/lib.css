@@ -210,3 +210,20 @@
   outline: 2px solid var(--ll-accent);
   outline-offset: 3px;
 }
+
+/* Docs-only forced-state mirrors — derived by `pnpm docs:build` from the
+ * component rules above; never hand-written. */
+.ll-button--primary.ll-docs-force-hover {
+  background: color-mix(in oklab, var(--ll-accent) 88%, white);
+  box-shadow:
+    0 0 0 1px var(--ll-accent),
+    0 0 24px -4px var(--ll-accent);
+}
+.ll-button--ghost.ll-docs-force-hover {
+  border-color: var(--ll-accent);
+  color: var(--ll-accent);
+}
+.ll-button.ll-docs-force-focus-visible {
+  outline: 2px solid var(--ll-accent);
+  outline-offset: 3px;
+}

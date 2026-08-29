@@ -139,6 +139,17 @@ drift. The component page now surfaces status, variants, description, props and
 accessibility as Louis described. Louis may still produce new Figma mockups
 after seeing this pass.
 
+Second pass (same day, MUI reference: mui.com/material-ui/react-button): each
+state gets a live example — the top stage is the interactive base (all CSS
+states work there, JSX shown underneath, derived from the contract examples);
+each state section then shows the examples **held in that exact state** with a
+note comparing it to default. `meta.states` becomes `{ state, note }[]` (the
+note is contract content). Freezing a CSS state statically is done with
+docs-only mirror rules: `pnpm docs:build` mechanically rewrites the component
+css's `:hover` / `:focus-visible` / `:active` selectors into
+`.ll-docs-force-<state>` classes appended to the generated `lib.css` — single
+source, no hand copy, no library change.
+
 ## Scalability review (performed 2026-08-29, amendments folded in above)
 
 1. `examples` in the contract instead of variant-derived demos — survives

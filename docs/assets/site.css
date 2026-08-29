@@ -258,32 +258,32 @@ a {
   color: var(--ll-danger);
 }
 
-.demos {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--ll-s-3);
-}
-.demo {
-  margin: 0;
-  flex: 1 1 240px;
-  border: 1px solid var(--ll-border-soft);
-}
-.demo figcaption {
-  font-family: var(--ll-font-mono);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--ll-fg-mute);
-  padding: var(--ll-s-1) var(--ll-s-2);
-  border-bottom: 1px solid var(--ll-border-soft);
-}
-.demo-stage,
+.stage,
 .accent-tile {
   display: flex;
   align-items: center;
   justify-content: center;
   padding: var(--ll-s-4);
   background: var(--ll-surface);
+}
+.stage {
+  flex-wrap: wrap;
+  gap: var(--ll-s-3);
+  border: 1px solid var(--ll-border-soft);
+}
+.stage + .code {
+  margin-top: 0;
+  border-top: 0;
+}
+.code {
+  margin: 0 0 var(--ll-s-3);
+  padding: var(--ll-s-2) var(--ll-s-3);
+  background: var(--ll-surface-2);
+  border: 1px solid var(--ll-border-soft);
+  overflow-x: auto;
+}
+.code code {
+  color: var(--ll-fg-dim);
 }
 .accent-grid {
   display: grid;

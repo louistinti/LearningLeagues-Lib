@@ -79,48 +79,48 @@
   --ll-s: 8px;
 }
 
-/* Accent axis — the host sets [data-accent] on the root element. */
-:root[data-accent="or"] {
+/* Accent axis — the host sets [data-accent] on the root element or any subtree. */
+[data-accent="or"] {
   --ll-accent: var(--ll-accent-or);
 }
-:root[data-accent="ambre"] {
+[data-accent="ambre"] {
   --ll-accent: var(--ll-accent-ambre);
 }
-:root[data-accent="bleu"] {
+[data-accent="bleu"] {
   --ll-accent: var(--ll-accent-bleu);
 }
-:root[data-accent="rouge"] {
+[data-accent="rouge"] {
   --ll-accent: var(--ll-accent-rouge);
 }
-:root[data-accent="violet"] {
+[data-accent="violet"] {
   --ll-accent: var(--ll-accent-violet);
 }
-:root[data-accent="jade"] {
+[data-accent="jade"] {
   --ll-accent: var(--ll-accent-jade);
 }
 
 /* Role axis — placed AFTER [data-accent] so a role accent wins the cascade. */
-:root[data-role="support"] {
+[data-role="support"] {
   --ll-accent: var(--ll-accent-ambre);
 }
-:root[data-role="adc"] {
+[data-role="adc"] {
   --ll-accent: var(--ll-accent-bleu);
 }
-:root[data-role="top"] {
+[data-role="top"] {
   --ll-accent: var(--ll-accent-rouge);
 }
-:root[data-role="mid"] {
+[data-role="mid"] {
   --ll-accent: var(--ll-accent-violet);
 }
-:root[data-role="jungle"] {
+[data-role="jungle"] {
   --ll-accent: var(--ll-accent-jade);
 }
 
-/* Density axis — the host sets [data-density] on the root element. */
-:root[data-density="compact"] {
+/* Density axis — the host sets [data-density] on the root element or any subtree. */
+[data-density="compact"] {
   --ll-s: 8px;
 }
-:root[data-density="aere"] {
+[data-density="aere"] {
   --ll-s: 10px;
 }
 

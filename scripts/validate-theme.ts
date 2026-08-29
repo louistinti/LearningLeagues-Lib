@@ -94,15 +94,15 @@ check(
 const css = readFileSync(CSS, "utf8");
 {
   const fail: string[] = [];
-  const blocks = [...css.matchAll(/^(:root(?:\[[^\]]+\])?)\s*\{([^}]*)\}/gms)].map((m) => ({
+  const blocks = [...css.matchAll(/^(:root|\[[^\]]+\])\s*\{([^}]*)\}/gms)].map((m) => ({
     selector: m[1],
     body: m[2],
   }));
   const expectedSelectors = [
     ":root",
-    ...["or", "ambre", "bleu", "rouge", "violet", "jade"].map((a) => `:root[data-accent="${a}"]`),
-    ...["support", "adc", "top", "mid", "jungle"].map((r) => `:root[data-role="${r}"]`),
-    ...["compact", "aere"].map((d) => `:root[data-density="${d}"]`),
+    ...["or", "ambre", "bleu", "rouge", "violet", "jade"].map((a) => `[data-accent="${a}"]`),
+    ...["support", "adc", "top", "mid", "jungle"].map((r) => `[data-role="${r}"]`),
+    ...["compact", "aere"].map((d) => `[data-density="${d}"]`),
   ];
   const found = blocks.map((b) => b.selector);
   for (const s of expectedSelectors) if (!found.includes(s)) fail.push(`missing block ${s}`);

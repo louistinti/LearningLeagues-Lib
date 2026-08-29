@@ -89,9 +89,9 @@ if (!compact) errors.push("transform: Spacing/density/base-compact missing");
 else lines.push(`  --ll-s: ${px(Number(compact.value))};`);
 lines.push("}");
 lines.push("");
-lines.push("/* Accent axis — the host sets [data-accent] on the root element. */");
+lines.push("/* Accent axis — the host sets [data-accent] on the root element or any subtree. */");
 for (const a of accents) {
-  lines.push(`:root[data-accent="${a}"] {`);
+  lines.push(`[data-accent="${a}"] {`);
   lines.push(`  --ll-accent: var(--ll-accent-${a});`);
   lines.push("}");
 }
@@ -100,15 +100,15 @@ lines.push("/* Role axis — placed AFTER [data-accent] so a role accent wins th
 for (const [role, accent] of Object.entries(ROLE_ACCENT)) {
   if (!accents.includes(accent))
     errors.push(`ROLE_ACCENT: role ${role} points at unknown accent ${accent}`);
-  lines.push(`:root[data-role="${role}"] {`);
+  lines.push(`[data-role="${role}"] {`);
   lines.push(`  --ll-accent: var(--ll-accent-${accent});`);
   lines.push("}");
 }
 lines.push("");
-lines.push("/* Density axis — the host sets [data-density] on the root element. */");
+lines.push("/* Density axis — the host sets [data-density] on the root element or any subtree. */");
 for (const [key, t] of densityPair) {
   const name = key.split("/").pop()!.replace("base-", "");
-  lines.push(`:root[data-density="${name}"] {`);
+  lines.push(`[data-density="${name}"] {`);
   lines.push(`  ${t.css}: ${px(Number(t.value))};`);
   lines.push("}");
 }

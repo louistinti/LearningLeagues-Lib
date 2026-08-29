@@ -45,7 +45,7 @@ its row; if none match, it is a doctrine gap — flag it.
 
 | Component | Status | Owner                      | Branch                  | PR  | Priority | RFC                                               | Notes                                                                                                                  | `conflictsWith` |
 | --------- | ------ | -------------------------- | ----------------------- | --- | -------- | ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | --------------- |
-| button    | draft  | docs-site session (Claude) | `feat/button-secondary` | —   | 1        | `packages/ui/src/components/button/Button.rfc.md` | First component through the circuit (M5). Rename ghost→secondary + iso chrome (arbitrated 2026-08-29); docs PR is #10. | —               |
+| button    | draft  | docs-site session (Claude) | `feat/button-secondary` | #11 | 1        | `packages/ui/src/components/button/Button.rfc.md` | First component through the circuit (M5). Rename ghost→secondary + iso chrome (arbitrated 2026-08-29); docs PR is #10. | —               |
 
 ---
 

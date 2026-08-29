@@ -28,6 +28,10 @@ stable across the move.
   - Rule: an intentional red is proved by injection-then-revert, never by a committed fixture the required job scans.
   - Gate: the required job's green-on-merge requirement is itself the gate, now that no permanent red is committed.
 
+- **L07** — Stacked PRs (#10 on #9's branch, #11 on #10's) were merged into their stacked bases; only #9 reached main, and the work sat invisible on intermediate branches until noticed.
+  - Rule: a stacked PR is retargeted to `main` the moment its base merges — before pressing its own merge; "merged" means merged-to-main, verified on `main`'s log, not on the PR badge.
+  - Gate: none; candidate is a repo check that flags merged PRs whose base was not `main`.
+
 ## Archive (closed, verbatim)
 
 <a id="l03"></a>

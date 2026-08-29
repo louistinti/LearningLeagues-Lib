@@ -43,9 +43,9 @@ its row; if none match, it is a doctrine gap — flag it.
 
 ## Component registry
 
-| Component | Status | Owner                    | Branch            | PR  | Priority | RFC                                               | Notes                                     | `conflictsWith` |
-| --------- | ------ | ------------------------ | ----------------- | --- | -------- | ------------------------------------------------- | ----------------------------------------- | --------------- |
-| button    | draft  | M5 agent session (Louis) | `feat/button-rfc` | #6  | 1        | `packages/ui/src/components/button/Button.rfc.md` | First component through the circuit (M5). | —               |
+| Component | Status | Owner                      | Branch           | PR  | Priority | RFC                                               | Notes                                                                               | `conflictsWith` |
+| --------- | ------ | -------------------------- | ---------------- | --- | -------- | ------------------------------------------------- | ----------------------------------------------------------------------------------- | --------------- |
+| button    | draft  | docs-site session (Claude) | `feat/docs-site` | —   | 1        | `packages/ui/src/components/button/Button.rfc.md` | First component through the circuit (M5). Docs-site session adds contract examples. | —               |
 
 ---
 

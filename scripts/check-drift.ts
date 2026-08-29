@@ -11,6 +11,7 @@ const REPORT = "reports/drift.md";
 const GENERATORS: { name: string; args: string[] }[] = [
   { name: "tokens.json (normalize)", args: ["scripts/extract-tokens/normalize.ts", "--check"] },
   { name: "tokens.css (transform)", args: ["scripts/extract-tokens/transform.ts", "--check"] },
+  { name: "docs site (generate-docs)", args: ["scripts/generate-docs.ts", "--check"] },
 ];
 
 const results = GENERATORS.map((g) => {

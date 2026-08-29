@@ -4,7 +4,7 @@ import React from "react";
 // are CSS states in button.css, never props. With `href` the component renders
 // a native <a> with identical chrome — link semantics kept deliberately (§4.1).
 export interface ButtonProps {
-  variant?: "primary" | "ghost";
+  variant?: "primary" | "secondary";
   href?: string;
   type?: "button" | "submit" | "reset";
   onClick?: (e: React.MouseEvent) => void;

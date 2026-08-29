@@ -15,6 +15,10 @@
   font-size: 12px; /* type/button */
   font-weight: 600; /* type/button */
   letter-spacing: 0.14em; /* type/button */
+  /* Self-defensive browser default (distribution contract §3.7): without it
+     the <a> rendering inherits the host's line-height and breaks the
+     button/link format parity (RFC §7, 2026-08-29). */
+  line-height: normal;
   text-transform: uppercase;
   border-radius: 0;
   cursor: pointer;
@@ -63,12 +67,12 @@
     0 0 24px -4px var(--ll-accent);
 }
 
-.ll-button--ghost {
+.ll-button--secondary {
   background: transparent;
   color: var(--ll-fg);
   border: 1px solid var(--ll-border);
 }
-.ll-button--ghost:hover {
+.ll-button--secondary:hover {
   border-color: var(--ll-accent);
   color: var(--ll-accent);
 }

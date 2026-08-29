@@ -52,19 +52,19 @@
 </nav>
 <main id="main">
 <h1>Button <span class="badge badge--draft">draft</span></h1>
-<p>Action trigger: accent-filled primary with corner brackets, outlined ghost. Renders a native &lt;a&gt; when href is set (all measured site usages navigate), a native &lt;button&gt; otherwise.</p>
-<p class="facts">Variants: <code>primary</code> <code>ghost</code> · A11y: <span class="badge badge--pending">pending</span></p>
+<p>Action trigger: accent-filled primary with corner brackets, outlined secondary. Renders a native &lt;a&gt; when href is set (all measured site usages navigate), a native &lt;button&gt; otherwise.</p>
+<p class="facts">Variants: <code>primary</code> <code>secondary</code> · A11y: <span class="badge badge--pending">pending</span></p>
 <p class="notes">Hover and focus-visible are CSS states, never props (RFC §3). Chrome lives in button.css; the type/button text-style values are restated there until a text-style extraction stage exists.</p>
 <p class="meta-links">RFC: <code>Button.rfc.md</code> · Figma node: <code>16:18</code></p>
 <h2 id="examples">Examples</h2>
 <p>Live renders — hover and keyboard states all work here.</p>
 <div class="stage">
   <button class="ll-button ll-button--primary" type="button">Start a league</button>
-  <button class="ll-button ll-button--ghost" type="button">View the rules</button>
+  <button class="ll-button ll-button--secondary" type="button">View the rules</button>
   <a class="ll-button ll-button--primary" href="#">Open the guide</a>
 </div>
 <pre class="code"><code>&lt;Button variant=&quot;primary&quot;&gt;Start a league&lt;/Button&gt;
-&lt;Button variant=&quot;ghost&quot;&gt;View the rules&lt;/Button&gt;
+&lt;Button variant=&quot;secondary&quot;&gt;View the rules&lt;/Button&gt;
 &lt;Button variant=&quot;primary&quot; href=&quot;#&quot;&gt;Open the guide&lt;/Button&gt;</code></pre>
 <h2 id="accents">The 6 accents</h2>
 <p>Each tile scopes the accent axis with <code>data-accent</code> on the tile itself — the element-scoped theme contract.</p>
@@ -100,21 +100,21 @@
 <p>The resting chrome — what every example renders.</p>
 <div class="stage">
   <button class="ll-button ll-button--primary" type="button">Start a league</button>
-  <button class="ll-button ll-button--ghost" type="button">View the rules</button>
+  <button class="ll-button ll-button--secondary" type="button">View the rules</button>
   <a class="ll-button ll-button--primary" href="#">Open the guide</a>
 </div>
 <h3 id="state-hover"><code>hover</code></h3>
-<p>Versus default: primary's fill lightens toward white and an accent glow ring appears; ghost recolors its border and label to the accent. Pure CSS, never a prop (RFC §3).</p>
+<p>Versus default: primary's fill lightens toward white and an accent glow ring appears; secondary recolors its border and label to the accent. Pure CSS, never a prop (RFC §3).</p>
 <div class="stage">
   <button class="ll-docs-force-hover ll-button ll-button--primary" type="button">Start a league</button>
-  <button class="ll-docs-force-hover ll-button ll-button--ghost" type="button">View the rules</button>
+  <button class="ll-docs-force-hover ll-button ll-button--secondary" type="button">View the rules</button>
   <a class="ll-docs-force-hover ll-button ll-button--primary" href="#">Open the guide</a>
 </div>
 <h3 id="state-focus-visible"><code>focus-visible</code></h3>
 <p>Versus default: a 2px accent outline at 3px offset, both variants. Keyboard-only — pointer clicks never show it (RFC §4.2).</p>
 <div class="stage">
   <button class="ll-docs-force-focus-visible ll-button ll-button--primary" type="button">Start a league</button>
-  <button class="ll-docs-force-focus-visible ll-button ll-button--ghost" type="button">View the rules</button>
+  <button class="ll-docs-force-focus-visible ll-button ll-button--secondary" type="button">View the rules</button>
   <a class="ll-docs-force-focus-visible ll-button ll-button--primary" href="#">Open the guide</a>
 </div>
 <h2 id="props">Props</h2>
@@ -125,7 +125,7 @@
   <tbody>
       <tr>
         <th scope="row"><code>variant</code></th>
-        <td><code>&quot;primary&quot; | &quot;ghost&quot;</code></td>
+        <td><code>&quot;primary&quot; | &quot;secondary&quot;</code></td>
         <td><code>primary</code></td>
         <td>no</td>
         <td></td>

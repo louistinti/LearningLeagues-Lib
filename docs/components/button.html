@@ -11,9 +11,7 @@
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header">
-  <nav aria-label="Site">
-    <a class="site-title" href="../index.html">LearningLeagues Lib</a>
-  </nav>
+  <a class="site-title" href="../index.html">LearningLeagues Lib</a>
   <div class="switchers">
     <fieldset class="switcher" aria-label="Accent">
       <legend>Accent</legend>
@@ -31,13 +29,34 @@
     </fieldset>
   </div>
 </header>
+<div class="shell">
+<nav class="sidebar" aria-label="Components">
+  <a class="registry-link" href="../index.html">Registry</a>
+  <p class="sidebar-label">Components</p>
+  <ul class="nav-list">
+    <li>
+      <details open>
+        <summary><a href="../components/button.html" aria-current="page">Button</a></summary>
+        <ul class="sub">
+        <li><a href="../components/button.html#examples">Examples</a></li>
+        <li><a href="../components/button.html#accents">Accents</a></li>
+        <li><a href="../components/button.html#state-default">default</a></li>
+        <li><a href="../components/button.html#state-hover">hover</a></li>
+        <li><a href="../components/button.html#state-focus-visible">focus-visible</a></li>
+        <li><a href="../components/button.html#props">Props</a></li>
+        <li><a href="../components/button.html#accessibility">Accessibility</a></li>
+        </ul>
+      </details>
+    </li>
+  </ul>
+</nav>
 <main id="main">
-<nav aria-label="Breadcrumb"><a href="../index.html">Registry</a> / Button</nav>
 <h1>Button <span class="badge badge--draft">draft</span></h1>
 <p>Action trigger: accent-filled primary with corner brackets, outlined ghost. Renders a native &lt;a&gt; when href is set (all measured site usages navigate), a native &lt;button&gt; otherwise.</p>
+<p class="facts">Variants: <code>primary</code> <code>ghost</code> · A11y: <span class="badge badge--pending">pending</span></p>
 <p class="notes">Hover and focus-visible are CSS states, never props (RFC §3). Chrome lives in button.css; the type/button text-style values are restated there until a text-style extraction stage exists.</p>
 <p class="meta-links">RFC: <code>Button.rfc.md</code> · Figma node: <code>16:18</code></p>
-<h2>Examples</h2>
+<h2 id="examples">Examples</h2>
 <div class="demos">
   <figure class="demo">
     <figcaption>Primary action</figcaption>
@@ -52,7 +71,7 @@
     <div class="demo-stage"><a class="ll-button ll-button--primary" href="#">Open the guide</a></div>
   </figure>
 </div>
-<h2>The 6 accents</h2>
+<h2 id="accents">The 6 accents</h2>
 <p>Each tile scopes the accent axis with <code>data-accent</code> on the tile itself — the element-scoped theme contract.</p>
 <div class="accent-grid">
     <div class="accent-tile" data-accent="or">
@@ -80,9 +99,15 @@
       <button class="ll-button ll-button--primary" type="button">Start a league</button>
     </div>
 </div>
-<h2>States</h2>
-<p>Hover and focus-visible are CSS states, never props (RFC §3). Hover the examples above, or Tab to them to see the 2px accent focus ring.</p>
-<h2>Props</h2>
+<h2 id="states">States</h2>
+<p>Hover and focus-visible are CSS states, never props (RFC §3).</p>
+<h3 id="state-default"><code>default</code></h3>
+<p>The resting chrome — exactly what the examples render.</p>
+<h3 id="state-hover"><code>hover</code></h3>
+<p>Pointer over the control. A CSS state, never a prop — try it on any example.</p>
+<h3 id="state-focus-visible"><code>focus-visible</code></h3>
+<p>Keyboard-only focus ring. Tab to an example to see it — never a prop.</p>
+<h2 id="props">Props</h2>
 <table>
   <thead>
     <tr><th scope="col">Prop</th><th scope="col">Type</th><th scope="col">Default</th><th scope="col">Optional</th><th scope="col">Note</th></tr>
@@ -118,7 +143,7 @@
       </tr>
   </tbody>
 </table>
-<h2>Accessibility <span class="badge badge--pending">pending</span></h2>
+<h2 id="accessibility">Accessibility <span class="badge badge--pending">pending</span></h2>
 <dl class="a11y">
     <div><dt>Semantic structure</dt><dd>Native &lt;button type&gt; or native &lt;a href&gt; when href is set; link semantics kept deliberately (Enter activates, Space scrolls). No ARIA overrides; uppercase is CSS text-transform, AT reads the author's casing.</dd></div>
     <div><dt>Keyboard</dt><dd>Native activation, no custom key handling; focus ring only on :focus-visible — 2px accent outline, 3px offset, both variants.</dd></div>
@@ -126,6 +151,7 @@
     <div><dt>Notes</dt><dd>Implemented per RFC §4; this status moves to pass only through the accessibility engine gate, never by assertion.</dd></div>
 </dl>
 </main>
+</div>
 <footer class="site-footer">
   <p>Generated from the component contracts by <code>pnpm docs:build</code>. Content lives in the contracts, never here.</p>
 </footer>

@@ -3,6 +3,7 @@ export const meta = {
   description:
     "Action trigger: accent-filled primary with corner brackets, outlined ghost. Renders a native <a> when href is set (all measured site usages navigate), a native <button> otherwise.",
   variants: [{ variant: "primary" }, { variant: "ghost" }],
+  states: ["default", "hover", "focus-visible"],
   examples: [
     { label: "Primary action", props: { variant: "primary" }, children: "Start a league" },
     { label: "Ghost action", props: { variant: "ghost" }, children: "View the rules" },

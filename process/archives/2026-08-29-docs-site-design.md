@@ -126,6 +126,19 @@ listed as planned, not invented ahead of its milestone.
 stale docs → red → regenerate → green) recorded; the site served locally for
 Louis's visual checkpoint — a human lock, never the pipeline's call.
 
+## Addendum — visual checkpoint feedback (Louis, 2026-08-29)
+
+Layout reworked to MUI-docs-style navigation: a sticky left sidebar lists the
+components; the current component's entry expands (details/summary, no-JS) into
+a submenu of in-page anchors — Examples, Accents, one entry per **state**
+("default", "hover", "focus-visible"), Props, Accessibility. States are contract
+data: `meta.ts` gains an optional `states: string[]`; the submenu and the page's
+per-state blocks are generated from it (never hand-listed in the shell). One
+`sections()` function feeds both the submenu and the headings so they cannot
+drift. The component page now surfaces status, variants, description, props and
+accessibility as Louis described. Louis may still produce new Figma mockups
+after seeing this pass.
+
 ## Scalability review (performed 2026-08-29, amendments folded in above)
 
 1. `examples` in the contract instead of variant-derived demos — survives

@@ -78,7 +78,7 @@ const outputs: Record<string, string> = {
   [join(OUT, "index.html")]: indexPage(components, accents),
 };
 for (const c of components)
-  outputs[join(OUT, "components", `${c.slug}.html`)] = componentPage(c, accents);
+  outputs[join(OUT, "components", `${c.slug}.html`)] = componentPage(c, accents, components);
 
 if (process.argv.includes("--check")) {
   const stale = Object.entries(outputs).filter(

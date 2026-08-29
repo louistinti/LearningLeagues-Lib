@@ -4,9 +4,9 @@
   "component": "Button",
   "rfc": "Button.rfc.md",
   "designNode": "16:18",
-  "variants": ["primary", "ghost"],
+  "variants": ["primary", "secondary"],
   "props": {
-    "variant": { "type": "\"primary\" | \"ghost\"", "default": "primary" },
+    "variant": { "type": "\"primary\" | \"secondary\"", "default": "primary" },
     "href": {
       "type": "string",
       "optional": true,

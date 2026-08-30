@@ -142,7 +142,7 @@ export function layout(opts: {
   const { title, relRoot, accents, components, tokenSections, current, content } = opts;
   return `<!doctype html>
 ${GENERATED}
-<html lang="en" data-accent="ambre" data-density="compact">
+<html lang="en" data-accent="ambre">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -163,11 +163,6 @@ ${accents
       `      <button type="button" data-set-accent="${esc(a)}" aria-pressed="${a === "ambre"}">${esc(a)}</button>`,
   )
   .join("\n")}
-    </fieldset>
-    <fieldset class="switcher" aria-label="Density">
-      <legend>Density</legend>
-      <button type="button" data-set-density="compact" aria-pressed="true">compact</button>
-      <button type="button" data-set-density="aere" aria-pressed="false">aere</button>
     </fieldset>
   </div>
 </header>
@@ -362,8 +357,7 @@ export function tokensPage(
   for (const c of model.collections) for (const e of c.entries) byKey.set(e.key, e);
   const byCollection = (name: string): TokenEntry[] =>
     model.collections.find((c) => c.collection === name)?.entries ?? [];
-  const tokenCount =
-    model.collections.reduce((n, c) => n + c.entries.length, 0) + model.densities.length;
+  const tokenCount = model.collections.reduce((n, c) => n + c.entries.length, 0);
 
   const sectionBodies: Record<string, string> = {};
 
@@ -397,7 +391,7 @@ export function tokensPage(
     (a, b) => parseFloat(a.emitted) - parseFloat(b.emitted),
   );
   sectionBodies.Spacing =
-    `<p>The spacing ladder. Each bar is drawn at the token's actual size via its own custom property. The density base unit <code>--ll-s</code> is documented under Theme axes.</p>\n` +
+    `<p>The spacing ladder, built on the base unit <code>--ll-s</code> (the ladder arithmetic multiplies it: <code>s-275</code> = 2.75 × 8). Each bar is drawn at the token's actual size via its own custom property.</p>\n` +
     `<table>
   <thead>
     <tr><th scope="col">Preview</th><th scope="col">Token</th><th scope="col">CSS property</th><th scope="col">Value</th></tr>
@@ -520,17 +514,8 @@ ${typeSlugs
       </tr>`,
     )
     .join("\n");
-  const densityRows = model.densities
-    .map(
-      (d) => `      <tr>
-        <th scope="row"><code>${esc(d.name)}</code></th>
-        <td><code>${esc(d.css)}</code></td>
-        <td><code>${esc(d.emitted)}</code></td>
-      </tr>`,
-    )
-    .join("\n");
   const axesHtml = `<h2 id="axes">Theme axes</h2>
-<p>There is no light/dark axis — the palette is a single dark theme by design. The two theming axes are element-scoped: the host application sets the attribute on the root element or any subtree element, and the subtree inherits it. The bare root defaults to <code>data-accent="ambre"</code>, <code>data-density="compact"</code>.</p>
+<p>There is no light/dark axis — the palette is a single dark theme by design — and no density axis since 2026-08-30. The one theming axis is element-scoped: the host application sets the attribute on the root element or any subtree element, and the subtree inherits it. The bare root defaults to <code>data-accent="ambre"</code>.</p>
 <h3 id="axes-accent">Accent — <code>data-accent</code></h3>
 <p>Swaps which accent primitive <code>--ll-accent</code> resolves to. Try the switcher in the header — every live preview on this page follows it.</p>
 <div class="chips">
@@ -546,18 +531,7 @@ ${accentChips}
   <tbody>
 ${roleRows}
   </tbody>
-</table>
-<h3 id="axes-density">Density — <code>data-density</code></h3>
-<p>Swaps the base spacing unit <code>--ll-s</code>. The bar below is drawn at the live base unit — it follows the density switcher in the header.</p>
-<table>
-  <thead>
-    <tr><th scope="col">Density</th><th scope="col">CSS property</th><th scope="col">Base unit</th></tr>
-  </thead>
-  <tbody>
-${densityRows}
-  </tbody>
-</table>
-<p><span class="bar ll-docs-bar--s" aria-hidden="true"></span> <code>--ll-s</code> right now</p>`;
+</table>`;
 
   return layout({
     title: "Design tokens — LearningLeagues Lib",

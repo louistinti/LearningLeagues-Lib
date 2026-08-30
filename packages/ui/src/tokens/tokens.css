@@ -63,6 +63,7 @@
   --ll-s-6: 48px;
   --ll-s-7: 56px;
   --ll-s-8: 64px;
+  --ll-s: 8px;
   --ll-s-275: 22px;
   --ll-s-125: 10px;
   --ll-nav-h: 64px;
@@ -131,7 +132,6 @@
   --ll-type-button-line-height: normal;
   --ll-type-button-tracking: 0.14em;
   --ll-type-button-case: uppercase;
-  --ll-s: 8px;
 }
 
 /* Accent axis — the host sets [data-accent] on the root element or any subtree. */
@@ -166,14 +166,6 @@
 }
 [data-role="jungle"] {
   --ll-accent: var(--ll-accent-jade);
-}
-
-/* Density axis — the host sets [data-density] on the root element or any subtree. */
-[data-density="compact"] {
-  --ll-s: 8px;
-}
-[data-density="aere"] {
-  --ll-s: 10px;
 }
 
 /* utilities (agent-extensible zone) — none yet */

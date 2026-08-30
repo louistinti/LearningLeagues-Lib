@@ -16,6 +16,19 @@ source — rather than restating it here.
 
 ## Entries
 
+- **2026-08-30** — Density axis removed: every product page measured
+  `data-density="compact"` (`aere` existed only as an unused definition in the
+  historical `styles.css`), so the axis carried no information.
+  `Spacing/density/base-compact` renamed to `s` in Figma (the base unit
+  survives as the plain `--ll-s` = 8 token — the site's spacing pattern
+  multiplies it); `density/base-aere` deleted in Figma (verified un-aliased;
+  deletion performed by Louis — the MCP session's destructive call was
+  permission-blocked); the Spacing mode renamed `compact` → `Mode 1`. Raw
+  export updated by script; `[data-density]` emission, schema-gate
+  expectations and the docs density switcher removed in the same change.
+  Decided by: Louis Tinthilier (2026-08-30, in session). Delivered by:
+  text-style-tokens agent session (sup. Louis Tinthilier).
+
 - **2026-08-30** — Accent axis narrowed: `Primitives/accent/or` deleted in
   Figma (verified un-aliased first; the remaining accents read back:
   ambre/bleu/rouge/violet/jade) and removed from the raw export by script.

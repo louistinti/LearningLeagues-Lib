@@ -36,7 +36,7 @@
       "modes": [
         {
           "modeId": "3:2",
-          "name": "compact"
+          "name": "Mode 1"
         }
       ]
     },
@@ -1127,7 +1127,7 @@
     },
     {
       "id": "VariableID:4:62",
-      "name": "density/base-compact",
+      "name": "s",
       "variableCollectionId": "VariableCollectionId:3:4",
       "resolvedType": "FLOAT",
       "scopes": [
@@ -1139,22 +1139,6 @@
       },
       "valuesByMode": {
         "3:2": 8
-      }
-    },
-    {
-      "id": "VariableID:4:63",
-      "name": "density/base-aere",
-      "variableCollectionId": "VariableCollectionId:3:4",
-      "resolvedType": "FLOAT",
-      "scopes": [
-        "WIDTH_HEIGHT",
-        "GAP"
-      ],
-      "codeSyntax": {
-        "WEB": "var(--ll-s)"
-      },
-      "valuesByMode": {
-        "3:2": 10
       }
     },
     {

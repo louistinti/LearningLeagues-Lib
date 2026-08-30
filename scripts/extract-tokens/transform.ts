@@ -77,7 +77,6 @@ const resolveValue = (key: string, t: Token): string => {
 
 const entries = Object.entries(tokens);
 const inCollection = (c: string) => entries.filter(([k]) => k.startsWith(`${c}/`));
-const densityPair = inCollection("Spacing").filter(([k]) => k.includes("/density/"));
 const accents = inCollection("Primitives")
   .filter(([k]) => k.startsWith("Primitives/accent/"))
   .map(([k]) => k.split("/").pop() as string);
@@ -90,13 +89,8 @@ lines.push(" * Source of truth: Figma file `Lib` (see tokens/PROVENANCE.md). */"
 lines.push("");
 lines.push(":root {");
 for (const [key, t] of entries) {
-  if (key.includes("/density/")) continue; // emitted via the density axis below
   lines.push(`  ${t.css}: ${resolveValue(key, t)};`);
 }
-// Default density: compact (mirrors the site's historical default).
-const compact = tokens["Spacing/density/base-compact"];
-if (!compact) errors.push("transform: Spacing/density/base-compact missing");
-else lines.push(`  --ll-s: ${px(Number(compact.value))};`);
 lines.push("}");
 lines.push("");
 lines.push("/* Accent axis — the host sets [data-accent] on the root element or any subtree. */");
@@ -112,14 +106,6 @@ for (const [role, accent] of Object.entries(ROLE_ACCENT)) {
     errors.push(`ROLE_ACCENT: role ${role} points at unknown accent ${accent}`);
   lines.push(`[data-role="${role}"] {`);
   lines.push(`  --ll-accent: var(--ll-accent-${accent});`);
-  lines.push("}");
-}
-lines.push("");
-lines.push("/* Density axis — the host sets [data-density] on the root element or any subtree. */");
-for (const [key, t] of densityPair) {
-  const name = key.split("/").pop()!.replace("base-", "");
-  lines.push(`[data-density="${name}"] {`);
-  lines.push(`  ${t.css}: ${px(Number(t.value))};`);
   lines.push("}");
 }
 lines.push("");

@@ -41,12 +41,13 @@ point on the flow is strictly Figma → code; the historical CSS is reference,
 not source.
 
 Constraint (verified 2026-08-12): the Figma plan allows **one mode per
-variable collection** (`addMode` throws "Limited to 1 modes only"). The density
-axis is therefore modeled as two explicit variables
-(`Spacing/density/base-compact` = 8, `Spacing/density/base-aere` = 10) and the
-accent axis as the `Primitives/accent/*` variables; the transform stage of
-the token pipeline emits the `[data-density]` / `[data-accent]` CSS blocks from
-them. If the plan ever gains multi-mode, revisit — do not half-migrate.
+variable collection** (`addMode` throws "Limited to 1 modes only"). The accent
+axis is therefore modeled as the `Primitives/accent/*` variables; the
+transform stage of the token pipeline emits the `[data-accent]` CSS blocks
+from them. If the plan ever gains multi-mode, revisit — do not half-migrate.
+(The density axis, originally modeled the same way as an explicit variable
+pair, was removed 2026-08-30 — every product page measured `compact`; the base
+unit survives as the plain `Spacing/s` = 8 token.)
 
 Seeded inventory: Primitives 32 / Semantic 18 (aliases only) / Spacing 12 /
 Layout 7 / Typography 3 — 72 variables, every one carrying WEB code syntax in
@@ -64,10 +65,10 @@ gap to list in the first RFC that needs it, not a token.
 - Single dark palette; no light mode by design.
 - Fonts: EB Garamond (display/serif), Inter (body), JetBrains Mono (meta/mono).
 - Square corners, 1px rules, corner-bracket ornaments, 8px spacing ladder.
-- Theming axes: accent (`ambre`, `bleu`, `rouge`, `violet`, `jade` — the five
+- Theming axis: accent (`ambre`, `bleu`, `rouge`, `violet`, `jade` — the five
   role guides map onto them; `or` removed as an axis value 2026-08-30, gold
-  living on as the challenger tier colour and the `gold-soft` alpha) and
-  density (`aere`, `compact`).
+  living on as the challenger tier colour and the `gold-soft` alpha). The
+  density axis was removed 2026-08-30 (see the mode-constraint note above).
 
 ## Workspace layout
 

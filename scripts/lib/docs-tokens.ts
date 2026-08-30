@@ -17,7 +17,6 @@ export interface TokenEntry {
 export interface TokenModel {
   collections: { collection: string; entries: TokenEntry[] }[]; // tokens.json order
   roles: { role: string; accent: string }[]; // parsed from the [data-role] blocks
-  densities: { name: string; css: string; emitted: string }[]; // from [data-density]
   accents: string[]; // accent axis values, tokens.json order
 }
 
@@ -62,12 +61,6 @@ export function buildTokenModel(
   ].map((m) => ({ role: m[1], accent: m[2] }));
   if (roles.length === 0) errors.push("tokens.css: no [data-role] blocks found");
 
-  // ── Density axis: [data-density] blocks ───────────────────────────────────
-  const densities = [
-    ...tokensCss.matchAll(/\[data-density="([a-z]+)"\] \{\n {2}(--[a-zA-Z0-9-]+): (.+);\n\}/g),
-  ].map((m) => ({ name: m[1], css: m[2], emitted: m[3] }));
-  if (densities.length === 0) errors.push("tokens.css: no [data-density] blocks found");
-
   // ── Collections, in tokens.json order ─────────────────────────────────────
   const collections: TokenModel["collections"] = [];
   for (const [key, t] of Object.entries(tokens)) {
@@ -82,15 +75,11 @@ export function buildTokenModel(
       );
       continue;
     }
-    const isDensity = key.includes("/density/");
     const value = emitted.get(t.css);
-    // The density pair shares one custom property; its per-value emission lives
-    // in the [data-density] blocks, presented via model.densities instead.
-    if (value === undefined && !isDensity) {
+    if (value === undefined) {
       errors.push(`${key}: custom property ${t.css} not found in tokens.css :root`);
       continue;
     }
-    if (isDensity) continue;
     let coll = collections.find((c) => c.collection === collection);
     if (!coll) collections.push((coll = { collection, entries: [] }));
     const aliasOf =
@@ -115,13 +104,13 @@ export function buildTokenModel(
     .map((e) => e.path.split("/").pop() as string);
   if (accents.length === 0) errors.push("tokens.json: no Primitives/accent/* tokens found");
 
-  return { model: { collections, roles, densities, accents }, errors };
+  return { model: { collections, roles, accents }, errors };
 }
 
 // Docs-only visualisation classes appended to the generated lib.css — derived
 // from the model (single source), never hand-written, and excluded from the
 // token lint like the rest of lib.css. Swatches for every colour token, bars
-// for the spacing ladder and the density base, one class per font family.
+// for the spacing ladder, one class per font family, one per type/* style.
 export function docsTokenCss(model: TokenModel): string {
   const rules: string[] = [];
   const seen = new Set<string>();
@@ -163,9 +152,6 @@ export function docsTokenCss(model: TokenModel): string {
       rules.push(`.${cls} {\n${decls}\n}`);
     }
   }
-  // The density base bar reads the live --ll-s, so it follows the switcher.
-  for (const d of model.densities)
-    rule(`ll-docs-bar--${d.css.replace(/^--ll-/, "")}`, `width: var(${d.css});`);
   return (
     "\n/* Docs-only token visualisation classes — derived by `pnpm docs:build` from\n" +
     " * the token artefacts; never hand-written. */\n" +

@@ -34,17 +34,13 @@ check(
     .map(([k, t]) => `${k} -> ${t.css}`),
 );
 
-// 2. Duplicate css names — the ONLY allowed duplicate is --ll-s on the
-//    Spacing/density pair (one custom property, two axis values).
+// 2. Duplicate css names — every token owns exactly one custom property.
 {
   const seen = new Map<string, string[]>();
   for (const [k, t] of entries) seen.set(t.css, [...(seen.get(t.css) ?? []), k]);
-  const dupes = [...seen.entries()].filter(
-    ([css, keys]) =>
-      keys.length > 1 && !(css === "--ll-s" && keys.every((k) => k.includes("/density/"))),
-  );
+  const dupes = [...seen.entries()].filter(([, keys]) => keys.length > 1);
   check(
-    "no duplicate css names (density pair excepted)",
+    "no duplicate css names",
     dupes.map(([css, keys]) => `${css}: ${keys.join(", ")}`),
   );
 }
@@ -78,14 +74,12 @@ check(
     .map(([k, t]) => `${k} -> ${t.value}`),
 );
 
-// 5. Axis parity — accent set complete, density pair complete.
+// 5. Axis parity — accent set complete.
 {
   const fail: string[] = [];
   for (const a of ["ambre", "bleu", "rouge", "violet", "jade"])
     if (!tokens[`Primitives/accent/${a}`]) fail.push(`missing Primitives/accent/${a}`);
-  for (const d of ["base-compact", "base-aere"])
-    if (!tokens[`Spacing/density/${d}`]) fail.push(`missing Spacing/density/${d}`);
-  check("axis parity (6 accents, density pair)", fail);
+  check("axis parity (5 accents)", fail);
 }
 
 // 6. Stylesheet structural coverage — enumerate EVERY block the target can
@@ -102,23 +96,18 @@ const css = readFileSync(CSS, "utf8");
     ":root",
     ...["ambre", "bleu", "rouge", "violet", "jade"].map((a) => `[data-accent="${a}"]`),
     ...["support", "adc", "top", "mid", "jungle"].map((r) => `[data-role="${r}"]`),
-    ...["compact", "aere"].map((d) => `[data-density="${d}"]`),
   ];
   const found = blocks.map((b) => b.selector);
   for (const s of expectedSelectors) if (!found.includes(s)) fail.push(`missing block ${s}`);
   for (const s of found) if (!expectedSelectors.includes(s)) fail.push(`unexpected block ${s}`);
 
-  // Every token's custom property is declared in :root exactly once
-  // (--ll-s additionally appears in each density block).
+  // Every token's custom property is declared in :root exactly once.
   const root = blocks.find((b) => b.selector === ":root");
   const rootDecls = root ? [...root.body.matchAll(/(--ll-[a-z0-9-]+):/g)].map((m) => m[1]) : [];
-  for (const [k, t] of entries) {
-    if (k.includes("/density/")) continue;
+  for (const [, t] of entries) {
     const n = rootDecls.filter((d) => d === t.css).length;
     if (n !== 1) fail.push(`${t.css} declared ${n}x in :root (expected 1)`);
   }
-  if (rootDecls.filter((d) => d === "--ll-s").length !== 1)
-    fail.push("--ll-s not declared exactly 1x in :root");
 
   // Every var() reference in the whole stylesheet resolves to a declared property.
   const declared = new Set([...css.matchAll(/(--ll-[a-z0-9-]+):/g)].map((m) => m[1]));

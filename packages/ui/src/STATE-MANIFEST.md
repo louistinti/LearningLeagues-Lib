@@ -43,9 +43,9 @@ its row; if none match, it is a doctrine gap — flag it.
 
 ## Component registry
 
-| Component | Status | Owner | Branch | PR  | Priority | RFC                                               | Notes                                                                                                                                          | `conflictsWith` |
-| --------- | ------ | ----- | ------ | --- | -------- | ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
-| button    | draft  | —     | —      | —   | 1        | `packages/ui/src/components/button/Button.rfc.md` | First component through the circuit (M5); shipped via PRs #11/#12, typography tokenized via `--ll-type-button-*` (PR #14). No session owns it. | —               |
+| Component | Status | Owner                       | Branch                     | PR  | Priority | RFC                                               | Notes                                                                                                                                                                                 | `conflictsWith` |
+| --------- | ------ | --------------------------- | -------------------------- | --- | -------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| button    | draft  | guidelines session (Claude) | `feat/guidelines-contract` | #16 | 1        | `packages/ui/src/components/button/Button.rfc.md` | First component through the circuit (M5); shipped via PRs #11/#12, typography tokenized via `--ll-type-button-*` (PR #14). Guidelines session adds contract `guidelines` (mission 2). | —               |
 
 ---
 

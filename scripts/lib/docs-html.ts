@@ -12,6 +12,11 @@ export interface ComponentDoc {
     states?: { state: string; note: string }[];
     notes?: string;
     examples: { label: string; props: Record<string, unknown>; children?: string }[];
+    guidelines?: {
+      golden: { rule: string; detail: string }[];
+      do: string[];
+      dont: string[];
+    };
   };
   contract: {
     status: string;
@@ -62,6 +67,7 @@ function withForcedState(html: string, state: string): string {
 function sections(c: ComponentDoc): { label: string; anchor: string }[] {
   return [
     { label: "Examples", anchor: "examples" },
+    ...(c.meta.guidelines ? [{ label: "Guidelines", anchor: "guidelines" }] : []),
     { label: "Accents", anchor: "accents" },
     ...(c.meta.states ?? []).map((s) => ({ label: s.state, anchor: `state-${s.state}` })),
     ...(c.contract.props ? [{ label: "Props", anchor: "props" }] : []),
@@ -229,6 +235,33 @@ export function componentPage(
 ${c.renderedExamples.map((html) => `  ${html}`).join("\n")}
 </div>
 <pre class="code"><code>${c.meta.examples.map((e) => esc(jsxSource(c.meta.name, e))).join("\n")}</code></pre>`;
+  // Guidelines: golden rules as a numbered card, do/dont as ✓/✗ columns —
+  // contract content (meta.guidelines), rendered here, never hand-listed.
+  const g = c.meta.guidelines;
+  const guidelinesHtml = g
+    ? `<h2 id="guidelines">Guidelines</h2>
+<div class="golden">
+  <p class="golden-title">Golden rules</p>
+  <ol>
+${g.golden.map((r) => `    <li><strong>${esc(r.rule)}.</strong> ${esc(r.detail)}</li>`).join("\n")}
+  </ol>
+</div>
+<div class="dos-donts">
+  <div class="dos">
+    <p class="dos-title">Do</p>
+    <ul>
+${g.do.map((d) => `      <li>${esc(d)}</li>`).join("\n")}
+    </ul>
+  </div>
+  <div class="donts">
+    <p class="donts-title">Don't</p>
+    <ul>
+${g.dont.map((d) => `      <li>${esc(d)}</li>`).join("\n")}
+    </ul>
+  </div>
+</div>
+`
+    : "";
   const firstExample = c.renderedExamples[0] ?? "";
   const accentTiles = accents
     .map(
@@ -287,7 +320,7 @@ ${c.meta.notes ? `<p class="notes">${esc(c.meta.notes)}</p>` : ""}
 <h2 id="examples">Examples</h2>
 <p>Live renders — hover and keyboard states all work here.</p>
 ${exampleStage}
-<h2 id="accents">The ${accents.length} accents</h2>
+${guidelinesHtml}<h2 id="accents">The ${accents.length} accents</h2>
 <p>Each tile scopes the accent axis with <code>data-accent</code> on the tile itself — the element-scoped theme contract.</p>
 <div class="accent-grid">
 ${accentTiles}

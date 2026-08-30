@@ -26,6 +26,14 @@ const FONT_STACKS: Record<string, Record<string, string>> = {
   "Typography/font/body": { Inter: "'Inter', ui-sans-serif, system-ui, sans-serif" },
   "Typography/font/mono": { "JetBrains Mono": "'JetBrains Mono', ui-monospace, Menlo, monospace" },
 };
+// Text-style weight overrides, keyed on token identity. type/button is
+// ARBITRATED (Figma style description + Button.rfc.md §7): the Figma face is
+// Bold(700) only until JetBrains Mono SemiBold is installed — the web truth
+// is 600. Changing the face in Figma without updating this map fails no gate:
+// the override simply stops differing. Remove the entry when Figma catches up.
+const WEIGHT_OVERRIDES: Record<string, number> = {
+  "Type/button/weight": 600,
+};
 // Role -> accent mapping (design decision, mirrors the site's historical
 // [data-role] cascade; support intentionally equals ambre).
 const ROLE_ACCENT: Record<string, string> = {
@@ -60,9 +68,11 @@ const resolveValue = (key: string, t: Token): string => {
     }
     return String(v);
   }
-  // number
-  if (key.startsWith("Layout/z/")) return String(v);
-  return px(Number(v));
+  // number — z/*, type weight and type leading are unitless by nature.
+  const n = WEIGHT_OVERRIDES[key] ?? Number(v);
+  if (key.startsWith("Layout/z/")) return String(n);
+  if (/^Type\/[a-z0-9-]+\/(weight|leading)$/.test(key)) return String(n);
+  return px(n);
 };
 
 const entries = Object.entries(tokens);

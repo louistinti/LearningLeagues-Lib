@@ -26,7 +26,7 @@ plan ever gains REST variables access, replace this procedure with an
 
 ```js
 const collections = await figma.variables.getLocalVariableCollectionsAsync();
-const out = { collections: [], variables: [] };
+const out = { collections: [], variables: [], textStyles: [] };
 for (const c of collections) {
   out.collections.push({
     id: c.id,
@@ -47,8 +47,26 @@ for (const c of collections) {
     });
   }
 }
+for (const s of await figma.getLocalTextStylesAsync()) {
+  out.textStyles.push({
+    id: s.id,
+    name: s.name,
+    fontName: s.fontName,
+    fontSize: s.fontSize,
+    lineHeight: s.lineHeight,
+    letterSpacing: s.letterSpacing,
+    textCase: s.textCase,
+    textDecoration: s.textDecoration,
+    description: s.description,
+  });
+}
 return out;
 ```
+
+Text styles ride the same export since 2026-08-30: the normalize stage derives
+per-property tokens from them (collection `Type`, `--ll-type-<style>-<prop>`),
+so a text-style change in Figma flows through the exact same pipeline, diff
+gate and approval label as a variable change.
 
 ## Never
 

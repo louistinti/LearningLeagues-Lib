@@ -80,6 +80,62 @@
   --ll-font-display: 'EB Garamond', 'Iowan Old Style', Georgia, serif;
   --ll-font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
   --ll-font-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+  --ll-type-display-family: var(--ll-font-display);
+  --ll-type-display-size: 64px;
+  --ll-type-display-weight: 500;
+  --ll-type-display-style: normal;
+  --ll-type-display-leading: 1;
+  --ll-type-display-tracking: -0.025em;
+  --ll-type-display-case: none;
+  --ll-type-h1-italic-family: var(--ll-font-display);
+  --ll-type-h1-italic-size: 44px;
+  --ll-type-h1-italic-weight: 500;
+  --ll-type-h1-italic-style: italic;
+  --ll-type-h1-italic-leading: 1.1;
+  --ll-type-h1-italic-tracking: -0.01em;
+  --ll-type-h1-italic-case: none;
+  --ll-type-h2-family: var(--ll-font-display);
+  --ll-type-h2-size: 32px;
+  --ll-type-h2-weight: 500;
+  --ll-type-h2-style: normal;
+  --ll-type-h2-leading: 1.1;
+  --ll-type-h2-tracking: -0.01em;
+  --ll-type-h2-case: none;
+  --ll-type-h3-family: var(--ll-font-display);
+  --ll-type-h3-size: 22px;
+  --ll-type-h3-weight: 500;
+  --ll-type-h3-style: normal;
+  --ll-type-h3-leading: 1.2;
+  --ll-type-h3-tracking: -0.01em;
+  --ll-type-h3-case: none;
+  --ll-type-body-family: var(--ll-font-body);
+  --ll-type-body-size: 15px;
+  --ll-type-body-weight: 400;
+  --ll-type-body-style: normal;
+  --ll-type-body-leading: 1.55;
+  --ll-type-body-tracking: 0em;
+  --ll-type-body-case: none;
+  --ll-type-body-sm-family: var(--ll-font-body);
+  --ll-type-body-sm-size: 14px;
+  --ll-type-body-sm-weight: 400;
+  --ll-type-body-sm-style: normal;
+  --ll-type-body-sm-leading: 1.55;
+  --ll-type-body-sm-tracking: 0em;
+  --ll-type-body-sm-case: none;
+  --ll-type-meta-family: var(--ll-font-mono);
+  --ll-type-meta-size: 11px;
+  --ll-type-meta-weight: 400;
+  --ll-type-meta-style: normal;
+  --ll-type-meta-leading: 1.4;
+  --ll-type-meta-tracking: 0.06em;
+  --ll-type-meta-case: none;
+  --ll-type-button-family: var(--ll-font-mono);
+  --ll-type-button-size: 12px;
+  --ll-type-button-weight: 600;
+  --ll-type-button-style: normal;
+  --ll-type-button-leading: normal;
+  --ll-type-button-tracking: 0.14em;
+  --ll-type-button-case: uppercase;
   --ll-s: 8px;
 }
 
@@ -131,27 +187,27 @@
 /* utilities (agent-extensible zone) — none yet */
 
 /* Button chrome — Button.rfc.md §3-§4, design node 16:18.
-   Every colour and spacing value is a token, or derived live from one
-   (the hover color-mix and glow follow --ll-accent across the accent axis).
-   The type/button text style (mono 12 / 600 / 0.14em / uppercase) has no
-   extracted CSS variable yet — its values are restated verbatim from the
-   Figma style. Bracket and ring geometry (8px, 3px, 1px, 2px) is fixed
-   ornament geometry, not themable design values. */
+   Every colour, spacing and type value is a token, or derived live from one
+   (the hover color-mix and glow follow --ll-accent across the accent axis;
+   the label typography is the extracted type/button text style). Bracket and
+   ring geometry (8px, 3px, 1px, 2px) is fixed ornament geometry, not
+   themable design values. */
 
 .ll-button {
   display: inline-flex;
   align-items: center;
   gap: var(--ll-s-125);
   padding: var(--ll-s-15) var(--ll-s-275);
-  font-family: var(--ll-font-mono);
-  font-size: 12px; /* type/button */
-  font-weight: 600; /* type/button */
-  letter-spacing: 0.14em; /* type/button */
-  /* Self-defensive browser default (distribution contract §3.7): without it
-     the <a> rendering inherits the host's line-height and breaks the
-     button/link format parity (RFC §7, 2026-08-29). */
-  line-height: normal;
-  text-transform: uppercase;
+  font-family: var(--ll-type-button-family);
+  font-size: var(--ll-type-button-size);
+  font-weight: var(--ll-type-button-weight);
+  font-style: var(--ll-type-button-style);
+  letter-spacing: var(--ll-type-button-tracking);
+  /* type/button leading is `normal` — which is also the self-defensive
+     browser default the <a> rendering needs for button/link format parity
+     (distribution contract §3.7; RFC §7, 2026-08-29). */
+  line-height: var(--ll-type-button-leading);
+  text-transform: var(--ll-type-button-case);
   border-radius: 0;
   cursor: pointer;
   position: relative;
@@ -428,6 +484,78 @@
 }
 .ll-docs-font--font-mono {
   font-family: var(--ll-font-mono);
+}
+.ll-docs-type--display {
+  font-family: var(--ll-type-display-family);
+  font-size: var(--ll-type-display-size);
+  font-weight: var(--ll-type-display-weight);
+  font-style: var(--ll-type-display-style);
+  line-height: var(--ll-type-display-leading);
+  letter-spacing: var(--ll-type-display-tracking);
+  text-transform: var(--ll-type-display-case);
+}
+.ll-docs-type--h1-italic {
+  font-family: var(--ll-type-h1-italic-family);
+  font-size: var(--ll-type-h1-italic-size);
+  font-weight: var(--ll-type-h1-italic-weight);
+  font-style: var(--ll-type-h1-italic-style);
+  line-height: var(--ll-type-h1-italic-leading);
+  letter-spacing: var(--ll-type-h1-italic-tracking);
+  text-transform: var(--ll-type-h1-italic-case);
+}
+.ll-docs-type--h2 {
+  font-family: var(--ll-type-h2-family);
+  font-size: var(--ll-type-h2-size);
+  font-weight: var(--ll-type-h2-weight);
+  font-style: var(--ll-type-h2-style);
+  line-height: var(--ll-type-h2-leading);
+  letter-spacing: var(--ll-type-h2-tracking);
+  text-transform: var(--ll-type-h2-case);
+}
+.ll-docs-type--h3 {
+  font-family: var(--ll-type-h3-family);
+  font-size: var(--ll-type-h3-size);
+  font-weight: var(--ll-type-h3-weight);
+  font-style: var(--ll-type-h3-style);
+  line-height: var(--ll-type-h3-leading);
+  letter-spacing: var(--ll-type-h3-tracking);
+  text-transform: var(--ll-type-h3-case);
+}
+.ll-docs-type--body {
+  font-family: var(--ll-type-body-family);
+  font-size: var(--ll-type-body-size);
+  font-weight: var(--ll-type-body-weight);
+  font-style: var(--ll-type-body-style);
+  line-height: var(--ll-type-body-leading);
+  letter-spacing: var(--ll-type-body-tracking);
+  text-transform: var(--ll-type-body-case);
+}
+.ll-docs-type--body-sm {
+  font-family: var(--ll-type-body-sm-family);
+  font-size: var(--ll-type-body-sm-size);
+  font-weight: var(--ll-type-body-sm-weight);
+  font-style: var(--ll-type-body-sm-style);
+  line-height: var(--ll-type-body-sm-leading);
+  letter-spacing: var(--ll-type-body-sm-tracking);
+  text-transform: var(--ll-type-body-sm-case);
+}
+.ll-docs-type--meta {
+  font-family: var(--ll-type-meta-family);
+  font-size: var(--ll-type-meta-size);
+  font-weight: var(--ll-type-meta-weight);
+  font-style: var(--ll-type-meta-style);
+  line-height: var(--ll-type-meta-leading);
+  letter-spacing: var(--ll-type-meta-tracking);
+  text-transform: var(--ll-type-meta-case);
+}
+.ll-docs-type--button {
+  font-family: var(--ll-type-button-family);
+  font-size: var(--ll-type-button-size);
+  font-weight: var(--ll-type-button-weight);
+  font-style: var(--ll-type-button-style);
+  line-height: var(--ll-type-button-leading);
+  letter-spacing: var(--ll-type-button-tracking);
+  text-transform: var(--ll-type-button-case);
 }
 .ll-docs-bar--s {
   width: var(--ll-s);

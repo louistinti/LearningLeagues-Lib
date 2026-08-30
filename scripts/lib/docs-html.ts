@@ -457,9 +457,47 @@ ${byCollection("Typography")
   </tbody>
 </table>`;
 
+  // Type: the ramp derived from the type/* text styles — one row per style,
+  // specimen rendered by its generated .ll-docs-type--<slug> class.
+  const typeEntries = byCollection("Type");
+  const typeSlugs = [...new Set(typeEntries.map((e) => e.group))];
+  const typeProp = (slug: string, prop: string) =>
+    typeEntries.find((e) => e.group === slug && e.path === `${slug}/${prop}`);
+  sectionBodies.Type =
+    `<p>Tokens derived from the Figma <code>type/*</code> text styles by the extraction pipeline. Each style is a set of custom properties named <code>--ll-type-&lt;style&gt;-&lt;prop&gt;</code> (family, size, weight, style, leading, tracking, case); the family aliases the Typography font tokens above. The specimens are rendered by these variables.</p>\n` +
+    `<table>
+  <thead>
+    <tr><th scope="col">Specimen</th><th scope="col">Style</th><th scope="col">size</th><th scope="col">weight</th><th scope="col">leading</th><th scope="col">tracking</th><th scope="col">case</th></tr>
+  </thead>
+  <tbody>
+${typeSlugs
+  .map((slug) => {
+    const cell = (prop: string) => {
+      const e = typeProp(slug, prop);
+      return e ? `<code>${esc(e.emitted)}</code>` : "—";
+    };
+    return `      <tr>
+        <td><span class="ll-docs-type--${esc(slug)}">Climb the ladder</span></td>
+        <th scope="row"><code>type/${esc(slug)}</code></th>
+        <td>${cell("size")}</td>
+        <td>${cell("weight")}</td>
+        <td>${cell("leading")}</td>
+        <td>${cell("tracking")}</td>
+        <td>${cell("case")}</td>
+      </tr>`;
+  })
+  .join("\n")}
+  </tbody>
+</table>`;
+
   const collectionsHtml = tokenSections
     .filter((s) => s.anchor !== "axes")
-    .map((s) => `<h2 id="${esc(s.anchor)}">${esc(s.label)}</h2>\n${sectionBodies[s.label] ?? ""}`)
+    .map((s) => {
+      const body = sectionBodies[s.label];
+      if (body === undefined)
+        throw new Error(`tokensPage: no section renderer for collection "${s.label}"`);
+      return `<h2 id="${esc(s.anchor)}">${esc(s.label)}</h2>\n${body}`;
+    })
     .join("\n");
 
   const accentChips = model.accents

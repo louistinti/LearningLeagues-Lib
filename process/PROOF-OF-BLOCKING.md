@@ -17,6 +17,11 @@ Tokens-page re-proof: 2026-08-30 (the docs generator gained `docs/tokens.html`
 and the token-lint scan surface gained its exemption), locally, Node 25.9 (the
 repo pins Node 24; CI re-runs every gate on the pinned version).
 
+Text-styles re-proof: 2026-08-30 (normalize gained the text-style derivation),
+locally, Node 25.9. The injection restore surfaced L08: `git checkout --` on
+the raw export discarded uncommitted session work — restored by re-running the
+scripted merge, not from HEAD.
+
 | Gate                                   | Injection                                                              | Red observed                                                             | Restored green                                                             |
 | -------------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------ | -------------------------------------------------------------------------- |
 | Format                                 | unformatted new files                                                  | exit 1                                                                   | exit 0 after `pnpm format`                                                 |
@@ -59,3 +64,4 @@ repo pins Node 24; CI re-runs every gate on the pinned version).
 | Generated-artefact drift — tokens page | hand edit appended to generated `docs/tokens.html`, verified present   | exit 1, `docs/tokens.html` named under "docs site (generate-docs)"       | exit 0 after `pnpm docs:build`                                             |
 | Docs generator — unknown collection    | `Weird/x` token injected into `tokens.json`, verified landed           | exit 1: `unknown collection "Weird" — teach the tokens page template`    | exit 0 after `git checkout --` (tracked file)                              |
 | Token lint — tokens page exemption     | `#ff0000` appended to `docs/assets/site.css`, verified present         | exit 1 at `site.css:369`; `docs/tokens.html` NOT scanned (still 8 files) | exit 0 after removal                                                       |
+| Normalize — text-style face            | `type/meta` face set to `"Fancy"` in the raw export, verified landed   | exit 1: `font face "Fancy" has no standard weight`                       | exit 0 after scripted re-merge (not `git checkout` — L08)                  |

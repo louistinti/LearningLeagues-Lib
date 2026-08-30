@@ -43,6 +43,7 @@
         <li><a href="./tokens.html#spacing">Spacing</a></li>
         <li><a href="./tokens.html#layout">Layout</a></li>
         <li><a href="./tokens.html#typography">Typography</a></li>
+        <li><a href="./tokens.html#type">Type</a></li>
         <li><a href="./tokens.html#axes">Theme axes</a></li>
         </ul>
       </details>
@@ -68,7 +69,7 @@
 </nav>
 <main id="main">
 <h1>Design tokens</h1>
-<p>74 tokens in the <code>--ll-*</code> namespace. They flow one way only: Figma variables → extraction pipeline → one generated stylesheet. No agent and no developer ever writes a token by hand; this page is generated from the same artefacts the library ships (<code>tokens.json</code> + <code>tokens.css</code>).</p>
+<p>130 tokens in the <code>--ll-*</code> namespace. They flow one way only: Figma variables → extraction pipeline → one generated stylesheet. No agent and no developer ever writes a token by hand; this page is generated from the same artefacts the library ships (<code>tokens.json</code> + <code>tokens.css</code>).</p>
 <h2 id="primitives">Primitives</h2>
 <p>Raw values as extracted from Figma. Components never reference a primitive directly — they consume the semantic aliases below.</p>
 <h3 id="primitives-neutral"><code>neutral</code></h3>
@@ -569,6 +570,87 @@
         <th scope="row"><code>font/mono</code></th>
         <td><code>--ll-font-mono</code></td>
         <td><code>'JetBrains Mono', ui-monospace, Menlo, monospace</code></td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="type">Type</h2>
+<p>Tokens derived from the Figma <code>type/*</code> text styles by the extraction pipeline. Each style is a set of custom properties named <code>--ll-type-&lt;style&gt;-&lt;prop&gt;</code> (family, size, weight, style, leading, tracking, case); the family aliases the Typography font tokens above. The specimens are rendered by these variables.</p>
+<table>
+  <thead>
+    <tr><th scope="col">Specimen</th><th scope="col">Style</th><th scope="col">size</th><th scope="col">weight</th><th scope="col">leading</th><th scope="col">tracking</th><th scope="col">case</th></tr>
+  </thead>
+  <tbody>
+      <tr>
+        <td><span class="ll-docs-type--display">Climb the ladder</span></td>
+        <th scope="row"><code>type/display</code></th>
+        <td><code>64px</code></td>
+        <td><code>500</code></td>
+        <td><code>1</code></td>
+        <td><code>-0.025em</code></td>
+        <td><code>none</code></td>
+      </tr>
+      <tr>
+        <td><span class="ll-docs-type--h1-italic">Climb the ladder</span></td>
+        <th scope="row"><code>type/h1-italic</code></th>
+        <td><code>44px</code></td>
+        <td><code>500</code></td>
+        <td><code>1.1</code></td>
+        <td><code>-0.01em</code></td>
+        <td><code>none</code></td>
+      </tr>
+      <tr>
+        <td><span class="ll-docs-type--h2">Climb the ladder</span></td>
+        <th scope="row"><code>type/h2</code></th>
+        <td><code>32px</code></td>
+        <td><code>500</code></td>
+        <td><code>1.1</code></td>
+        <td><code>-0.01em</code></td>
+        <td><code>none</code></td>
+      </tr>
+      <tr>
+        <td><span class="ll-docs-type--h3">Climb the ladder</span></td>
+        <th scope="row"><code>type/h3</code></th>
+        <td><code>22px</code></td>
+        <td><code>500</code></td>
+        <td><code>1.2</code></td>
+        <td><code>-0.01em</code></td>
+        <td><code>none</code></td>
+      </tr>
+      <tr>
+        <td><span class="ll-docs-type--body">Climb the ladder</span></td>
+        <th scope="row"><code>type/body</code></th>
+        <td><code>15px</code></td>
+        <td><code>400</code></td>
+        <td><code>1.55</code></td>
+        <td><code>0em</code></td>
+        <td><code>none</code></td>
+      </tr>
+      <tr>
+        <td><span class="ll-docs-type--body-sm">Climb the ladder</span></td>
+        <th scope="row"><code>type/body-sm</code></th>
+        <td><code>14px</code></td>
+        <td><code>400</code></td>
+        <td><code>1.55</code></td>
+        <td><code>0em</code></td>
+        <td><code>none</code></td>
+      </tr>
+      <tr>
+        <td><span class="ll-docs-type--meta">Climb the ladder</span></td>
+        <th scope="row"><code>type/meta</code></th>
+        <td><code>11px</code></td>
+        <td><code>400</code></td>
+        <td><code>1.4</code></td>
+        <td><code>0.06em</code></td>
+        <td><code>none</code></td>
+      </tr>
+      <tr>
+        <td><span class="ll-docs-type--button">Climb the ladder</span></td>
+        <th scope="row"><code>type/button</code></th>
+        <td><code>12px</code></td>
+        <td><code>600</code></td>
+        <td><code>normal</code></td>
+        <td><code>0.14em</code></td>
+        <td><code>uppercase</code></td>
       </tr>
   </tbody>
 </table>

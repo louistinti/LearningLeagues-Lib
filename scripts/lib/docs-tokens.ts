@@ -22,8 +22,16 @@ export interface TokenModel {
 }
 
 // The collections this page knows how to present. A new Figma collection must
-// be taught to the template, not silently dropped.
-export const KNOWN_COLLECTIONS = ["Primitives", "Semantic", "Spacing", "Layout", "Typography"];
+// be taught to the template, not silently dropped. "Type" holds the tokens
+// derived from the type/* text styles by the normalize stage.
+export const KNOWN_COLLECTIONS = [
+  "Primitives",
+  "Semantic",
+  "Spacing",
+  "Layout",
+  "Typography",
+  "Type",
+];
 
 interface RawToken {
   type: string;
@@ -130,6 +138,29 @@ export function docsTokenCss(model: TokenModel): string {
         rule(`ll-docs-bar--${slug}`, `width: var(${e.css});`);
       if (e.type === "string" && collection === "Typography")
         rule(`ll-docs-font--${slug}`, `font-family: var(${e.css});`);
+    }
+  }
+  // One specimen class per type/* style, applying every extracted property.
+  const TYPE_PROP_CSS: Record<string, string> = {
+    family: "font-family",
+    size: "font-size",
+    weight: "font-weight",
+    style: "font-style",
+    leading: "line-height",
+    tracking: "letter-spacing",
+    case: "text-transform",
+  };
+  const typeEntries = model.collections.find((c) => c.collection === "Type")?.entries ?? [];
+  const styleSlugs = [...new Set(typeEntries.map((e) => e.group))];
+  for (const slug of styleSlugs) {
+    const decls = typeEntries
+      .filter((e) => e.group === slug && TYPE_PROP_CSS[e.path.split("/").pop() as string])
+      .map((e) => `  ${TYPE_PROP_CSS[e.path.split("/").pop() as string]}: var(${e.css});`)
+      .join("\n");
+    const cls = `ll-docs-type--${slug}`;
+    if (!seen.has(cls)) {
+      seen.add(cls);
+      rules.push(`.${cls} {\n${decls}\n}`);
     }
   }
   // The density base bar reads the live --ll-s, so it follows the switcher.

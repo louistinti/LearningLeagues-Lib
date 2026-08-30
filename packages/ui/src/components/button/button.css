@@ -1,25 +1,25 @@
 /* Button chrome — Button.rfc.md §3-§4, design node 16:18.
-   Every colour and spacing value is a token, or derived live from one
-   (the hover color-mix and glow follow --ll-accent across the accent axis).
-   The type/button text style (mono 12 / 600 / 0.14em / uppercase) has no
-   extracted CSS variable yet — its values are restated verbatim from the
-   Figma style. Bracket and ring geometry (8px, 3px, 1px, 2px) is fixed
-   ornament geometry, not themable design values. */
+   Every colour, spacing and type value is a token, or derived live from one
+   (the hover color-mix and glow follow --ll-accent across the accent axis;
+   the label typography is the extracted type/button text style). Bracket and
+   ring geometry (8px, 3px, 1px, 2px) is fixed ornament geometry, not
+   themable design values. */
 
 .ll-button {
   display: inline-flex;
   align-items: center;
   gap: var(--ll-s-125);
   padding: var(--ll-s-15) var(--ll-s-275);
-  font-family: var(--ll-font-mono);
-  font-size: 12px; /* type/button */
-  font-weight: 600; /* type/button */
-  letter-spacing: 0.14em; /* type/button */
-  /* Self-defensive browser default (distribution contract §3.7): without it
-     the <a> rendering inherits the host's line-height and breaks the
-     button/link format parity (RFC §7, 2026-08-29). */
-  line-height: normal;
-  text-transform: uppercase;
+  font-family: var(--ll-type-button-family);
+  font-size: var(--ll-type-button-size);
+  font-weight: var(--ll-type-button-weight);
+  font-style: var(--ll-type-button-style);
+  letter-spacing: var(--ll-type-button-tracking);
+  /* type/button leading is `normal` — which is also the self-defensive
+     browser default the <a> rendering needs for button/link format parity
+     (distribution contract §3.7; RFC §7, 2026-08-29). */
+  line-height: var(--ll-type-button-leading);
+  text-transform: var(--ll-type-button-case);
   border-radius: 0;
   cursor: pointer;
   position: relative;

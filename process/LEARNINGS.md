@@ -32,6 +32,10 @@ stable across the move.
   - Rule: a stacked PR is retargeted to `main` the moment its base merges — before pressing its own merge; "merged" means merged-to-main, verified on `main`'s log, not on the PR badge.
   - Gate: none; candidate is a repo check that flags merged PRs whose base was not `main`.
 
+- **L08** — An injection "restore" via `git checkout --` on a tracked artefact (the raw token export) also discarded the session's own uncommitted work on that file; the resulting drift red was then nearly "fixed" by regenerating everything from the stale source.
+  - Rule: before restoring an injected file with `git checkout`, confirm it carries no uncommitted work — otherwise restore by re-running the recorded merge/generator; a drift red immediately after a restore is compared against the intended state, not HEAD.
+  - Gate: none; the drift gate catches the symptom but cannot distinguish "stale" from "discarded work".
+
 ## Archive (closed, verbatim)
 
 <a id="l03"></a>

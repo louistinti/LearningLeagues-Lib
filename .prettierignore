@@ -17,3 +17,5 @@ docs/index.html
 docs/tokens.html
 docs/components/
 docs/assets/lib.css
+# Generated consumer dist (pnpm dist:build) — same rule as above.
+dist/

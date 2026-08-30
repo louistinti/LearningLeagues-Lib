@@ -1,5 +1,6 @@
 node_modules/
-dist/
+# dist/ is a committed GENERATED artefact since 2026-08-30 (pnpm dist:build) —
+# the drift gate checks its bytes like docs/ and the token artefacts.
 reports/
 *.log
 .DS_Store

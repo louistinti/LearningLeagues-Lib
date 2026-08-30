@@ -112,6 +112,7 @@ generated data.
 | `packages/ui/src/tokens/tokens.css`                             | `pnpm tokens:transform` (utilities zone at the end is the one agent-extensible area) |
 | `docs/index.html`, `docs/tokens.html`, `docs/components/*.html` | `pnpm docs:build`                                                                    |
 | `docs/assets/lib.css`                                           | `pnpm docs:build` (tokens.css + component css + docs-only derived rules)             |
+| `dist/ll-lib.css`, `dist/ll-lib.jsx`                            | `pnpm dist:build` (consumer artefacts; vendored at a pin via `vendor-dist.ts`)       |
 
 ## State manifest — usage rules (active from Milestone 4)
 

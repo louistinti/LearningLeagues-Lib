@@ -16,6 +16,7 @@
     "tokens:build": "pnpm tokens:normalize && pnpm tokens:transform",
     "tokens:check": "node scripts/check-drift.ts",
     "docs:build": "node scripts/generate-docs.ts",
+    "dist:build": "node scripts/generate-dist.ts",
     "validate:theme": "node scripts/validate-theme.ts",
     "diff:tokens": "node scripts/diff-tokens.ts",
     "gate:drift": "node scripts/check-drift.ts",

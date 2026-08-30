@@ -36,6 +36,10 @@ stable across the move.
   - Rule: before restoring an injected file with `git checkout`, confirm it carries no uncommitted work — otherwise restore by re-running the recorded merge/generator; a drift red immediately after a restore is compared against the intended state, not HEAD.
   - Gate: none; the drift gate catches the symptom but cannot distinguish "stale" from "discarded work".
 
+- **L09** — The adoption pilot measured and migrated against a sibling product checkout that was 54 commits behind `origin/main`; the divergence surfaced only when the push was rejected, and the whole migration had to be rebuilt on the real base (one upstream feature — the quiz — even changed the pilot's scope).
+  - Rule: before measuring or editing a consuming repository, `git fetch` and verify the tree sits on `origin/main` — a stale sibling checkout is active misinformation (axiom 6 applied to product repositories).
+  - Gate: none; candidate is a prerequisite check in the adapted product playbook (blueprint §8 phase 1 — "every check run and reported").
+
 ## Archive (closed, verbatim)
 
 <a id="l03"></a>

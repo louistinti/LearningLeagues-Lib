@@ -28,6 +28,7 @@ Milestone 4.)
 | Scaffold a new component                    | `node scripts/scaffold.ts <Name>`                       | shell created (intentionally red)                           |
 | Generate an RFC for a new component         | `.github/prompts/rfc-generation.prompt.md`              | RFC in `draft` + manifest row + closed questions listed     |
 | Implement a component from its approved RFC | `.github/prompts/component-generation.prompt.md`        | `pnpm conformity` verdict quoted; RFC arbitration untouched |
+| Promote a component (verify, then flip)     | `node scripts/promote.ts <name> <stable\|exported> [--write]` | verify-only by default; `--write` flips + regenerates + commits |
 
 Notes:
 

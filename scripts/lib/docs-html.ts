@@ -460,9 +460,14 @@ ${byCollection("Typography")
   // Type: the ramp derived from the type/* text styles — one row per style,
   // specimen rendered by its generated .ll-docs-type--<slug> class.
   const typeEntries = byCollection("Type");
-  const typeSlugs = [...new Set(typeEntries.map((e) => e.group))];
   const typeProp = (slug: string, prop: string) =>
     typeEntries.find((e) => e.group === slug && e.path === `${slug}/${prop}`);
+  // Ramp order: size descending (the file's own order is style-creation order).
+  const typeSlugs = [...new Set(typeEntries.map((e) => e.group))].sort(
+    (a, b) =>
+      parseFloat(typeProp(b, "size")?.emitted ?? "0") -
+      parseFloat(typeProp(a, "size")?.emitted ?? "0"),
+  );
   sectionBodies.Type =
     `<p>Tokens derived from the Figma <code>type/*</code> text styles by the extraction pipeline. Each style is a set of custom properties named <code>--ll-type-&lt;style&gt;-&lt;prop&gt;</code> (family, size, weight, style, leading, tracking, case); the family aliases the Typography font tokens above. The specimens are rendered by these variables.</p>\n` +
     `<table>

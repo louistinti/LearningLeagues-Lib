@@ -38,3 +38,16 @@ for library gaps (§8.4 — none expected for Button v1), `DS-WORKAROUND #N`
 markers if any compensation is needed, and the session log entry. Scaffold
 generators (§8.2) are deferred: one component, first pilot — file the gap
 instead of inventing the machinery early.
+
+## Addendum — pilot outcome (2026-08-31)
+
+Shipped: site `main` b6f0d0c, dist pin 6be46f6, pushed by Louis. 12 rendered
+usages, zero compensations, legacy button CSS deleted (grep 0, comments
+included). Scope grew twice during the run, both arbitrated: quiz (+3 usages,
+upstream feature) and the header nav CTA (+2, reversing the §2.3 exclusion —
+secondary variant, active state dropped). One incident: the pilot's baseline
+was measured on a checkout 54 commits behind `origin/main` and everything was
+rebuilt on the real base (L09). Library asks born from the pilot: a
+selected/aria-current state on Button (RFC §7, 2026-08-31). The icon-slot
+deferral's clause fired the same day: the Figma set gained `Icon ?` (trailing
+arrow, default Yes); the code API is unchanged.

@@ -122,10 +122,10 @@ outline offset 3px, on both variants.
 <!-- HUMAN ONLY. Gates pass? Design sign-off? Product adoption clear? Anything
      that would block approval. Leave blank if this RFC is not yet under review. -->
 
-- [ ] Gates pass (conformity, accessibility, token lint, contrast)
-- [ ] Design sign-off (design lead)
-- [ ] Product adoption clear (consuming side)
-- [ ] Implementation approach reviewed
+- [x] Gates pass (conformity, accessibility, token lint, contrast)
+- [x] Design sign-off (design lead)
+- [x] Product adoption clear (consuming side)
+- [x] Implementation approach reviewed
 
 ---
 

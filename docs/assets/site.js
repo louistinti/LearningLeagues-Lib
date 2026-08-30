@@ -36,6 +36,56 @@
   restore("accent");
   wire("accent");
 
+  // Tabs (tokens page): horizontal navigation, no scrolling. Progressive
+  // enhancement — without this script every panel stays visible.
+  var tablist = document.querySelector(".tabs[role='tablist']");
+  var revealFor = function () {};
+  if (tablist) {
+    var tabs = Array.prototype.slice.call(tablist.querySelectorAll("[role='tab']"));
+    var select = function (anchor) {
+      var found = tabs.some(function (t) {
+        return t.getAttribute("aria-controls") === anchor;
+      });
+      if (!found && tabs.length) anchor = tabs[0].getAttribute("aria-controls");
+      tabs.forEach(function (t) {
+        var id = t.getAttribute("aria-controls");
+        var on = id === anchor;
+        t.setAttribute("aria-selected", String(on));
+        var panel = document.getElementById(id);
+        if (panel) panel.hidden = !on;
+      });
+    };
+    revealFor = function (el) {
+      var panel = el.closest("[role='tabpanel']");
+      if (panel) select(panel.id);
+    };
+    tabs.forEach(function (t) {
+      t.addEventListener("click", function () {
+        var id = t.getAttribute("aria-controls");
+        select(id);
+        try {
+          history.pushState(null, "", "#" + id);
+        } catch (e) {
+          /* sandboxed viewers may block history */
+        }
+      });
+    });
+    var initial = location.hash
+      ? document.getElementById(decodeURIComponent(location.hash.slice(1)))
+      : null;
+    select(tabs.length ? tabs[0].getAttribute("aria-controls") : "");
+    if (initial) {
+      revealFor(initial);
+      initial.scrollIntoView();
+    }
+    window.addEventListener("hashchange", function () {
+      var el = location.hash
+        ? document.getElementById(decodeURIComponent(location.hash.slice(1)))
+        : null;
+      if (el) revealFor(el);
+    });
+  }
+
   // Scrollspy: highlight the current page's sub-section in the sidebar as the
   // reader scrolls (or clicks an anchor). Purely presentational — the links
   // and anchors themselves are generated from the contracts.
@@ -57,6 +107,7 @@
     var pos = window.scrollY + window.innerHeight / 4;
     var active = null;
     pairs.forEach(function (p) {
+      if (!p.target.offsetParent) return; // inside a hidden tab panel
       if (p.target.getBoundingClientRect().top + window.scrollY <= pos) active = p;
     });
     if (!active && pairs.length) active = pairs[0];
@@ -73,6 +124,7 @@
     pairs.forEach(function (p) {
       p.link.addEventListener("click", function (ev) {
         ev.preventDefault();
+        revealFor(p.target); // switch the tab first when the target is in one
         p.target.scrollIntoView({ behavior: "smooth" });
         history.pushState(null, "", "#" + p.target.id);
         markCurrent();

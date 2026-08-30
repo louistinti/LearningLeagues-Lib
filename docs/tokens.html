@@ -15,7 +15,6 @@
   <div class="switchers">
     <fieldset class="switcher" aria-label="Accent">
       <legend>Accent</legend>
-      <button type="button" data-set-accent="or" aria-pressed="false">or</button>
       <button type="button" data-set-accent="ambre" aria-pressed="true">ambre</button>
       <button type="button" data-set-accent="bleu" aria-pressed="false">bleu</button>
       <button type="button" data-set-accent="rouge" aria-pressed="false">rouge</button>
@@ -69,7 +68,7 @@
 </nav>
 <main id="main">
 <h1>Design tokens</h1>
-<p>130 tokens in the <code>--ll-*</code> namespace. They flow one way only: Figma variables → extraction pipeline → one generated stylesheet. No agent and no developer ever writes a token by hand; this page is generated from the same artefacts the library ships (<code>tokens.json</code> + <code>tokens.css</code>).</p>
+<p>129 tokens in the <code>--ll-*</code> namespace. They flow one way only: Figma variables → extraction pipeline → one generated stylesheet. No agent and no developer ever writes a token by hand; this page is generated from the same artefacts the library ships (<code>tokens.json</code> + <code>tokens.css</code>).</p>
 <h2 id="primitives">Primitives</h2>
 <p>Raw values as extracted from Figma. Components never reference a primitive directly — they consume the semantic aliases below.</p>
 <h3 id="primitives-neutral"><code>neutral</code></h3>
@@ -140,12 +139,6 @@
     <tr><th scope="col">Preview</th><th scope="col">Token</th><th scope="col">CSS property</th><th scope="col">Value</th></tr>
   </thead>
   <tbody>
-      <tr>
-        <td><span class="swatch ll-docs-swatch--accent-or" aria-hidden="true"></span></td>
-        <th scope="row"><code>accent/or</code></th>
-        <td><code>--ll-accent-or</code></td>
-        <td><code>#d4b468</code></td>
-      </tr>
       <tr>
         <td><span class="swatch ll-docs-swatch--accent-ambre" aria-hidden="true"></span></td>
         <th scope="row"><code>accent/ambre</code></th>
@@ -659,7 +652,6 @@
 <h3 id="axes-accent">Accent — <code>data-accent</code></h3>
 <p>Swaps which accent primitive <code>--ll-accent</code> resolves to. Try the switcher in the header — every live preview on this page follows it.</p>
 <div class="chips">
-    <span class="chip"><span class="swatch ll-docs-swatch--accent-or" aria-hidden="true"></span>or</span>
     <span class="chip"><span class="swatch ll-docs-swatch--accent-ambre" aria-hidden="true"></span>ambre</span>
     <span class="chip"><span class="swatch ll-docs-swatch--accent-bleu" aria-hidden="true"></span>bleu</span>
     <span class="chip"><span class="swatch ll-docs-swatch--accent-rouge" aria-hidden="true"></span>rouge</span>

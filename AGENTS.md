@@ -74,9 +74,10 @@ merger — single-human team).
   - **Single dark palette** on `:root`. Parity gates check axis parity, not
     light/dark parity.
   - **Accent axis** — `[data-accent]` / `[data-role]` swap which accent token is
-    live (`or`, `ambre`, `bleu`, `rouge`, `violet`, `jade`), on the root element
-    or any subtree element (element-scoped since 2026-08-29). Every
-    accent-dependent semantic token must resolve under every axis value.
+    live (`ambre`, `bleu`, `rouge`, `violet`, `jade` — `or` removed 2026-08-30;
+    gold survives only as `tier/challenger` and the `gold-soft` alpha), on the
+    root element or any subtree element (element-scoped since 2026-08-29).
+    Every accent-dependent semantic token must resolve under every axis value.
   - **Density axis** — `[data-density="aere" | "compact"]` swaps the base
     spacing unit, on the root element or any subtree element (element-scoped
     since 2026-08-29). The host application owns setting these attributes; the bare

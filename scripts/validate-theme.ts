@@ -81,7 +81,7 @@ check(
 // 5. Axis parity — accent set complete, density pair complete.
 {
   const fail: string[] = [];
-  for (const a of ["or", "ambre", "bleu", "rouge", "violet", "jade"])
+  for (const a of ["ambre", "bleu", "rouge", "violet", "jade"])
     if (!tokens[`Primitives/accent/${a}`]) fail.push(`missing Primitives/accent/${a}`);
   for (const d of ["base-compact", "base-aere"])
     if (!tokens[`Spacing/density/${d}`]) fail.push(`missing Spacing/density/${d}`);
@@ -100,7 +100,7 @@ const css = readFileSync(CSS, "utf8");
   }));
   const expectedSelectors = [
     ":root",
-    ...["or", "ambre", "bleu", "rouge", "violet", "jade"].map((a) => `[data-accent="${a}"]`),
+    ...["ambre", "bleu", "rouge", "violet", "jade"].map((a) => `[data-accent="${a}"]`),
     ...["support", "adc", "top", "mid", "jungle"].map((r) => `[data-role="${r}"]`),
     ...["compact", "aere"].map((d) => `[data-density="${d}"]`),
   ];

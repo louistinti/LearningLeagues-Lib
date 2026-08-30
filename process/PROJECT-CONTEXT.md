@@ -44,7 +44,7 @@ Constraint (verified 2026-08-12): the Figma plan allows **one mode per
 variable collection** (`addMode` throws "Limited to 1 modes only"). The density
 axis is therefore modeled as two explicit variables
 (`Spacing/density/base-compact` = 8, `Spacing/density/base-aere` = 10) and the
-accent axis as the six `Primitives/accent/*` variables; the transform stage of
+accent axis as the `Primitives/accent/*` variables; the transform stage of
 the token pipeline emits the `[data-density]` / `[data-accent]` CSS blocks from
 them. If the plan ever gains multi-mode, revisit — do not half-migrate.
 
@@ -64,8 +64,10 @@ gap to list in the first RFC that needs it, not a token.
 - Single dark palette; no light mode by design.
 - Fonts: EB Garamond (display/serif), Inter (body), JetBrains Mono (meta/mono).
 - Square corners, 1px rules, corner-bracket ornaments, 8px spacing ladder.
-- Theming axes: accent (`or`, `ambre`, `bleu`, `rouge`, `violet`, `jade` — the
-  five role guides map onto them) and density (`aere`, `compact`).
+- Theming axes: accent (`ambre`, `bleu`, `rouge`, `violet`, `jade` — the five
+  role guides map onto them; `or` removed as an axis value 2026-08-30, gold
+  living on as the challenger tier colour and the `gold-soft` alpha) and
+  density (`aere`, `compact`).
 
 ## Workspace layout
 

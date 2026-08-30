@@ -13,7 +13,6 @@
   --ll-neutral-fg: #e7ecf5;
   --ll-neutral-fg-dim: #a8b3c7;
   --ll-neutral-fg-mute: #7d89a3;
-  --ll-accent-or: #d4b468;
   --ll-accent-ambre: #e39a3c;
   --ll-accent-bleu: #6fa8dc;
   --ll-accent-rouge: #c96f6f;
@@ -136,9 +135,6 @@
 }
 
 /* Accent axis — the host sets [data-accent] on the root element or any subtree. */
-[data-accent="or"] {
-  --ll-accent: var(--ll-accent-or);
-}
 [data-accent="ambre"] {
   --ll-accent: var(--ll-accent-ambre);
 }

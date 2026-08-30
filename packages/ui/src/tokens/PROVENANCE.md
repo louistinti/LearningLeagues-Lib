@@ -16,6 +16,16 @@ source — rather than restating it here.
 
 ## Entries
 
+- **2026-08-30** — Accent axis narrowed: `Primitives/accent/or` deleted in
+  Figma (verified un-aliased first; the remaining accents read back:
+  ambre/bleu/rouge/violet/jade) and removed from the raw export by script.
+  This narrows the 2026-08-14 arbitration ("or stays available as a selectable
+  accent"): measured then and still true now, no product page uses `or`; gold
+  survives as `tier/challenger` and the `gold-soft` alpha, both untouched.
+  Schema gate's expected accent set updated in the same change. Decided by:
+  Louis Tinthilier (2026-08-30, in session). Delivered by: text-style-tokens
+  agent session (sup. Louis Tinthilier).
+
 - **2026-08-30** — Text-style extraction: the 8 `type/*` text styles exported
   from Figma file `Lib` via the extended stage-1 procedure (variables
   re-exported the same session and verified unchanged — the tokens.json diff

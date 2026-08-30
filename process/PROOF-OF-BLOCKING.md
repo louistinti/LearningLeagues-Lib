@@ -22,14 +22,19 @@ locally, Node 25.9. The injection restore surfaced L08: `git checkout --` on
 the raw export discarded uncommitted session work — restored by re-running the
 scripted merge, not from HEAD.
 
+Schema-gate re-proof: 2026-08-30 (`or` removed from the accent axis — the
+expected accent set shrank to five), locally, Node 25.9. The two
+stylesheet-schema injection rows below were re-run and rewritten with the new
+spellings; restores via regeneration, not `git checkout` (L08).
+
 | Gate                                   | Injection                                                              | Red observed                                                             | Restored green                                                             |
 | -------------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------ | -------------------------------------------------------------------------- |
 | Format                                 | unformatted new files                                                  | exit 1                                                                   | exit 0 after `pnpm format`                                                 |
 | Generated-artefact drift               | hand edit in `tokens.css` AND `tokens.json` simultaneously             | exit 1, **both** artefacts in the report (non-short-circuit §5.2.7)      | exit 0                                                                     |
 | Generated-artefact drift               | prettier rewriting generated artefacts (real incident, L03)            | exit 1                                                                   | exit 0 after `.prettierignore` exemption                                   |
 | Stylesheet schema                      | removed element-scoped `[data-role="mid"]` block                       | exit 1, names the missing block                                          | exit 0                                                                     |
-| Stylesheet schema                      | dangling `var(--ll-does-not-exist)` in `[data-accent="or"]`            | exit 1                                                                   | exit 0                                                                     |
-| Stylesheet schema                      | unexpected `[data-accent="pink"]` block                                | exit 1                                                                   | exit 0                                                                     |
+| Stylesheet schema                      | dangling `var(--ll-does-not-exist)` in `[data-accent="jade"]`          | exit 1                                                                   | exit 0                                                                     |
+| Stylesheet schema                      | unexpected `[data-accent="or"]` block (removed accent reintroduced)    | exit 1                                                                   | exit 0                                                                     |
 | Token lint — raw colour                | `"#ff0000"` in a source fixture                                        | exit 1                                                                   | exit 0 after removal                                                       |
 | Token lint — arbitrary value           | `p-[13px]`                                                             | exit 1                                                                   | exit 0                                                                     |
 | Token lint — invalid var syntax        | `var(ll-bg)`                                                           | exit 1                                                                   | exit 0                                                                     |

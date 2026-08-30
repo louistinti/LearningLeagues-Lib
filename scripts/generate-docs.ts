@@ -1,13 +1,22 @@
 // Docs-site generator (blueprint §9): builds docs/ from the component
-// contracts. Content lives in meta.ts + contract.json and regenerates —
-// never hand-add an entry to the generated pages.
-// Emits: docs/index.html, docs/components/<slug>.html, docs/assets/lib.css.
+// contracts and the generated token artefacts. Content lives in meta.ts +
+// contract.json + tokens.json/tokens.css and regenerates — never hand-add an
+// entry to the generated pages.
+// Emits: docs/index.html, docs/tokens.html, docs/components/<slug>.html,
+// docs/assets/lib.css.
 // Usage: node scripts/generate-docs.ts [--check]
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, statSync, existsSync } from "node:fs";
 import { join, resolve, dirname } from "node:path";
 import { pathToFileURL } from "node:url";
 import { renderExamples, type Example } from "./lib/docs-render.ts";
-import { indexPage, componentPage, type ComponentDoc } from "./lib/docs-html.ts";
+import {
+  indexPage,
+  componentPage,
+  tokensPage,
+  tokensSections,
+  type ComponentDoc,
+} from "./lib/docs-html.ts";
+import { buildTokenModel, docsTokenCss } from "./lib/docs-tokens.ts";
 
 const COMPONENTS_DIR = "packages/ui/src/components";
 const TOKENS_JSON = "packages/ui/src/tokens/tokens.json";
@@ -23,13 +32,15 @@ const slugs = readdirSync(COMPONENTS_DIR)
   .filter((n) => existsSync(join(COMPONENTS_DIR, n, "contract.json")))
   .sort();
 
-// ── Accent axis names from tokens.json (never hand-listed) ──────────────────
-const tokens: Record<string, { css: string }> = JSON.parse(
-  readFileSync(TOKENS_JSON, "utf8"),
-).tokens;
-const accents = Object.keys(tokens)
-  .filter((k) => k.startsWith("Primitives/accent/"))
-  .map((k) => k.split("/").pop() as string);
+// ── Token model from the generated artefacts (never hand-listed) ────────────
+const tokensCssText = readFileSync(TOKENS_CSS, "utf8");
+const { model: tokenModel, errors: tokenErrors } = buildTokenModel(
+  JSON.parse(readFileSync(TOKENS_JSON, "utf8")),
+  tokensCssText,
+);
+tokenErrors.forEach(fail);
+const accents = tokenModel.accents;
+const tokenSections = tokensSections(tokenModel);
 
 const components: ComponentDoc[] = [];
 for (const slug of slugs) {
@@ -112,14 +123,21 @@ function forceStateRules(css: string): string {
 const outputs: Record<string, string> = {
   [join(OUT, "assets", "lib.css")]:
     CSS_BANNER +
-    readFileSync(TOKENS_CSS, "utf8") +
+    tokensCssText +
     "\n" +
     componentCss +
-    forceStateRules(componentCss),
-  [join(OUT, "index.html")]: indexPage(components, accents),
+    forceStateRules(componentCss) +
+    docsTokenCss(tokenModel),
+  [join(OUT, "index.html")]: indexPage(components, accents, tokenSections),
+  [join(OUT, "tokens.html")]: tokensPage(tokenModel, components, tokenSections),
 };
 for (const c of components)
-  outputs[join(OUT, "components", `${c.slug}.html`)] = componentPage(c, accents, components);
+  outputs[join(OUT, "components", `${c.slug}.html`)] = componentPage(
+    c,
+    accents,
+    components,
+    tokenSections,
+  );
 
 if (process.argv.includes("--check")) {
   const stale = Object.entries(outputs).filter(

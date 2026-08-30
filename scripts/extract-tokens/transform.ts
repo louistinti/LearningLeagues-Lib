@@ -68,10 +68,10 @@ const resolveValue = (key: string, t: Token): string => {
     }
     return String(v);
   }
-  // number — z/*, type weight and type leading are unitless by nature.
+  // number — z/*, type weight and type line-height are unitless by nature.
   const n = WEIGHT_OVERRIDES[key] ?? Number(v);
   if (key.startsWith("Layout/z/")) return String(n);
-  if (/^Type\/[a-z0-9-]+\/(weight|leading)$/.test(key)) return String(n);
+  if (/^Type\/[a-z0-9-]+\/(weight|line-height)$/.test(key)) return String(n);
   return px(n);
 };
 

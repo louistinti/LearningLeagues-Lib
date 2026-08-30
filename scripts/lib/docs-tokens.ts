@@ -146,7 +146,7 @@ export function docsTokenCss(model: TokenModel): string {
     size: "font-size",
     weight: "font-weight",
     style: "font-style",
-    leading: "line-height",
+    "line-height": "line-height",
     tracking: "letter-spacing",
     case: "text-transform",
   };

@@ -15,10 +15,10 @@
   font-weight: var(--ll-type-button-weight);
   font-style: var(--ll-type-button-style);
   letter-spacing: var(--ll-type-button-tracking);
-  /* type/button leading is `normal` — which is also the self-defensive
+  /* type/button line-height is `normal` — which is also the self-defensive
      browser default the <a> rendering needs for button/link format parity
      (distribution contract §3.7; RFC §7, 2026-08-29). */
-  line-height: var(--ll-type-button-leading);
+  line-height: var(--ll-type-button-line-height);
   text-transform: var(--ll-type-button-case);
   border-radius: 0;
   cursor: pointer;

@@ -469,10 +469,10 @@ ${byCollection("Typography")
       parseFloat(typeProp(a, "size")?.emitted ?? "0"),
   );
   sectionBodies.Type =
-    `<p>Tokens derived from the Figma <code>type/*</code> text styles by the extraction pipeline. Each style is a set of custom properties named <code>--ll-type-&lt;style&gt;-&lt;prop&gt;</code> (family, size, weight, style, leading, tracking, case); the family aliases the Typography font tokens above. The specimens are rendered by these variables.</p>\n` +
+    `<p>Tokens derived from the Figma <code>type/*</code> text styles by the extraction pipeline. Each style is a set of custom properties named <code>--ll-type-&lt;style&gt;-&lt;prop&gt;</code> (family, size, weight, style, line-height, tracking, case); the family aliases the Typography font tokens above. The specimens are rendered by these variables.</p>\n` +
     `<table>
   <thead>
-    <tr><th scope="col">Specimen</th><th scope="col">Style</th><th scope="col">size</th><th scope="col">weight</th><th scope="col">leading</th><th scope="col">tracking</th><th scope="col">case</th></tr>
+    <tr><th scope="col">Specimen</th><th scope="col">Style</th><th scope="col">size</th><th scope="col">weight</th><th scope="col">line-height</th><th scope="col">tracking</th><th scope="col">case</th></tr>
   </thead>
   <tbody>
 ${typeSlugs
@@ -486,7 +486,7 @@ ${typeSlugs
         <th scope="row"><code>type/${esc(slug)}</code></th>
         <td>${cell("size")}</td>
         <td>${cell("weight")}</td>
-        <td>${cell("leading")}</td>
+        <td>${cell("line-height")}</td>
         <td>${cell("tracking")}</td>
         <td>${cell("case")}</td>
       </tr>`;

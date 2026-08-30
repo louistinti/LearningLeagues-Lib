@@ -132,9 +132,9 @@ for (const s of raw.textStyles ?? []) {
     errors.push(`${s.name}: font face ${JSON.stringify(s.fontName.style)} has no standard weight`);
   else emit("weight", "float", STANDARD_WEIGHTS[face]);
   emit("style", "string", /Italic$/.test(s.fontName.style) ? "italic" : "normal");
-  if (s.lineHeight.unit === "AUTO") emit("leading", "string", "normal");
+  if (s.lineHeight.unit === "AUTO") emit("line-height", "string", "normal");
   else if (s.lineHeight.unit === "PERCENT")
-    emit("leading", "float", round4(Math.round(s.lineHeight.value!) / 100));
+    emit("line-height", "float", round4(Math.round(s.lineHeight.value!) / 100));
   else errors.push(`${s.name}: unsupported lineHeight unit ${s.lineHeight.unit}`);
   if (s.letterSpacing.unit === "PERCENT")
     emit("tracking", "string", `${round4(s.letterSpacing.value / 100)}em`);

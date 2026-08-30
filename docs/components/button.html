@@ -50,6 +50,7 @@
         <summary><a href="../components/button.html" aria-current="page">Button</a></summary>
         <ul class="sub">
         <li><a href="../components/button.html#examples">Examples</a></li>
+        <li><a href="../components/button.html#guidelines">Guidelines</a></li>
         <li><a href="../components/button.html#accents">Accents</a></li>
         <li><a href="../components/button.html#state-default">default</a></li>
         <li><a href="../components/button.html#state-hover">hover</a></li>
@@ -65,7 +66,7 @@
 <h1>Button <span class="badge badge--draft">draft</span></h1>
 <p>Action trigger: accent-filled primary with corner brackets, outlined secondary. Renders a native &lt;a&gt; when href is set (all measured site usages navigate), a native &lt;button&gt; otherwise.</p>
 <p class="facts">Variants: <code>primary</code> <code>secondary</code> · A11y: <span class="badge badge--pending">pending</span></p>
-<p class="notes">Hover and focus-visible are CSS states, never props (RFC §3). Chrome lives in button.css; the type/button text-style values are restated there until a text-style extraction stage exists.</p>
+<p class="notes">Hover and focus-visible are CSS states, never props (RFC §3). Chrome lives in button.css; the label typography is the extracted type/button text style (--ll-type-button-*).</p>
 <p class="meta-links">RFC: <code>Button.rfc.md</code> · Figma node: <code>16:18</code></p>
 <h2 id="examples">Examples</h2>
 <p>Live renders — hover and keyboard states all work here.</p>
@@ -77,6 +78,33 @@
 <pre class="code"><code>&lt;Button variant=&quot;primary&quot;&gt;Start a league&lt;/Button&gt;
 &lt;Button variant=&quot;secondary&quot;&gt;View the rules&lt;/Button&gt;
 &lt;Button variant=&quot;primary&quot; href=&quot;#&quot;&gt;Open the guide&lt;/Button&gt;</code></pre>
+<h2 id="guidelines">Guidelines</h2>
+<div class="golden">
+  <p class="golden-title">Golden rules</p>
+  <ol>
+    <li><strong>Primary carries the view's main action.</strong> Secondary supports it — same format, different weight in the hierarchy (RFC §7: iso-format arbitration; measured zones: landing CTA vs supporting actions).</li>
+    <li><strong>Navigation wears the same chrome.</strong> When the action navigates, set href: the component renders a real &lt;a&gt; with identical chrome and link semantics kept (RFC §3.1 — all 11 measured site usages navigate).</li>
+    <li><strong>Write labels in original casing.</strong> The uppercase treatment is CSS (text-transform), so assistive tech reads the author's casing — write children as a normal sentence (RFC §4.1).</li>
+  </ol>
+</div>
+<div class="dos-donts">
+  <div class="dos">
+    <p class="dos-title">Do</p>
+    <ul>
+      <li>Write the label in sentence case — the uppercase is CSS.</li>
+      <li>Use href when the action navigates; type only applies to the &lt;button&gt; rendering.</li>
+      <li>Put inline SVG glyphs inside children — the site's Explore-arrow pattern (RFC §3.2).</li>
+    </ul>
+  </div>
+  <div class="donts">
+    <p class="donts-title">Don't</p>
+    <ul>
+      <li>Don't fake a disabled state product-side — disabled is arbitrated out of v1 and returns via RFC (§7, 2026-08-14).</li>
+      <li>Don't wrap Button in an &lt;a&gt; — use the href prop instead.</li>
+      <li>Don't use secondary for the view's main call-to-action.</li>
+    </ul>
+  </div>
+</div>
 <h2 id="accents">The 5 accents</h2>
 <p>Each tile scopes the accent axis with <code>data-accent</code> on the tile itself — the element-scoped theme contract.</p>
 <div class="accent-grid">

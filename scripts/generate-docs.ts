@@ -67,6 +67,21 @@ for (const slug of slugs) {
         if (typeof s?.state !== "string" || !s.state || typeof s?.note !== "string" || !s.note)
           fail(`${slug}: every meta.states entry needs a state name and a note (vs default)`);
   }
+  if (meta?.guidelines !== undefined) {
+    const g = meta.guidelines;
+    if (!Array.isArray(g?.golden) || !Array.isArray(g?.do) || !Array.isArray(g?.dont))
+      fail(`${slug}: meta.guidelines needs golden, do and dont arrays`);
+    else {
+      for (const r of g.golden)
+        if (typeof r?.rule !== "string" || !r.rule || typeof r?.detail !== "string" || !r.detail)
+          fail(`${slug}: every guidelines.golden entry needs a rule and a detail`);
+      for (const d of [...g.do, ...g.dont])
+        if (typeof d !== "string" || !d)
+          fail(`${slug}: guidelines.do/dont entries must be non-empty strings`);
+      if (g.golden.length + g.do.length + g.dont.length === 0)
+        fail(`${slug}: meta.guidelines is present but empty`);
+    }
+  }
   if (typeof contract?.status !== "string") fail(`${slug}: contract.status missing`);
   if (typeof contract?.a11y?.status !== "string") fail(`${slug}: contract.a11y.status missing`);
   if (errors.length) continue;

@@ -355,6 +355,68 @@ a {
   font-size: 18px;
 }
 
+/* Guidelines: golden-rules card + do/don't columns (contract content). */
+.golden {
+  position: relative;
+  border: 1px solid var(--ll-accent);
+  background: var(--ll-accent-soft);
+  padding: var(--ll-s-3) var(--ll-s-4);
+  margin-bottom: var(--ll-s-3);
+}
+.golden-title,
+.dos-title,
+.donts-title {
+  font-family: var(--ll-font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  margin: 0 0 var(--ll-s-1);
+}
+.golden-title {
+  color: var(--ll-accent);
+}
+.golden ol {
+  margin: 0;
+  padding-left: var(--ll-s-3);
+}
+.golden li {
+  margin-bottom: var(--ll-s-1);
+}
+.golden li::marker {
+  color: var(--ll-accent);
+  font-family: var(--ll-font-mono);
+}
+.dos-donts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--ll-s-3);
+}
+.dos,
+.donts {
+  border: 1px solid var(--ll-border-soft);
+  border-top: 2px solid var(--ll-success);
+  padding: var(--ll-s-2) var(--ll-s-3);
+}
+.donts {
+  border-top-color: var(--ll-danger);
+}
+.dos-title {
+  color: var(--ll-success);
+}
+.donts-title {
+  color: var(--ll-danger);
+}
+.dos ul,
+.donts ul {
+  margin: 0;
+  padding-left: var(--ll-s-3);
+}
+.dos li,
+.donts li {
+  margin-bottom: var(--ll-s-05);
+  font-size: 14px;
+}
+
 .a11y div {
   margin-bottom: var(--ll-s-2);
 }

@@ -1,6 +1,8 @@
 // HTML templates for the docs generator. Hand-written SHELL semantics live in
 // docs/assets/site.css + site.js; everything data-driven here comes from the
-// contracts and tokens.json, never hand-added (blueprint §2.3).
+// contracts and the token artefacts, never hand-added (blueprint §2.3).
+import type { TokenEntry, TokenModel } from "./docs-tokens.ts";
+
 export interface ComponentDoc {
   slug: string; // folder name, kebab-case
   meta: {
@@ -67,17 +69,40 @@ function sections(c: ComponentDoc): { label: string; anchor: string }[] {
   ];
 }
 
-function sidebar(components: ComponentDoc[], relRoot: string, currentSlug?: string): string {
+// The tokens page's section anchors — one definition feeds the sidebar submenu
+// and the page headings, so they cannot drift apart. Collection sections come
+// from the model (tokens.json order); "Theme axes" is a template section.
+export function tokensSections(model: TokenModel): { label: string; anchor: string }[] {
+  return [
+    ...model.collections.map((c) => ({
+      label: c.collection,
+      anchor: c.collection.toLowerCase(),
+    })),
+    { label: "Theme axes", anchor: "axes" },
+  ];
+}
+
+function sidebar(
+  components: ComponentDoc[],
+  tokenSections: { label: string; anchor: string }[],
+  relRoot: string,
+  current?: string,
+): string {
+  const tokensHref = `${relRoot}/tokens.html`;
+  const tokensCurrent = current === "tokens";
+  const tokensSub = tokenSections
+    .map((s) => `        <li><a href="${tokensHref}#${s.anchor}">${esc(s.label)}</a></li>`)
+    .join("\n");
   const items = components
     .map((c) => {
       const href = `${relRoot}/components/${esc(c.slug)}.html`;
-      const current = c.slug === currentSlug;
+      const isCurrent = c.slug === current;
       const sub = sections(c)
         .map((s) => `        <li><a href="${href}#${s.anchor}">${esc(s.label)}</a></li>`)
         .join("\n");
       return `    <li>
-      <details${current ? " open" : ""}>
-        <summary><a href="${href}"${current ? ' aria-current="page"' : ""}>${esc(c.meta.name)}</a></summary>
+      <details${isCurrent ? " open" : ""}>
+        <summary><a href="${href}"${isCurrent ? ' aria-current="page"' : ""}>${esc(c.meta.name)}</a></summary>
         <ul class="sub">
 ${sub}
         </ul>
@@ -85,8 +110,19 @@ ${sub}
     </li>`;
     })
     .join("\n");
-  return `<nav class="sidebar" aria-label="Components">
-  <a class="registry-link" href="${relRoot}/index.html"${currentSlug ? "" : ' aria-current="page"'}>Registry</a>
+  return `<nav class="sidebar" aria-label="Documentation">
+  <a class="registry-link" href="${relRoot}/index.html"${current === "registry" ? ' aria-current="page"' : ""}>Registry</a>
+  <p class="sidebar-label">Foundations</p>
+  <ul class="nav-list">
+    <li>
+      <details${tokensCurrent ? " open" : ""}>
+        <summary><a href="${tokensHref}"${tokensCurrent ? ' aria-current="page"' : ""}>Design tokens</a></summary>
+        <ul class="sub">
+${tokensSub}
+        </ul>
+      </details>
+    </li>
+  </ul>
   <p class="sidebar-label">Components</p>
   <ul class="nav-list">
 ${items}
@@ -96,13 +132,14 @@ ${items}
 
 export function layout(opts: {
   title: string;
-  relRoot: string; // "." for index, ".." for component pages
+  relRoot: string; // "." for root pages, ".." for component pages
   accents: string[];
   components: ComponentDoc[];
-  currentSlug?: string;
+  tokenSections: { label: string; anchor: string }[];
+  current?: string; // "registry" | "tokens" | a component slug
   content: string;
 }): string {
-  const { title, relRoot, accents, components, currentSlug, content } = opts;
+  const { title, relRoot, accents, components, tokenSections, current, content } = opts;
   return `<!doctype html>
 ${GENERATED}
 <html lang="en" data-accent="ambre" data-density="compact">
@@ -135,7 +172,7 @@ ${accents
   </div>
 </header>
 <div class="shell">
-${sidebar(components, relRoot, currentSlug)}
+${sidebar(components, tokenSections, relRoot, current)}
 <main id="main">
 ${content}
 </main>
@@ -149,7 +186,11 @@ ${content}
 `;
 }
 
-export function indexPage(components: ComponentDoc[], accents: string[]): string {
+export function indexPage(
+  components: ComponentDoc[],
+  accents: string[],
+  tokenSections: { label: string; anchor: string }[],
+): string {
   const rows = components
     .map(
       (c) => `      <tr>
@@ -166,6 +207,8 @@ export function indexPage(components: ComponentDoc[], accents: string[]): string
     relRoot: ".",
     accents,
     components,
+    tokenSections,
+    current: "registry",
     content: `<h1>Component registry</h1>
 <p>Every row is generated from the component's own contract (<code>meta.ts</code> + <code>contract.json</code>).</p>
 <table>
@@ -183,6 +226,7 @@ export function componentPage(
   c: ComponentDoc,
   accents: string[],
   components: ComponentDoc[],
+  tokenSections: { label: string; anchor: string }[],
 ): string {
   // Top stage: every example live in one row (interactive — all CSS states
   // work here), with the JSX each one came from underneath.
@@ -238,7 +282,8 @@ ${c.renderedExamples.map((html) => `  ${withForcedState(html, s.state)}`).join("
     relRoot: "..",
     accents,
     components,
-    currentSlug: c.slug,
+    tokenSections,
+    current: c.slug,
     content: `<h1>${esc(c.meta.name)} <span class="badge badge--${esc(c.contract.status)}">${esc(c.contract.status)}</span></h1>
 <p>${esc(c.meta.description)}</p>
 <p class="facts">Variants: ${c.meta.variants.map((v) => `<code>${esc(v.variant)}</code>`).join(" ") || "—"} · A11y: <span class="badge badge--${esc(a.status)}">${esc(a.status)}</span></p>
@@ -272,5 +317,215 @@ ${propsRows}
 <dl class="a11y">
 ${a11yItems}
 </dl>`,
+  });
+}
+
+// ── Tokens page ─────────────────────────────────────────────────────────────
+
+const swatch = (e: TokenEntry): string =>
+  `<span class="swatch ll-docs-swatch--${esc(e.css.replace(/^--ll-/, ""))}" aria-hidden="true"></span>`;
+
+const spacingBar = (cssVar: string): string =>
+  `<span class="bar ll-docs-bar--${esc(cssVar.replace(/^--ll-/, ""))}" aria-hidden="true"></span>`;
+
+function colorTable(
+  entries: TokenEntry[],
+  valueHeader: string,
+  value: (e: TokenEntry) => string,
+): string {
+  const rows = entries
+    .map(
+      (e) => `      <tr>
+        <td>${swatch(e)}</td>
+        <th scope="row"><code>${esc(e.path)}</code></th>
+        <td><code>${esc(e.css)}</code></td>
+        <td>${value(e)}</td>
+      </tr>`,
+    )
+    .join("\n");
+  return `<table>
+  <thead>
+    <tr><th scope="col">Preview</th><th scope="col">Token</th><th scope="col">CSS property</th><th scope="col">${esc(valueHeader)}</th></tr>
+  </thead>
+  <tbody>
+${rows}
+  </tbody>
+</table>`;
+}
+
+export function tokensPage(
+  model: TokenModel,
+  components: ComponentDoc[],
+  tokenSections: { label: string; anchor: string }[],
+): string {
+  const byKey = new Map<string, TokenEntry>();
+  for (const c of model.collections) for (const e of c.entries) byKey.set(e.key, e);
+  const byCollection = (name: string): TokenEntry[] =>
+    model.collections.find((c) => c.collection === name)?.entries ?? [];
+  const tokenCount =
+    model.collections.reduce((n, c) => n + c.entries.length, 0) + model.densities.length;
+
+  const sectionBodies: Record<string, string> = {};
+
+  // Primitives: raw values, one table per group.
+  const primitives = byCollection("Primitives");
+  const groups = [...new Set(primitives.map((e) => e.group))];
+  sectionBodies.Primitives =
+    `<p>Raw values as extracted from Figma. Components never reference a primitive directly — they consume the semantic aliases below.</p>\n` +
+    groups
+      .map(
+        (g) =>
+          `<h3 id="primitives-${esc(g)}"><code>${esc(g)}</code></h3>\n` +
+          colorTable(
+            primitives.filter((e) => e.group === g),
+            "Value",
+            (e) => `<code>${esc(e.emitted)}</code>`,
+          ),
+      )
+      .join("\n");
+
+  // Semantic: aliases only — the column shows what each token points at.
+  sectionBodies.Semantic =
+    `<p>The layer components consume. Every semantic token is an alias of a primitive — none holds a raw value. The previews are live: <code>--ll-accent</code> and its dependents follow the accent switcher above.</p>\n` +
+    colorTable(byCollection("Semantic"), "Alias of", (e) => {
+      const target = e.aliasOf ? byKey.get(e.aliasOf) : undefined;
+      return target ? `<code>${esc(target.css)}</code>` : "—";
+    });
+
+  // Spacing: the ladder, sorted by value, each step drawn at its real size.
+  const spacing = [...byCollection("Spacing")].sort(
+    (a, b) => parseFloat(a.emitted) - parseFloat(b.emitted),
+  );
+  sectionBodies.Spacing =
+    `<p>The spacing ladder. Each bar is drawn at the token's actual size via its own custom property. The density base unit <code>--ll-s</code> is documented under Theme axes.</p>\n` +
+    `<table>
+  <thead>
+    <tr><th scope="col">Preview</th><th scope="col">Token</th><th scope="col">CSS property</th><th scope="col">Value</th></tr>
+  </thead>
+  <tbody>
+${spacing
+  .map(
+    (e) => `      <tr>
+        <td class="bar-cell">${spacingBar(e.css)}</td>
+        <th scope="row"><code>${esc(e.path)}</code></th>
+        <td><code>${esc(e.css)}</code></td>
+        <td><code>${esc(e.emitted)}</code></td>
+      </tr>`,
+  )
+  .join("\n")}
+  </tbody>
+</table>`;
+
+  // Layout: plain values (z/* is unitless by name).
+  sectionBodies.Layout =
+    `<p>Structural constants: chrome dimensions and the z-index scale.</p>\n` +
+    `<table>
+  <thead>
+    <tr><th scope="col">Token</th><th scope="col">CSS property</th><th scope="col">Value</th></tr>
+  </thead>
+  <tbody>
+${byCollection("Layout")
+  .map(
+    (e) => `      <tr>
+        <th scope="row"><code>${esc(e.path)}</code></th>
+        <td><code>${esc(e.css)}</code></td>
+        <td><code>${esc(e.emitted)}</code></td>
+      </tr>`,
+  )
+  .join("\n")}
+  </tbody>
+</table>`;
+
+  // Typography: a specimen per family, with the emitted stack.
+  sectionBodies.Typography =
+    `<p>Figma stores the bare family; the transform stage adds the web fallback stack shown here.</p>\n` +
+    `<table>
+  <thead>
+    <tr><th scope="col">Specimen</th><th scope="col">Token</th><th scope="col">CSS property</th><th scope="col">Family stack</th></tr>
+  </thead>
+  <tbody>
+${byCollection("Typography")
+  .map(
+    (e) => `      <tr>
+        <td><span class="specimen ll-docs-font--${esc(e.css.replace(/^--ll-/, ""))}">Learning leagues climb the ladder — 0123456789</span></td>
+        <th scope="row"><code>${esc(e.path)}</code></th>
+        <td><code>${esc(e.css)}</code></td>
+        <td><code>${esc(e.emitted)}</code></td>
+      </tr>`,
+  )
+  .join("\n")}
+  </tbody>
+</table>`;
+
+  const collectionsHtml = tokenSections
+    .filter((s) => s.anchor !== "axes")
+    .map((s) => `<h2 id="${esc(s.anchor)}">${esc(s.label)}</h2>\n${sectionBodies[s.label] ?? ""}`)
+    .join("\n");
+
+  const accentChips = model.accents
+    .map(
+      (a) =>
+        `    <span class="chip"><span class="swatch ll-docs-swatch--accent-${esc(a)}" aria-hidden="true"></span>${esc(a)}</span>`,
+    )
+    .join("\n");
+  const roleRows = model.roles
+    .map(
+      (r) => `      <tr>
+        <th scope="row"><code>${esc(r.role)}</code></th>
+        <td><code>${esc(r.accent)}</code></td>
+        <td><span class="swatch ll-docs-swatch--accent-${esc(r.accent)}" aria-hidden="true"></span></td>
+      </tr>`,
+    )
+    .join("\n");
+  const densityRows = model.densities
+    .map(
+      (d) => `      <tr>
+        <th scope="row"><code>${esc(d.name)}</code></th>
+        <td><code>${esc(d.css)}</code></td>
+        <td><code>${esc(d.emitted)}</code></td>
+      </tr>`,
+    )
+    .join("\n");
+  const axesHtml = `<h2 id="axes">Theme axes</h2>
+<p>There is no light/dark axis — the palette is a single dark theme by design. The two theming axes are element-scoped: the host application sets the attribute on the root element or any subtree element, and the subtree inherits it. The bare root defaults to <code>data-accent="ambre"</code>, <code>data-density="compact"</code>.</p>
+<h3 id="axes-accent">Accent — <code>data-accent</code></h3>
+<p>Swaps which accent primitive <code>--ll-accent</code> resolves to. Try the switcher in the header — every live preview on this page follows it.</p>
+<div class="chips">
+${accentChips}
+    <span class="chip"><span class="swatch ll-docs-swatch--accent" aria-hidden="true"></span>current (<code>--ll-accent</code>)</span>
+</div>
+<h3 id="axes-role">Role — <code>data-role</code></h3>
+<p>Maps a product role onto an accent; a role attribute wins over an inherited accent in the cascade.</p>
+<table>
+  <thead>
+    <tr><th scope="col">Role</th><th scope="col">Accent</th><th scope="col">Preview</th></tr>
+  </thead>
+  <tbody>
+${roleRows}
+  </tbody>
+</table>
+<h3 id="axes-density">Density — <code>data-density</code></h3>
+<p>Swaps the base spacing unit <code>--ll-s</code>. The bar below is drawn at the live base unit — it follows the density switcher in the header.</p>
+<table>
+  <thead>
+    <tr><th scope="col">Density</th><th scope="col">CSS property</th><th scope="col">Base unit</th></tr>
+  </thead>
+  <tbody>
+${densityRows}
+  </tbody>
+</table>
+<p><span class="bar ll-docs-bar--s" aria-hidden="true"></span> <code>--ll-s</code> right now</p>`;
+
+  return layout({
+    title: "Design tokens — LearningLeagues Lib",
+    relRoot: ".",
+    accents: model.accents,
+    components,
+    tokenSections,
+    current: "tokens",
+    content: `<h1>Design tokens</h1>
+<p>${tokenCount} tokens in the <code>--ll-*</code> namespace. They flow one way only: Figma variables → extraction pipeline → one generated stylesheet. No agent and no developer ever writes a token by hand; this page is generated from the same artefacts the library ships (<code>tokens.json</code> + <code>tokens.css</code>).</p>
+${collectionsHtml}
+${axesHtml}`,
   });
 }

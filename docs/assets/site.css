@@ -7,6 +7,9 @@
 *::after {
   box-sizing: border-box;
 }
+/* Smooth scrolling is applied by site.js on intercepted same-page anchor
+   clicks only — a CSS scroll-behavior would also animate the initial anchor
+   positioning after a cross-page load (a visible top-to-anchor sweep). */
 body {
   margin: 0;
   background: var(--ll-bg);
@@ -157,6 +160,14 @@ code {
 .sub a {
   font-size: 13px;
   padding-left: var(--ll-s-15);
+  border-left: 2px solid transparent;
+  margin-left: -1px;
+}
+/* Scrollspy (site.js): the sub-section currently in view. */
+.sub a[aria-current="location"] {
+  color: var(--ll-accent);
+  border-left-color: var(--ll-accent);
+  background: var(--ll-accent-soft);
 }
 
 main {
@@ -304,6 +315,45 @@ a {
   text-transform: uppercase;
   letter-spacing: 0.14em;
   color: var(--ll-fg-mute);
+}
+
+/* Tokens page: swatches, spacing bars, type specimens. The per-token classes
+   (.ll-docs-swatch--*, .ll-docs-bar--*, .ll-docs-font--*) are generated into
+   lib.css by pnpm docs:build; only the shared shapes live here. */
+.swatch {
+  display: inline-block;
+  width: var(--ll-s-3);
+  height: var(--ll-s-2);
+  border: 1px solid var(--ll-rule);
+  vertical-align: middle;
+}
+.bar {
+  display: inline-block;
+  height: var(--ll-s-1);
+  background: var(--ll-accent);
+  vertical-align: middle;
+}
+.bar-cell {
+  min-width: var(--ll-s-8);
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ll-s-2) var(--ll-s-3);
+  margin: var(--ll-s-2) 0;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ll-s-1);
+  font-family: var(--ll-font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ll-fg-dim);
+}
+.specimen {
+  font-size: 18px;
 }
 
 .a11y div {

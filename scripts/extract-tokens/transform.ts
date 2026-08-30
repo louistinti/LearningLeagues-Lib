@@ -26,6 +26,14 @@ const FONT_STACKS: Record<string, Record<string, string>> = {
   "Typography/font/body": { Inter: "'Inter', ui-sans-serif, system-ui, sans-serif" },
   "Typography/font/mono": { "JetBrains Mono": "'JetBrains Mono', ui-monospace, Menlo, monospace" },
 };
+// Text-style weight overrides, keyed on token identity. type/button is
+// ARBITRATED (Figma style description + Button.rfc.md §7): the Figma face is
+// Bold(700) only until JetBrains Mono SemiBold is installed — the web truth
+// is 600. Changing the face in Figma without updating this map fails no gate:
+// the override simply stops differing. Remove the entry when Figma catches up.
+const WEIGHT_OVERRIDES: Record<string, number> = {
+  "Type/button/weight": 600,
+};
 // Role -> accent mapping (design decision, mirrors the site's historical
 // [data-role] cascade; support intentionally equals ambre).
 const ROLE_ACCENT: Record<string, string> = {
@@ -60,14 +68,15 @@ const resolveValue = (key: string, t: Token): string => {
     }
     return String(v);
   }
-  // number
-  if (key.startsWith("Layout/z/")) return String(v);
-  return px(Number(v));
+  // number — z/*, type weight and type line-height are unitless by nature.
+  const n = WEIGHT_OVERRIDES[key] ?? Number(v);
+  if (key.startsWith("Layout/z/")) return String(n);
+  if (/^Type\/[a-z0-9-]+\/(weight|line-height)$/.test(key)) return String(n);
+  return px(n);
 };
 
 const entries = Object.entries(tokens);
 const inCollection = (c: string) => entries.filter(([k]) => k.startsWith(`${c}/`));
-const densityPair = inCollection("Spacing").filter(([k]) => k.includes("/density/"));
 const accents = inCollection("Primitives")
   .filter(([k]) => k.startsWith("Primitives/accent/"))
   .map(([k]) => k.split("/").pop() as string);
@@ -80,13 +89,8 @@ lines.push(" * Source of truth: Figma file `Lib` (see tokens/PROVENANCE.md). */"
 lines.push("");
 lines.push(":root {");
 for (const [key, t] of entries) {
-  if (key.includes("/density/")) continue; // emitted via the density axis below
   lines.push(`  ${t.css}: ${resolveValue(key, t)};`);
 }
-// Default density: compact (mirrors the site's historical default).
-const compact = tokens["Spacing/density/base-compact"];
-if (!compact) errors.push("transform: Spacing/density/base-compact missing");
-else lines.push(`  --ll-s: ${px(Number(compact.value))};`);
 lines.push("}");
 lines.push("");
 lines.push("/* Accent axis — the host sets [data-accent] on the root element or any subtree. */");
@@ -102,14 +106,6 @@ for (const [role, accent] of Object.entries(ROLE_ACCENT)) {
     errors.push(`ROLE_ACCENT: role ${role} points at unknown accent ${accent}`);
   lines.push(`[data-role="${role}"] {`);
   lines.push(`  --ll-accent: var(--ll-accent-${accent});`);
-  lines.push("}");
-}
-lines.push("");
-lines.push("/* Density axis — the host sets [data-density] on the root element or any subtree. */");
-for (const [key, t] of densityPair) {
-  const name = key.split("/").pop()!.replace("base-", "");
-  lines.push(`[data-density="${name}"] {`);
-  lines.push(`  ${t.css}: ${px(Number(t.value))};`);
   lines.push("}");
 }
 lines.push("");

@@ -142,7 +142,7 @@ export function layout(opts: {
   const { title, relRoot, accents, components, tokenSections, current, content } = opts;
   return `<!doctype html>
 ${GENERATED}
-<html lang="en" data-accent="ambre" data-density="compact">
+<html lang="en" data-accent="ambre">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -163,11 +163,6 @@ ${accents
       `      <button type="button" data-set-accent="${esc(a)}" aria-pressed="${a === "ambre"}">${esc(a)}</button>`,
   )
   .join("\n")}
-    </fieldset>
-    <fieldset class="switcher" aria-label="Density">
-      <legend>Density</legend>
-      <button type="button" data-set-density="compact" aria-pressed="true">compact</button>
-      <button type="button" data-set-density="aere" aria-pressed="false">aere</button>
     </fieldset>
   </div>
 </header>
@@ -362,8 +357,7 @@ export function tokensPage(
   for (const c of model.collections) for (const e of c.entries) byKey.set(e.key, e);
   const byCollection = (name: string): TokenEntry[] =>
     model.collections.find((c) => c.collection === name)?.entries ?? [];
-  const tokenCount =
-    model.collections.reduce((n, c) => n + c.entries.length, 0) + model.densities.length;
+  const tokenCount = model.collections.reduce((n, c) => n + c.entries.length, 0);
 
   const sectionBodies: Record<string, string> = {};
 
@@ -397,7 +391,7 @@ export function tokensPage(
     (a, b) => parseFloat(a.emitted) - parseFloat(b.emitted),
   );
   sectionBodies.Spacing =
-    `<p>The spacing ladder. Each bar is drawn at the token's actual size via its own custom property. The density base unit <code>--ll-s</code> is documented under Theme axes.</p>\n` +
+    `<p>The spacing ladder, built on the base unit <code>--ll-s</code> (the ladder arithmetic multiplies it: <code>s-275</code> = 2.75 × 8). Each bar is drawn at the token's actual size via its own custom property.</p>\n` +
     `<table>
   <thead>
     <tr><th scope="col">Preview</th><th scope="col">Token</th><th scope="col">CSS property</th><th scope="col">Value</th></tr>
@@ -457,9 +451,52 @@ ${byCollection("Typography")
   </tbody>
 </table>`;
 
+  // Type: the ramp derived from the type/* text styles — one row per style,
+  // specimen rendered by its generated .ll-docs-type--<slug> class.
+  const typeEntries = byCollection("Type");
+  const typeProp = (slug: string, prop: string) =>
+    typeEntries.find((e) => e.group === slug && e.path === `${slug}/${prop}`);
+  // Ramp order: size descending (the file's own order is style-creation order).
+  const typeSlugs = [...new Set(typeEntries.map((e) => e.group))].sort(
+    (a, b) =>
+      parseFloat(typeProp(b, "size")?.emitted ?? "0") -
+      parseFloat(typeProp(a, "size")?.emitted ?? "0"),
+  );
+  sectionBodies.Type =
+    `<p>Tokens derived from the Figma <code>type/*</code> text styles by the extraction pipeline. Each style is a set of custom properties named <code>--ll-type-&lt;style&gt;-&lt;prop&gt;</code> (family, size, weight, style, line-height, tracking, case); the family aliases the Typography font tokens above. The specimens are rendered by these variables.</p>\n` +
+    `<table>
+  <thead>
+    <tr><th scope="col">Specimen</th><th scope="col">Style</th><th scope="col">size</th><th scope="col">weight</th><th scope="col">line-height</th><th scope="col">tracking</th><th scope="col">case</th></tr>
+  </thead>
+  <tbody>
+${typeSlugs
+  .map((slug) => {
+    const cell = (prop: string) => {
+      const e = typeProp(slug, prop);
+      return e ? `<code>${esc(e.emitted)}</code>` : "—";
+    };
+    return `      <tr>
+        <td><span class="ll-docs-type--${esc(slug)}">Climb the ladder</span></td>
+        <th scope="row"><code>type/${esc(slug)}</code></th>
+        <td>${cell("size")}</td>
+        <td>${cell("weight")}</td>
+        <td>${cell("line-height")}</td>
+        <td>${cell("tracking")}</td>
+        <td>${cell("case")}</td>
+      </tr>`;
+  })
+  .join("\n")}
+  </tbody>
+</table>`;
+
   const collectionsHtml = tokenSections
     .filter((s) => s.anchor !== "axes")
-    .map((s) => `<h2 id="${esc(s.anchor)}">${esc(s.label)}</h2>\n${sectionBodies[s.label] ?? ""}`)
+    .map((s) => {
+      const body = sectionBodies[s.label];
+      if (body === undefined)
+        throw new Error(`tokensPage: no section renderer for collection "${s.label}"`);
+      return `<h2 id="${esc(s.anchor)}">${esc(s.label)}</h2>\n${body}`;
+    })
     .join("\n");
 
   const accentChips = model.accents
@@ -477,17 +514,8 @@ ${byCollection("Typography")
       </tr>`,
     )
     .join("\n");
-  const densityRows = model.densities
-    .map(
-      (d) => `      <tr>
-        <th scope="row"><code>${esc(d.name)}</code></th>
-        <td><code>${esc(d.css)}</code></td>
-        <td><code>${esc(d.emitted)}</code></td>
-      </tr>`,
-    )
-    .join("\n");
   const axesHtml = `<h2 id="axes">Theme axes</h2>
-<p>There is no light/dark axis — the palette is a single dark theme by design. The two theming axes are element-scoped: the host application sets the attribute on the root element or any subtree element, and the subtree inherits it. The bare root defaults to <code>data-accent="ambre"</code>, <code>data-density="compact"</code>.</p>
+<p>There is no light/dark axis — the palette is a single dark theme by design — and no density axis since 2026-08-30. The one theming axis is element-scoped: the host application sets the attribute on the root element or any subtree element, and the subtree inherits it. The bare root defaults to <code>data-accent="ambre"</code>.</p>
 <h3 id="axes-accent">Accent — <code>data-accent</code></h3>
 <p>Swaps which accent primitive <code>--ll-accent</code> resolves to. Try the switcher in the header — every live preview on this page follows it.</p>
 <div class="chips">
@@ -503,18 +531,7 @@ ${accentChips}
   <tbody>
 ${roleRows}
   </tbody>
-</table>
-<h3 id="axes-density">Density — <code>data-density</code></h3>
-<p>Swaps the base spacing unit <code>--ll-s</code>. The bar below is drawn at the live base unit — it follows the density switcher in the header.</p>
-<table>
-  <thead>
-    <tr><th scope="col">Density</th><th scope="col">CSS property</th><th scope="col">Base unit</th></tr>
-  </thead>
-  <tbody>
-${densityRows}
-  </tbody>
-</table>
-<p><span class="bar ll-docs-bar--s" aria-hidden="true"></span> <code>--ll-s</code> right now</p>`;
+</table>`;
 
   return layout({
     title: "Design tokens — LearningLeagues Lib",

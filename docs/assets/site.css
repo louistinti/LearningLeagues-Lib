@@ -173,7 +173,6 @@ code {
 main {
   flex: 1;
   min-width: 0;
-  max-width: 960px;
   padding: var(--ll-s-5) var(--ll-s-4) var(--ll-s-8);
 }
 h1,

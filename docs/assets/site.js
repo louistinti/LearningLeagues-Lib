@@ -34,9 +34,7 @@
     sync();
   }
   restore("accent");
-  restore("density");
   wire("accent");
-  wire("density");
 
   // Scrollspy: highlight the current page's sub-section in the sidebar as the
   // reader scrolls (or clicks an anchor). Purely presentational — the links

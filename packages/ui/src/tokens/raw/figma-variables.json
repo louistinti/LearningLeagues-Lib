@@ -5,7 +5,7 @@
     "fileKey": "6zp7CvEjdiFXzwh6ZGGwB8",
     "fileName": "Lib"
   },
-  "exportedAt": "2026-08-14",
+  "exportedAt": "2026-08-30",
   "collections": [
     {
       "id": "VariableCollectionId:3:2",
@@ -36,7 +36,7 @@
       "modes": [
         {
           "modeId": "3:2",
-          "name": "compact"
+          "name": "Mode 1"
         }
       ]
     },
@@ -222,24 +222,6 @@
           "r": 0.4901960790157318,
           "g": 0.5372549295425415,
           "b": 0.6392157077789307,
-          "a": 1
-        }
-      }
-    },
-    {
-      "id": "VariableID:4:11",
-      "name": "accent/or",
-      "variableCollectionId": "VariableCollectionId:3:2",
-      "resolvedType": "COLOR",
-      "scopes": [],
-      "codeSyntax": {
-        "WEB": "var(--ll-accent-or)"
-      },
-      "valuesByMode": {
-        "3:0": {
-          "r": 0.8313725590705872,
-          "g": 0.7058823704719543,
-          "b": 0.40784314274787903,
           "a": 1
         }
       }
@@ -1145,7 +1127,7 @@
     },
     {
       "id": "VariableID:4:62",
-      "name": "density/base-compact",
+      "name": "s",
       "variableCollectionId": "VariableCollectionId:3:4",
       "resolvedType": "FLOAT",
       "scopes": [
@@ -1157,22 +1139,6 @@
       },
       "valuesByMode": {
         "3:2": 8
-      }
-    },
-    {
-      "id": "VariableID:4:63",
-      "name": "density/base-aere",
-      "variableCollectionId": "VariableCollectionId:3:4",
-      "resolvedType": "FLOAT",
-      "scopes": [
-        "WIDTH_HEIGHT",
-        "GAP"
-      ],
-      "codeSyntax": {
-        "WEB": "var(--ll-s)"
-      },
-      "valuesByMode": {
-        "3:2": 10
       }
     },
     {
@@ -1344,6 +1310,167 @@
       "valuesByMode": {
         "3:4": "JetBrains Mono"
       }
+    }
+  ],
+  "textStyles": [
+    {
+      "id": "S:e974ae15c09dba85b083a1802b7b15c7b582fbae,",
+      "name": "type/display",
+      "fontName": {
+        "family": "EB Garamond",
+        "style": "Medium"
+      },
+      "fontSize": 64,
+      "lineHeight": {
+        "unit": "PERCENT",
+        "value": 100
+      },
+      "letterSpacing": {
+        "unit": "PERCENT",
+        "value": -2.5
+      },
+      "textCase": "ORIGINAL",
+      "textDecoration": "NONE",
+      "description": ""
+    },
+    {
+      "id": "S:4ea670d5c0452080634c9848aa700e83b9961830,",
+      "name": "type/h1-italic",
+      "fontName": {
+        "family": "EB Garamond",
+        "style": "Medium Italic"
+      },
+      "fontSize": 44,
+      "lineHeight": {
+        "unit": "PERCENT",
+        "value": 110.00000238418579
+      },
+      "letterSpacing": {
+        "unit": "PERCENT",
+        "value": -1
+      },
+      "textCase": "ORIGINAL",
+      "textDecoration": "NONE",
+      "description": ""
+    },
+    {
+      "id": "S:3d5ca0405dca364db2cb986a127e85eb353db578,",
+      "name": "type/h2",
+      "fontName": {
+        "family": "EB Garamond",
+        "style": "Medium"
+      },
+      "fontSize": 32,
+      "lineHeight": {
+        "unit": "PERCENT",
+        "value": 110.00000238418579
+      },
+      "letterSpacing": {
+        "unit": "PERCENT",
+        "value": -1
+      },
+      "textCase": "ORIGINAL",
+      "textDecoration": "NONE",
+      "description": ""
+    },
+    {
+      "id": "S:1a14fab9aed6bb8028b54bdd2b65821fe2003d54,",
+      "name": "type/h3",
+      "fontName": {
+        "family": "EB Garamond",
+        "style": "Medium"
+      },
+      "fontSize": 22,
+      "lineHeight": {
+        "unit": "PERCENT",
+        "value": 120.00000476837158
+      },
+      "letterSpacing": {
+        "unit": "PERCENT",
+        "value": -1
+      },
+      "textCase": "ORIGINAL",
+      "textDecoration": "NONE",
+      "description": ""
+    },
+    {
+      "id": "S:483dc175051e94f595309478ab189bfd3e4715b2,",
+      "name": "type/body",
+      "fontName": {
+        "family": "Inter",
+        "style": "Regular"
+      },
+      "fontSize": 15,
+      "lineHeight": {
+        "unit": "PERCENT",
+        "value": 154.99999523162842
+      },
+      "letterSpacing": {
+        "unit": "PERCENT",
+        "value": 0
+      },
+      "textCase": "ORIGINAL",
+      "textDecoration": "NONE",
+      "description": ""
+    },
+    {
+      "id": "S:1358d591c69844705ea8449d5a7bb4fad54c86d6,",
+      "name": "type/body-sm",
+      "fontName": {
+        "family": "Inter",
+        "style": "Regular"
+      },
+      "fontSize": 14,
+      "lineHeight": {
+        "unit": "PERCENT",
+        "value": 154.99999523162842
+      },
+      "letterSpacing": {
+        "unit": "PERCENT",
+        "value": 0
+      },
+      "textCase": "ORIGINAL",
+      "textDecoration": "NONE",
+      "description": ""
+    },
+    {
+      "id": "S:cfce7cd059e6553607c76368fbb2be612d933a2c,",
+      "name": "type/meta",
+      "fontName": {
+        "family": "JetBrains Mono",
+        "style": "Regular"
+      },
+      "fontSize": 11,
+      "lineHeight": {
+        "unit": "PERCENT",
+        "value": 139.9999976158142
+      },
+      "letterSpacing": {
+        "unit": "PERCENT",
+        "value": 6
+      },
+      "textCase": "ORIGINAL",
+      "textDecoration": "NONE",
+      "description": ""
+    },
+    {
+      "id": "S:064b6ca1502c264d9f54b3db86e7be73faaba87d,",
+      "name": "type/button",
+      "fontName": {
+        "family": "JetBrains Mono",
+        "style": "Bold"
+      },
+      "fontSize": 12,
+      "lineHeight": {
+        "unit": "AUTO"
+      },
+      "letterSpacing": {
+        "unit": "PERCENT",
+        "value": 14
+      },
+      "textCase": "UPPER",
+      "textDecoration": "NONE",
+      "description": "Button label — site truth: mono 12 / weight 600 / tracking .14em / uppercase. Figma face is Bold(700) until JetBrains Mono SemiBold is installed; code uses 600."
     }
   ]
 }

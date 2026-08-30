@@ -16,6 +16,41 @@ source — rather than restating it here.
 
 ## Entries
 
+- **2026-08-30** — Density axis removed: every product page measured
+  `data-density="compact"` (`aere` existed only as an unused definition in the
+  historical `styles.css`), so the axis carried no information.
+  `Spacing/density/base-compact` renamed to `s` in Figma (the base unit
+  survives as the plain `--ll-s` = 8 token — the site's spacing pattern
+  multiplies it); `density/base-aere` deleted in Figma (verified un-aliased;
+  deletion performed by Louis — the MCP session's destructive call was
+  permission-blocked); the Spacing mode renamed `compact` → `Mode 1`. Raw
+  export updated by script; `[data-density]` emission, schema-gate
+  expectations and the docs density switcher removed in the same change.
+  Decided by: Louis Tinthilier (2026-08-30, in session). Delivered by:
+  text-style-tokens agent session (sup. Louis Tinthilier).
+
+- **2026-08-30** — Accent axis narrowed: `Primitives/accent/or` deleted in
+  Figma (verified un-aliased first; the remaining accents read back:
+  ambre/bleu/rouge/violet/jade) and removed from the raw export by script.
+  This narrows the 2026-08-14 arbitration ("or stays available as a selectable
+  accent"): measured then and still true now, no product page uses `or`; gold
+  survives as `tier/challenger` and the `gold-soft` alpha, both untouched.
+  Schema gate's expected accent set updated in the same change. Decided by:
+  Louis Tinthilier (2026-08-30, in session). Delivered by: text-style-tokens
+  agent session (sup. Louis Tinthilier).
+
+- **2026-08-30** — Text-style extraction: the 8 `type/*` text styles exported
+  from Figma file `Lib` via the extended stage-1 procedure (variables
+  re-exported the same session and verified unchanged — the tokens.json diff
+  is additions only). Normalize derives 56 per-property tokens (collection
+  `Type`, `--ll-type-<style>-<prop>`); the one judgement — `type/button`
+  weight 600 while the Figma face is Bold(700) pending JetBrains Mono
+  SemiBold — is a documented transform override, arbitrated in the Figma
+  style description and `components/button/Button.rfc.md` §7. Extraction form
+  (per-property variables) decided by: Louis Tinthilier (2026-08-30, in
+  session). Delivered by: text-style-tokens agent session (sup. Louis
+  Tinthilier).
+
 - **2026-08-14** — Default accent arbitration: `Semantic accent/default`
   realiased from `accent/or` to `accent/ambre` in Figma, then re-extracted.
   Measured motivation: the landing and 5 other pages run `data-accent="ambre"`;

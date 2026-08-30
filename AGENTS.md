@@ -74,15 +74,16 @@ merger — single-human team).
   - **Single dark palette** on `:root`. Parity gates check axis parity, not
     light/dark parity.
   - **Accent axis** — `[data-accent]` / `[data-role]` swap which accent token is
-    live (`or`, `ambre`, `bleu`, `rouge`, `violet`, `jade`), on the root element
-    or any subtree element (element-scoped since 2026-08-29). Every
-    accent-dependent semantic token must resolve under every axis value.
-  - **Density axis** — `[data-density="aere" | "compact"]` swaps the base
-    spacing unit, on the root element or any subtree element (element-scoped
-    since 2026-08-29). The host application owns setting these attributes; the bare
-    root defaults to `data-accent="ambre"`, `data-density="compact"` semantics
-    (ambre since 2026-08-14 — the measured product default; no page uses `or`
-    as its accent).
+    live (`ambre`, `bleu`, `rouge`, `violet`, `jade` — `or` removed 2026-08-30;
+    gold survives only as `tier/challenger` and the `gold-soft` alpha), on the
+    root element or any subtree element (element-scoped since 2026-08-29).
+    Every accent-dependent semantic token must resolve under every axis value.
+  - **Density axis — removed 2026-08-30.** Every product page measured
+    `compact`, so the axis carried no information; the base spacing unit lives
+    on as the plain token `--ll-s` (`Spacing/s` = 8, the ladder's arithmetic
+    base). The host application owns setting the accent attribute; the bare
+    root defaults to `data-accent="ambre"` semantics (ambre since 2026-08-14 —
+    the measured product default).
 - The generated stylesheet is external input, like a vendored dependency: it has
   a provenance log, a CODEOWNERS rule, and a token-diff gate requiring a human
   approval label (Milestone 2).

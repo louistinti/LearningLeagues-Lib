@@ -51,7 +51,11 @@ const row = manifest.split("\n").find((l) => l.startsWith(`| ${name} `));
 // ── Criteria (draft → stable; exported adds its own) ───────────────────────
 // 1. Every blocking gate green, executed now — a summary is not evidence.
 const conf = spawnSync(process.execPath, ["scripts/check-conformity.ts"], { encoding: "utf8" });
-check("gates green (pnpm conformity, executed)", conf.status === 0, conf.status === 0 ? undefined : "conformity FAILED — fix before promoting");
+check(
+  "gates green (pnpm conformity, executed)",
+  conf.status === 0,
+  conf.status === 0 ? undefined : "conformity FAILED — fix before promoting",
+);
 
 // 2. RFC approved + design sign-off attestation (§6 checkboxes, human-ticked).
 check('RFC status "approved"', /^> \*\*Status:\*\* approved/m.test(rfc));
@@ -65,9 +69,15 @@ check(
 );
 
 // 3. Documentation complete.
-check("design link in the contract", typeof contract.designNode === "string" && contract.designNode.length > 0);
+check(
+  "design link in the contract",
+  typeof contract.designNode === "string" && contract.designNode.length > 0,
+);
 check("documented props in the contract", contract.props && Object.keys(contract.props).length > 0);
-check("contract examples (meta.examples ≥ 1)", Array.isArray(meta?.examples) && meta.examples.length > 0);
+check(
+  "contract examples (meta.examples ≥ 1)",
+  Array.isArray(meta?.examples) && meta.examples.length > 0,
+);
 
 // 4. Product adoption recorded in the manifest row.
 check(
@@ -85,10 +95,14 @@ check(
 );
 
 if (target === "exported") {
-  check('status already "stable" (or promoted in this run)', contract.status === "stable" || blockers.length === 0);
+  check(
+    'status already "stable" (or promoted in this run)',
+    contract.status === "stable" || blockers.length === 0,
+  );
   const today = new Date().toISOString().slice(0, 10);
   const allow = loadAllowlist("scripts/a11y-allowlist.json", today);
-  const covered = contract.a11y?.status === "pass" ||
+  const covered =
+    contract.a11y?.status === "pass" ||
     (contract.a11y?.status === "fail" && allow.entries.some((e) => e.scope === name));
   check('a11y "pass" or time-boxed allowlisted "fail" (export gate)', covered);
 }
@@ -101,14 +115,18 @@ if (blockers.length) {
   process.exit(1);
 }
 if (!write) {
-  console.log("\npromote: READY — every criterion holds. Re-run with --write to flip, regenerate and commit.");
+  console.log(
+    "\npromote: READY — every criterion holds. Re-run with --write to flip, regenerate and commit.",
+  );
   process.exit(0);
 }
 
 // ── Flip + regenerate + commit, one unit ───────────────────────────────────
 const branch = spawnSync("git", ["branch", "--show-current"], { encoding: "utf8" }).stdout.trim();
 if (!branch || branch === "main") {
-  console.error(`promote: refusing to commit on "${branch || "detached HEAD"}" — use a branch (main is push-protected).`);
+  console.error(
+    `promote: refusing to commit on "${branch || "detached HEAD"}" — use a branch (main is push-protected).`,
+  );
   process.exit(1);
 }
 if (target === "stable") contract.status = "stable";
@@ -120,7 +138,10 @@ writeFileSync(contractPath, JSON.stringify(contract, null, 2) + "\n");
 writeFileSync(
   MANIFEST,
   manifest.replace(rowRe, (line) =>
-    line.replace(/^(\| [^|]+\|) [a-z]+(\s+)\|/, `$1 ${target === "exported" ? "stable" : target}$2|`),
+    line.replace(
+      /^(\| [^|]+\|) [a-z]+(\s+)\|/,
+      `$1 ${target === "exported" ? "stable" : target}$2|`,
+    ),
   ),
 );
 // The manifest table must stay prettier-formatted or the format gate reds.
@@ -129,7 +150,10 @@ spawnSync(
   [join("node_modules", "prettier", "bin", "prettier.cjs"), "--write", MANIFEST, contractPath],
   { stdio: "inherit" },
 );
-const docs = spawnSync(process.execPath, ["scripts/generate-docs.ts"], { encoding: "utf8", stdio: "inherit" });
+const docs = spawnSync(process.execPath, ["scripts/generate-docs.ts"], {
+  encoding: "utf8",
+  stdio: "inherit",
+});
 if (docs.status !== 0) {
   console.error("promote: docs regeneration failed after the flip — resolve before committing");
   process.exit(1);

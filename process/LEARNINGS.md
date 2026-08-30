@@ -22,7 +22,7 @@ stable across the move.
 
 - **L05** — "RFC approved" is enforced at prompt level only: `component-generation.prompt.md` reads the `Status:` line, but nothing mechanical blocks code landing without an approved RFC.
   - Rule: the human reviewer checks the RFC status on every component PR until then.
-  - Gate: none yet; the planned promotion script (which owns status semantics) is the natural home.
+  - Gate: partial since 2026-08-31 — `scripts/promote.ts` refuses any promotion without RFC `approved` + a fully ticked §6; code landing pre-approval is still only caught by the human reviewer, so the lesson stays active.
 
 - **L06** — The test-button scaffold's intentional red lived inside the required CI job, making it permanently red: the first PR it blocked was the one shipping the circuit itself (arbitrated 2026-08-12: fixture deleted, evidence kept in PROOF-OF-BLOCKING).
   - Rule: an intentional red is proved by injection-then-revert, never by a committed fixture the required job scans.

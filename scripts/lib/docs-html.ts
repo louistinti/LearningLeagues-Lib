@@ -117,6 +117,7 @@ ${sub}
     })
     .join("\n");
   return `<nav class="sidebar" aria-label="Documentation">
+<div class="sidebar-inner">
   <a class="registry-link" href="${relRoot}/index.html"${current === "registry" ? ' aria-current="page"' : ""}>Registry</a>
   <p class="sidebar-label">Foundations</p>
   <ul class="nav-list">
@@ -133,6 +134,7 @@ ${tokensSub}
   <ul class="nav-list">
 ${items}
   </ul>
+</div>
 </nav>`;
 }
 

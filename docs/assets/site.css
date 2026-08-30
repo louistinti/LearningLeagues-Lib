@@ -99,18 +99,21 @@ code {
 
 .shell {
   display: flex;
-  align-items: flex-start;
 }
+/* The sidebar stretches with the page so its divider reaches the bottom;
+   the sticky behaviour lives on the inner wrapper. */
 .sidebar {
   width: 240px;
   flex-shrink: 0;
+  border-right: 1px solid var(--ll-rule);
+  font-size: 14px;
+}
+.sidebar-inner {
   position: sticky;
   top: 0;
   max-height: 100vh;
   overflow-y: auto;
   padding: var(--ll-s-3) var(--ll-s-2) var(--ll-s-5) var(--ll-s-4);
-  border-right: 1px solid var(--ll-rule);
-  font-size: 14px;
 }
 .sidebar a {
   display: block;
@@ -194,11 +197,13 @@ h3 {
     flex-direction: column;
   }
   .sidebar {
-    position: static;
     width: 100%;
-    max-height: none;
     border-right: 0;
     border-bottom: 1px solid var(--ll-rule);
+  }
+  .sidebar-inner {
+    position: static;
+    max-height: none;
   }
 }
 h1 {

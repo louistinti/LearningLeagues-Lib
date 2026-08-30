@@ -37,4 +37,40 @@
   restore("density");
   wire("accent");
   wire("density");
+
+  // Scrollspy: highlight the current page's sub-section in the sidebar as the
+  // reader scrolls (or clicks an anchor). Purely presentational — the links
+  // and anchors themselves are generated from the contracts.
+  // Some static hosts serve "/tokens.html" at "/tokens" — compare normalized.
+  function normPath(p) {
+    return p.replace(/\/index\.html$/, "/").replace(/\.html$/, "");
+  }
+  var pairs = Array.prototype.filter
+    .call(document.querySelectorAll(".sidebar .sub a"), function (a) {
+      return normPath(a.pathname) === normPath(location.pathname) && a.hash;
+    })
+    .map(function (a) {
+      return { link: a, target: document.getElementById(decodeURIComponent(a.hash.slice(1))) };
+    })
+    .filter(function (p) {
+      return p.target;
+    });
+  function markCurrent() {
+    var pos = window.scrollY + window.innerHeight / 4;
+    var active = null;
+    pairs.forEach(function (p) {
+      if (p.target.getBoundingClientRect().top + window.scrollY <= pos) active = p;
+    });
+    if (!active && pairs.length) active = pairs[0];
+    pairs.forEach(function (p) {
+      if (p === active) p.link.setAttribute("aria-current", "location");
+      else if (p.link.getAttribute("aria-current") === "location")
+        p.link.removeAttribute("aria-current");
+    });
+  }
+  if (pairs.length) {
+    window.addEventListener("scroll", markCurrent, { passive: true });
+    window.addEventListener("hashchange", markCurrent);
+    markCurrent();
+  }
 })();

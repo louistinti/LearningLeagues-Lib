@@ -7,6 +7,9 @@
 *::after {
   box-sizing: border-box;
 }
+html {
+  scroll-behavior: smooth;
+}
 body {
   margin: 0;
   background: var(--ll-bg);
@@ -157,6 +160,14 @@ code {
 .sub a {
   font-size: 13px;
   padding-left: var(--ll-s-15);
+  border-left: 2px solid transparent;
+  margin-left: -1px;
+}
+/* Scrollspy (site.js): the sub-section currently in view. */
+.sub a[aria-current="location"] {
+  color: var(--ll-accent);
+  border-left-color: var(--ll-accent);
+  background: var(--ll-accent-soft);
 }
 
 main {

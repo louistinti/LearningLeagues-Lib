@@ -122,7 +122,7 @@ ${sub}
   <ul class="nav-list">
     <li>
       <details${tokensCurrent ? " open" : ""}>
-        <summary><a href="${tokensHref}"${tokensCurrent ? ' aria-current="page"' : ""}>Design tokens</a></summary>
+        <summary><a href="${tokensHref}"${tokensCurrent ? ' aria-current="page"' : ""}>Tokens</a></summary>
         <ul class="sub">
 ${tokensSub}
         </ul>
@@ -522,15 +522,9 @@ ${typeSlugs
   </tbody>
 </table>`;
 
-  const collectionsHtml = tokenSections
-    .filter((s) => s.anchor !== "axes")
-    .map((s) => {
-      const body = sectionBodies[s.label];
-      if (body === undefined)
-        throw new Error(`tokensPage: no section renderer for collection "${s.label}"`);
-      return `<h2 id="${esc(s.anchor)}">${esc(s.label)}</h2>\n${body}`;
-    })
-    .join("\n");
+  // Horizontal tab navigation (arbitrated 2026-08-31): one tab per section so
+  // the page never needs scrolling. Progressive enhancement — without JS every
+  // panel stays visible; site.js hides all but the selected one.
 
   const accentChips = model.accents
     .map(
@@ -547,8 +541,8 @@ ${typeSlugs
       </tr>`,
     )
     .join("\n");
-  const axesHtml = `<h2 id="axes">Theme axes</h2>
-<p>There is no light/dark axis — the palette is a single dark theme by design — and no density axis since 2026-08-30. The one theming axis is element-scoped: the host application sets the attribute on the root element or any subtree element, and the subtree inherits it. The bare root defaults to <code>data-accent="ambre"</code>.</p>
+  sectionBodies["Theme axes"] =
+    `<p>There is no light/dark axis — the palette is a single dark theme by design — and no density axis since 2026-08-30. The one theming axis is element-scoped: the host application sets the attribute on the root element or any subtree element, and the subtree inherits it. The bare root defaults to <code>data-accent="ambre"</code>.</p>
 <h3 id="axes-accent">Accent — <code>data-accent</code></h3>
 <p>Swaps which accent primitive <code>--ll-accent</code> resolves to. Try the switcher in the header — every live preview on this page follows it.</p>
 <div class="chips">
@@ -566,16 +560,34 @@ ${roleRows}
   </tbody>
 </table>`;
 
+  const tabsBar = `<div class="tabs" role="tablist" aria-label="Token sections">
+${tokenSections
+  .map(
+    (s, i) =>
+      `  <button type="button" class="tab" role="tab" id="tab-${esc(s.anchor)}" aria-controls="${esc(s.anchor)}" aria-selected="${i === 0}">${esc(s.label)}</button>`,
+  )
+  .join("\n")}
+</div>`;
+  const panelsHtml = tokenSections
+    .map((s) => {
+      const body = sectionBodies[s.label];
+      if (body === undefined) throw new Error(`tokensPage: no section renderer for "${s.label}"`);
+      return `<section class="tok-panel" id="${esc(s.anchor)}" role="tabpanel" aria-labelledby="tab-${esc(s.anchor)}">
+<h2>${esc(s.label)}</h2>
+${body}
+</section>`;
+    })
+    .join("\n");
   return layout({
-    title: "Design tokens — LearningLeagues Lib",
+    title: "Tokens — LearningLeagues Lib",
     relRoot: ".",
     accents: model.accents,
     components,
     tokenSections,
     current: "tokens",
-    content: `<h1>Design tokens</h1>
+    content: `<h1>Tokens</h1>
 <p>${tokenCount} tokens in the <code>--ll-*</code> namespace. They flow one way only: Figma variables → extraction pipeline → one generated stylesheet. No agent and no developer ever writes a token by hand; this page is generated from the same artefacts the library ships (<code>tokens.json</code> + <code>tokens.css</code>).</p>
-${collectionsHtml}
-${axesHtml}`,
+${tabsBar}
+${panelsHtml}`,
   });
 }

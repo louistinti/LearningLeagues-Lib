@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Design tokens — LearningLeagues Lib</title>
+<title>Tokens — LearningLeagues Lib</title>
 <link rel="stylesheet" href="./assets/lib.css">
 <link rel="stylesheet" href="./assets/site.css">
 </head>
@@ -30,7 +30,7 @@
   <ul class="nav-list">
     <li>
       <details open>
-        <summary><a href="./tokens.html" aria-current="page">Design tokens</a></summary>
+        <summary><a href="./tokens.html" aria-current="page">Tokens</a></summary>
         <ul class="sub">
         <li><a href="./tokens.html#primitives">Primitives</a></li>
         <li><a href="./tokens.html#semantic">Semantic</a></li>
@@ -63,9 +63,19 @@
   </ul>
 </nav>
 <main id="main">
-<h1>Design tokens</h1>
+<h1>Tokens</h1>
 <p>128 tokens in the <code>--ll-*</code> namespace. They flow one way only: Figma variables → extraction pipeline → one generated stylesheet. No agent and no developer ever writes a token by hand; this page is generated from the same artefacts the library ships (<code>tokens.json</code> + <code>tokens.css</code>).</p>
-<h2 id="primitives">Primitives</h2>
+<div class="tabs" role="tablist" aria-label="Token sections">
+  <button type="button" class="tab" role="tab" id="tab-primitives" aria-controls="primitives" aria-selected="true">Primitives</button>
+  <button type="button" class="tab" role="tab" id="tab-semantic" aria-controls="semantic" aria-selected="false">Semantic</button>
+  <button type="button" class="tab" role="tab" id="tab-spacing" aria-controls="spacing" aria-selected="false">Spacing</button>
+  <button type="button" class="tab" role="tab" id="tab-layout" aria-controls="layout" aria-selected="false">Layout</button>
+  <button type="button" class="tab" role="tab" id="tab-typography" aria-controls="typography" aria-selected="false">Typography</button>
+  <button type="button" class="tab" role="tab" id="tab-type" aria-controls="type" aria-selected="false">Type</button>
+  <button type="button" class="tab" role="tab" id="tab-axes" aria-controls="axes" aria-selected="false">Theme axes</button>
+</div>
+<section class="tok-panel" id="primitives" role="tabpanel" aria-labelledby="tab-primitives">
+<h2>Primitives</h2>
 <p>Raw values as extracted from Figma. Components never reference a primitive directly — they consume the semantic aliases below.</p>
 <h3 id="primitives-neutral"><code>neutral</code></h3>
 <table>
@@ -293,7 +303,9 @@
       </tr>
   </tbody>
 </table>
-<h2 id="semantic">Semantic</h2>
+</section>
+<section class="tok-panel" id="semantic" role="tabpanel" aria-labelledby="tab-semantic">
+<h2>Semantic</h2>
 <p>The layer components consume. Every semantic token is an alias of a primitive — none holds a raw value. The previews are live: <code>--ll-accent</code> and its dependents follow the accent switcher above.</p>
 <table>
   <thead>
@@ -410,7 +422,9 @@
       </tr>
   </tbody>
 </table>
-<h2 id="spacing">Spacing</h2>
+</section>
+<section class="tok-panel" id="spacing" role="tabpanel" aria-labelledby="tab-spacing">
+<h2>Spacing</h2>
 <p>The spacing ladder, built on the base unit <code>--ll-s</code> (the ladder arithmetic multiplies it: <code>s-275</code> = 2.75 × 8). Each bar is drawn at the token's actual size via its own custom property.</p>
 <table>
   <thead>
@@ -497,7 +511,9 @@
       </tr>
   </tbody>
 </table>
-<h2 id="layout">Layout</h2>
+</section>
+<section class="tok-panel" id="layout" role="tabpanel" aria-labelledby="tab-layout">
+<h2>Layout</h2>
 <p>Structural constants: chrome dimensions and the z-index scale.</p>
 <table>
   <thead>
@@ -541,7 +557,9 @@
       </tr>
   </tbody>
 </table>
-<h2 id="typography">Typography</h2>
+</section>
+<section class="tok-panel" id="typography" role="tabpanel" aria-labelledby="tab-typography">
+<h2>Typography</h2>
 <p>Figma stores the bare family; the transform stage adds the web fallback stack shown here.</p>
 <table>
   <thead>
@@ -568,7 +586,9 @@
       </tr>
   </tbody>
 </table>
-<h2 id="type">Type</h2>
+</section>
+<section class="tok-panel" id="type" role="tabpanel" aria-labelledby="tab-type">
+<h2>Type</h2>
 <p>Tokens derived from the Figma <code>type/*</code> text styles by the extraction pipeline. Each style is a set of custom properties named <code>--ll-type-&lt;style&gt;-&lt;prop&gt;</code> (family, size, weight, style, line-height, tracking, case); the family aliases the Typography font tokens above. The specimens are rendered by these variables.</p>
 <table>
   <thead>
@@ -649,7 +669,9 @@
       </tr>
   </tbody>
 </table>
-<h2 id="axes">Theme axes</h2>
+</section>
+<section class="tok-panel" id="axes" role="tabpanel" aria-labelledby="tab-axes">
+<h2>Theme axes</h2>
 <p>There is no light/dark axis — the palette is a single dark theme by design — and no density axis since 2026-08-30. The one theming axis is element-scoped: the host application sets the attribute on the root element or any subtree element, and the subtree inherits it. The bare root defaults to <code>data-accent="ambre"</code>.</p>
 <h3 id="axes-accent">Accent — <code>data-accent</code></h3>
 <p>Swaps which accent primitive <code>--ll-accent</code> resolves to. Try the switcher in the header — every live preview on this page follows it.</p>
@@ -695,6 +717,7 @@
       </tr>
   </tbody>
 </table>
+</section>
 </main>
 </div>
 <footer class="site-footer">

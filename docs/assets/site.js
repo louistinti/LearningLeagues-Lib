@@ -69,6 +69,17 @@
     });
   }
   if (pairs.length) {
+    // Same-page sub-links navigate by hash only: some static hosts serve
+    // "/tokens.html" at "/tokens", so following the full href would reload
+    // the document (landing at the top before descending to the anchor).
+    pairs.forEach(function (p) {
+      p.link.addEventListener("click", function (ev) {
+        ev.preventDefault();
+        p.target.scrollIntoView({ behavior: "smooth" });
+        history.pushState(null, "", "#" + p.target.id);
+        markCurrent();
+      });
+    });
     window.addEventListener("scroll", markCurrent, { passive: true });
     window.addEventListener("hashchange", markCurrent);
     markCurrent();

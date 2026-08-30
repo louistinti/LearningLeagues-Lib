@@ -7,9 +7,9 @@
 *::after {
   box-sizing: border-box;
 }
-html {
-  scroll-behavior: smooth;
-}
+/* Smooth scrolling is applied by site.js on intercepted same-page anchor
+   clicks only — a CSS scroll-behavior would also animate the initial anchor
+   positioning after a cross-page load (a visible top-to-anchor sweep). */
 body {
   margin: 0;
   background: var(--ll-bg);

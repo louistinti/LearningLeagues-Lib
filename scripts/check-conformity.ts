@@ -23,6 +23,11 @@ const GATES: { name: string; command: string; args?: string[]; shell?: boolean }
     args: ["scripts/check-a11y-status.ts"],
   },
   {
+    name: "Accessibility engine",
+    command: process.execPath,
+    args: ["scripts/check-a11y-engine.ts"],
+  },
+  {
     name: "Playbook anti-drift",
     command: process.execPath,
     args: ["scripts/check-playbook-drift.ts"],

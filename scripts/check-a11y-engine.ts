@@ -177,6 +177,8 @@ for (const slug of dirs) {
           );
         }
       }
+    } else {
+      problems.push(`${metaFile} exports no \`meta\` — nothing rendered, so nothing is verified`);
     }
   }
   if (problems.length) v.verdict = "FAIL";

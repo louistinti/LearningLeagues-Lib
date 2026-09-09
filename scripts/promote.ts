@@ -54,7 +54,8 @@ const row = manifest.split("\n").find((l) => l.startsWith(`| ${name} `));
 // 1. Every blocking gate green, executed now — a summary is not evidence.
 //    The start time gates the engine report below: only a report written by
 //    THIS run counts (never a stale file from an earlier session).
-const runStartedAt = Date.now() - 1000; // clock-granularity margin
+const runStartedAt = Date.now(); // both timestamps come from the same clock, and the
+// engine writes strictly after this line, so >= holds causally — no margin needed
 const conf = spawnSync(process.execPath, ["scripts/check-conformity.ts"], { encoding: "utf8" });
 check(
   "gates green (pnpm conformity, executed)",
@@ -69,19 +70,28 @@ type EngineReport = {
   generatedAt: string;
   components: Record<string, { verdict: "PASS" | "FAIL" }>;
 };
-const engine: EngineReport | undefined = existsSync(ENGINE_JSON)
-  ? JSON.parse(readFileSync(ENGINE_JSON, "utf8"))
-  : undefined;
+let engine: EngineReport | undefined;
+let engineReadError: string | undefined;
+if (existsSync(ENGINE_JSON)) {
+  try {
+    engine = JSON.parse(readFileSync(ENGINE_JSON, "utf8"));
+  } catch (err) {
+    engineReadError = err instanceof Error ? err.message : String(err);
+  }
+}
 const engineFresh = !!engine && Date.parse(engine.generatedAt) >= runStartedAt;
 const engineRow = engineFresh ? engine?.components?.[name] : undefined;
+const engineReason = engineReadError
+  ? `engine report unreadable (${engineReadError})`
+  : !engineFresh
+    ? "no engine report written by this run — see the conformity output"
+    : !engineRow
+      ? "component absent from the engine report"
+      : `engine verdict ${engineRow.verdict} — see reports/a11y-engine.md`;
 check(
   "accessibility engine green for this component (reports/a11y-engine.json, this run)",
   engineRow?.verdict === "PASS",
-  !engineFresh
-    ? "no engine report from this run — the engine gate did not execute"
-    : !engineRow
-      ? "component absent from the engine report"
-      : `engine verdict ${engineRow.verdict} — see reports/a11y-engine.md`,
+  engineReason,
 );
 
 // 2. RFC approved + design sign-off attestation (§6 checkboxes, human-ticked).
@@ -122,7 +132,7 @@ const a11yFlip = a11yStatus === "pending" && engineRow?.verdict === "PASS";
 check(
   'a11y status "pass" — or "pending" with the engine green (flipped by --write)',
   a11yStatus === "pass" || a11yFlip,
-  `currently "${a11yStatus}"${a11yStatus === "pending" ? " and the engine is not green for it" : ""}`,
+  `currently "${a11yStatus}"${a11yStatus === "pending" ? ` — ${engineReason}` : ""}`,
 );
 
 if (target === "exported") {

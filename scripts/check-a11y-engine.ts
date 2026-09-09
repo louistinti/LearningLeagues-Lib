@@ -75,73 +75,108 @@ for (const slug of dirs) {
   if (!existsSync(join(dir, "contract.json")) || !metaFile) {
     problems.push("no contract.json / *.meta.ts — unverified surface");
   } else {
-    const { meta } = await import(pathToFileURL(resolve(dir, metaFile)).href);
-    const examples = (Array.isArray(meta?.examples) ? meta.examples : []) as Example[];
-    if (examples.length === 0) {
-      problems.push("no contract examples — nothing rendered, so nothing is verified");
-    } else {
-      const componentCss = readdirSync(dir)
-        .filter((n) => n.endsWith(".css"))
-        .sort()
-        .map((n) => readFileSync(join(dir, n), "utf8"))
-        .join("\n");
-      // One broken component must not abort the report for the others
-      // (never short-circuit): a render/window failure is this component's
-      // problem and the loop continues.
-      try {
-        const htmls = renderExamples(dir, meta.name, examples);
-        for (const accent of accents) {
+    // A meta file that throws on import must not abort the report for the
+    // others (never short-circuit): that's this component's problem, and
+    // the loop continues to the next one with meta left undefined below —
+    // so the examples/suite work for this component is simply skipped.
+    let meta: { name: string; examples?: Example[] } | undefined;
+    try {
+      ({ meta } = await import(pathToFileURL(resolve(dir, metaFile)).href));
+    } catch (e) {
+      problems.push(`meta import failed: ${(e as Error).message}`);
+    }
+    if (meta) {
+      const examples = (Array.isArray(meta.examples) ? meta.examples : []) as Example[];
+      const emptyReported = new Set<string>();
+      if (examples.length === 0) {
+        problems.push("no contract examples — nothing rendered, so nothing is verified");
+      } else {
+        const componentCss = readdirSync(dir)
+          .filter((n) => n.endsWith(".css"))
+          .sort()
+          .map((n) => readFileSync(join(dir, n), "utf8"))
+          .join("\n");
+        // One broken component must not abort the report for the others
+        // (never short-circuit): a render/engine failure is this
+        // component's problem and the loop continues.
+        try {
+          const htmls = renderExamples(dir, meta.name, examples);
           for (const [i, html] of htmls.entries()) {
             const label = examples[i].label;
-            const window = createWindow({ html, css: `${tokensCss}\n${componentCss}`, accent });
-            let axe: AxeOutcome;
-            let findings: Finding[];
-            try {
-              axe = await runAxe(window);
-              findings = checkFragment(window.document, componentCss);
-            } finally {
-              window.close();
+            // An example that renders empty markup is red on its own — the
+            // zero-passes guard below only catches engine misconfiguration
+            // (a wrapper page around empty content still passes some
+            // rules), so it never sees this case. Checked once per example,
+            // not once per accent.
+            if (!html.trim()) {
+              if (!emptyReported.has(label)) {
+                emptyReported.add(label);
+                problems.push(`"${label}": example rendered empty markup — nothing verified`);
+              }
+              continue;
             }
-            v.renders++;
-            v.violations += axe.violations.length;
-            v.findings += findings.length;
-            // Refuse a vacuous green: a fragment with real markup always
-            // passes at least some rules (the Button passes dozens). Zero
-            // means axe ran zero rules — a typo in the tag list resolves
-            // silently to zero results otherwise.
-            if (axe.passes === 0)
-              problems.push(
-                `[${accent}] "${label}": axe ran zero rules on a non-empty fragment — engine misconfigured (unknown tag?)`,
+            for (const accent of accents) {
+              const window = createWindow({ html, css: `${tokensCss}\n${componentCss}`, accent });
+              let axe: AxeOutcome;
+              let findings: Finding[];
+              try {
+                axe = await runAxe(window);
+                findings = checkFragment(window.document, componentCss);
+              } finally {
+                window.close();
+              }
+              v.renders++;
+              v.violations += axe.violations.length;
+              v.findings += findings.length;
+              // Refuse a vacuous green: a fragment with real markup always
+              // passes at least some rules (the Button passes dozens). Zero
+              // means axe ran zero rules on a non-empty fragment — an
+              // engine misconfiguration (e.g. a typo in the tag list)
+              // resolves silently to zero results otherwise. This does NOT
+              // catch an example that renders empty markup — see above.
+              if (axe.passes === 0)
+                problems.push(
+                  `[${accent}] "${label}": axe ran zero rules on a non-empty fragment — engine misconfigured (unknown tag?)`,
+                );
+              for (const iss of axe.violations) {
+                const more = iss.nodes.length > 1 ? ` (+${iss.nodes.length - 1} more node(s))` : "";
+                problems.push(
+                  `[${accent}] "${label}": axe ${iss.id} (${iss.impact}) — ${iss.help} — \`${iss.nodes[0] ?? ""}\`${more}`,
+                );
+              }
+              for (const f of findings)
+                problems.push(`[${accent}] "${label}": ${f.rule} — ${f.message} — \`${f.html}\``);
+              for (const inc of axe.incomplete) {
+                if (!incompleteById.has(inc.id)) incompleteById.set(inc.id, new Set());
+                incompleteById.get(inc.id)!.add(slug);
+              }
+              const red = axe.violations.length + findings.length > 0;
+              rows.push(
+                `| ${slug} | ${accent} | ${label.replace(/\|/g, "\\|")} | ${axe.violations.length} | ${findings.length} | ${red ? "**FAIL**" : "PASS"} |`,
               );
-            for (const iss of axe.violations)
-              problems.push(
-                `[${accent}] "${label}": axe ${iss.id} (${iss.impact}) — ${iss.help} — ${iss.nodes[0] ?? ""}`,
-              );
-            for (const f of findings)
-              problems.push(`[${accent}] "${label}": ${f.rule} — ${f.message} — ${f.html}`);
-            for (const inc of axe.incomplete) {
-              if (!incompleteById.has(inc.id)) incompleteById.set(inc.id, new Set());
-              incompleteById.get(inc.id)!.add(slug);
             }
-            const red = axe.violations.length + findings.length > 0;
-            rows.push(
-              `| ${slug} | ${accent} | ${label} | ${axe.violations.length} | ${findings.length} | ${red ? "**FAIL**" : "PASS"} |`,
-            );
           }
+        } catch (e) {
+          problems.push(`render/engine failed: ${(e as Error).message}`);
         }
-      } catch (e) {
-        problems.push(`render failed: ${(e as Error).message}`);
       }
-    }
-    // Optional local behaviour suite — discovered, never listed by hand.
-    const suite = readdirSync(dir).find((n) => n.endsWith(".a11y.test.ts"));
-    if (suite) {
-      const r = spawnSync(process.execPath, ["--test", join(dir, suite)], { encoding: "utf8" });
-      v.suite = r.status === 0 ? "PASS" : "FAIL";
-      if (r.status !== 0)
-        problems.push(
-          `local suite ${suite} red:\n${((r.stdout ?? "") + (r.stderr ?? "")).trim().slice(0, 1500)}`,
-        );
+      // Optional local behaviour suite — discovered, never listed by hand.
+      const suite = readdirSync(dir).find((n) => n.endsWith(".a11y.test.ts"));
+      if (suite) {
+        const r = spawnSync(process.execPath, ["--test", join(dir, suite)], {
+          encoding: "utf8",
+          timeout: 120_000,
+        });
+        const suiteFailed = r.status !== 0 || Boolean(r.error) || Boolean(r.signal);
+        v.suite = suiteFailed ? "FAIL" : "PASS";
+        if (suiteFailed) {
+          const reason = r.error?.message ?? (r.signal ? `killed by ${r.signal}` : "");
+          const excerpt = ((r.stdout ?? "") + (r.stderr ?? "")).trim().slice(0, 1500);
+          problems.push(
+            `local suite ${suite} red${reason ? ` (${reason})` : ""}:\n\`\`\`\n${excerpt}\n\`\`\``,
+          );
+        }
+      }
     }
   }
   if (problems.length) v.verdict = "FAIL";

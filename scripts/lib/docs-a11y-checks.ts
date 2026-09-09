@@ -10,13 +10,12 @@
 export interface Finding {
   rule: string;
   message: string;
-  html: string;
+  html: string; // outer HTML of the element, truncated
 }
 
 const FOCUSABLE =
   'a[href], button, input:not([type=hidden]), select, textarea, summary, [tabindex]:not([tabindex="-1"])';
 const outer = (el: Element | null | undefined): string => (el ? el.outerHTML.slice(0, 120) : "");
-const SITE_SUFFIX_SEP = " — ";
 
 // The page-specific part of <title>: everything before " — <site title>",
 // the site title being read from the page's own `.site-title` link (never
@@ -26,9 +25,7 @@ export function titleSubject(doc: Document): string {
   const site = (doc.querySelector(".site-title")?.textContent ?? "").trim();
   if (site && title.endsWith(site)) {
     const head = title.slice(0, title.length - site.length);
-    return head.endsWith(SITE_SUFFIX_SEP)
-      ? head.slice(0, -SITE_SUFFIX_SEP.length).trim()
-      : head.trim();
+    return head.replace(/[\s—-]+$/, "").trim();
   }
   return title;
 }
@@ -77,13 +74,26 @@ export function checkLandmarks(doc: Document): Finding[] {
     out.push({ rule: "landmarks", message: "no <header> landmark", html: "" });
   const navs = [...doc.querySelectorAll("nav")];
   if (navs.length === 0) out.push({ rule: "landmarks", message: "no <nav> landmark", html: "" });
-  for (const nav of navs)
-    if (!nav.getAttribute("aria-label")?.trim() && !nav.getAttribute("aria-labelledby")?.trim())
+  for (const nav of navs) {
+    if (nav.getAttribute("aria-label")?.trim()) continue;
+    const labelledby = nav.getAttribute("aria-labelledby")?.trim();
+    if (!labelledby) {
       out.push({
         rule: "landmarks",
         message: "<nav> without an accessible name (aria-label / aria-labelledby)",
         html: outer(nav),
       });
+      continue;
+    }
+    const ids = labelledby.split(/\s+/);
+    const resolved = ids.every((id) => (doc.getElementById(id)?.textContent ?? "").trim());
+    if (!resolved)
+      out.push({
+        rule: "landmarks",
+        message: "<nav> aria-labelledby points to a missing or empty element",
+        html: outer(nav),
+      });
+  }
   return out;
 }
 
@@ -95,7 +105,7 @@ export function checkTableScopes(doc: Document): Finding[] {
     if (ths.length === 0)
       out.push({ rule: "table-scopes", message: "table without any <th>", html: outer(table) });
     for (const th of ths)
-      if (!SCOPES.has(th.getAttribute("scope") ?? ""))
+      if (!SCOPES.has((th.getAttribute("scope") ?? "").toLowerCase()))
         out.push({
           rule: "table-scopes",
           message: "<th> without a valid scope (col/row/colgroup/rowgroup)",
@@ -108,8 +118,16 @@ export function checkTableScopes(doc: Document): Finding[] {
 export function checkPageTitle(doc: Document): Finding[] {
   const out: Finding[] = [];
   const title = (doc.querySelector("title")?.textContent ?? "").trim();
+  const site = (doc.querySelector(".site-title")?.textContent ?? "").trim();
+  if (!site)
+    out.push({
+      rule: "page-title",
+      message:
+        "no .site-title element — the site name cannot be read from the page, so the title's subject cannot be judged",
+      html: "",
+    });
   if (!title) out.push({ rule: "page-title", message: "empty <title>", html: "" });
-  else if (!titleSubject(doc))
+  else if (site && !titleSubject(doc))
     out.push({
       rule: "page-title",
       message: `<title> "${title}" carries no page-specific part before the site name`,

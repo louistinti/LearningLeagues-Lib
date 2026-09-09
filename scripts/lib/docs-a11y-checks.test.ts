@@ -94,3 +94,31 @@ test("never short-circuits: several defects report every rule", () => {
   for (const rule of ["skip-link-first", "table-scopes", "landmarks"])
     assert.ok(r.includes(rule), rule);
 });
+
+test("table-scopes: scope is case-insensitive (COL passes)", () => {
+  assert.ok(
+    !rules(GOOD.replace('<th scope="col">Prop</th>', '<th scope="COL">Prop</th>')).includes(
+      "table-scopes",
+    ),
+  );
+});
+test("landmarks: aria-labelledby pointing to a missing id is red", () => {
+  assert.ok(
+    rules(GOOD.replace(' aria-label="Documentation"', ' aria-labelledby="ghost"')).includes(
+      "landmarks",
+    ),
+  );
+});
+test("landmarks: no <nav> at all is red", () => {
+  assert.ok(rules(GOOD.replace(/<nav[\s\S]*?<\/nav>/, "")).includes("landmarks"));
+});
+test("page-title: a page without .site-title cannot be judged — red", () => {
+  assert.ok(rules(GOOD.replace(' class="site-title"', "")).includes("page-title"));
+});
+test("page-title: an empty subject before the separator is red", () => {
+  assert.ok(rules(GOOD, `<title> — ${SITE}</title>`).includes("page-title"));
+});
+test("skip-link-first: a <summary> or tabindex=0 element before the skip link is red", () => {
+  assert.ok(rules(`<details><summary>x</summary></details>` + GOOD).includes("skip-link-first"));
+  assert.ok(rules(`<div tabindex="0">x</div>` + GOOD).includes("skip-link-first"));
+});

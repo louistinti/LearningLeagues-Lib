@@ -149,12 +149,55 @@ code {
   margin: 0;
   padding: 0;
 }
-.sidebar summary {
+/* Sidebar entry: the name is a plain link; a separate, named <summary>
+   chevron toggles the sections (WCAG nested-interactive, fixed 2026-09-10).
+   The summary sits on the link's row by absolute positioning; the section
+   list still flows below the link. Chevron geometry is fixed ornament
+   geometry, like the Button's brackets. */
+.nav-item {
+  position: relative;
+}
+.nav-item > a {
+  padding-right: var(--ll-s-3);
+}
+.nav-item > details > summary {
+  position: absolute;
+  top: 0;
+  right: 0;
+  /* Matches the link's line box (.sidebar sets font-size: 14px; line-height
+     1.6 comes from body) so the chevron centres on the row instead of the
+     24px --ll-s-3 default, which is shorter than the row. */
+  width: var(--ll-s-3);
+  height: calc(var(--ll-s-05) * 2 + 14px * 1.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  list-style: none;
   cursor: pointer;
   color: var(--ll-fg-mute);
 }
-.sidebar summary a {
-  display: inline-block;
+.nav-item > details > summary::-webkit-details-marker {
+  display: none;
+}
+.nav-item > details > summary::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform 0.18s;
+}
+.nav-item > details[open] > summary::before {
+  transform: translateY(2px) rotate(225deg);
+}
+.nav-item > details > summary:hover,
+.nav-item > details > summary:focus-visible {
+  color: var(--ll-accent);
+}
+.nav-item > details > summary:focus-visible {
+  outline: 2px solid var(--ll-accent);
+  outline-offset: 2px;
 }
 .sub {
   margin-left: var(--ll-s-15);

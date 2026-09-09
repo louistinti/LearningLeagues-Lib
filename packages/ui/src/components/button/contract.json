@@ -1,12 +1,15 @@
 {
-  "status": "draft",
+  "status": "stable",
   "exported": false,
   "component": "Button",
   "rfc": "Button.rfc.md",
   "designNode": "16:18",
   "variants": ["primary", "secondary"],
   "props": {
-    "variant": { "type": "\"primary\" | \"secondary\"", "default": "primary" },
+    "variant": {
+      "type": "\"primary\" | \"secondary\"",
+      "default": "primary"
+    },
     "href": {
       "type": "string",
       "optional": true,
@@ -17,10 +20,13 @@
       "default": "button",
       "note": "button rendering only"
     },
-    "onClick": { "type": "(e: MouseEvent) => void", "optional": true }
+    "onClick": {
+      "type": "(e: MouseEvent) => void",
+      "optional": true
+    }
   },
   "a11y": {
-    "status": "pending",
+    "status": "pass",
     "semanticStructure": "Native <button type> or native <a href> when href is set; link semantics kept deliberately (Enter activates, Space scrolls). No ARIA overrides; uppercase is CSS text-transform, AT reads the author's casing.",
     "keyboard": "Native activation, no custom key handling; focus ring only on :focus-visible — 2px accent outline, 3px offset, both variants.",
     "decisions": "Corner brackets and hover glow are decorative pseudo-elements/box-shadow, invisible to AT. Disabled is out of v1 by arbitration (RFC §7). Contrast is computed by the gate from resolved tokens, never declared here.",

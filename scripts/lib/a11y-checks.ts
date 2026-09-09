@@ -20,39 +20,61 @@ export const INTERACTIVE_SELECTOR = [
   "input:not([type=hidden])",
   "select",
   "textarea",
-  "[role=button]",
-  "[role=link]",
-  "[role=menuitem]",
-  "[role=tab]",
-  "[role=checkbox]",
-  "[role=radio]",
-  "[role=switch]",
-  "[role=option]",
+  "[role~=button]",
+  "[role~=link]",
+  "[role~=menuitem]",
+  "[role~=tab]",
+  "[role~=checkbox]",
+  "[role~=radio]",
+  "[role~=switch]",
+  "[role~=option]",
 ].join(",");
 
-const NATIVE_FOCUSABLE = /^(A|BUTTON|INPUT|SELECT|TEXTAREA)$/;
+const NATIVE_FOCUSABLE = /^(a|button|input|select|textarea)$/i;
 const outer = (el: Element): string => el.outerHTML.slice(0, 120);
+// Class names here are matched as DOM tokens (classList / a raw ".name"
+// literal), not as CSS-escaped selectors — "ll:button" vs ".ll\:button" will
+// not match. Irrelevant for this library's BEM names, which never need
+// escaping, but worth knowing if that ever changes.
 const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 export function interactiveElements(doc: Document): Element[] {
-  return [...doc.querySelectorAll(INTERACTIVE_SELECTOR)].filter(
-    (el) => !el.hasAttribute("disabled"),
-  );
+  return [...doc.querySelectorAll(INTERACTIVE_SELECTOR)].filter((el) => !el.matches(":disabled"));
 }
 
-export function checkFocusable(el: Element): Finding | null {
-  const tabindex = el.getAttribute("tabindex");
-  if (tabindex === "0") return null;
-  if (NATIVE_FOCUSABLE.test(el.tagName) && tabindex !== "-1") return null;
+// The rule is keyboard reachability, not a specific tabindex value: a native
+// control is reachable without any tabindex, and a roving-tabindex composite
+// (APG tablist/menu/radiogroup/listbox — one member tabindex="0", the rest
+// "-1") is reachable as a group even though most of its members are not
+// individually in the tab order.
+export function checkFocusable(el: Element, doc: Document): Finding | null {
+  const attr = el.getAttribute("tabindex");
+  const tabindex = parseInt(attr ?? "", 10);
+  if (tabindex >= 0) return null;
+  const isNative = NATIVE_FOCUSABLE.test(el.localName);
+  if (isNative && attr === null) return null;
+
+  const role = el.getAttribute("role");
+  const inRovingGroup = [...doc.querySelectorAll("*")].some((other) => {
+    if (other === el) return false;
+    const otherTabindex = parseInt(other.getAttribute("tabindex") ?? "", 10);
+    if (!(otherTabindex >= 0)) return false;
+    return role !== null
+      ? other.getAttribute("role") === role
+      : isNative && other.localName === el.localName;
+  });
+  if (inRovingGroup) return null;
+
   return {
     rule: "focusable",
-    message: 'interactive element is neither natively focusable nor tabindex="0"',
+    message:
+      "not reachable by keyboard: neither in the tab order (tabindex >= 0 or a native control) nor part of a roving group with one member in the tab order",
     html: outer(el),
   };
 }
 
 export function checkNoPositiveTabindex(el: Element): Finding | null {
-  const t = Number(el.getAttribute("tabindex") ?? "0");
+  const t = parseInt(el.getAttribute("tabindex") ?? "", 10);
   return t > 0
     ? {
         rule: "no-positive-tabindex",
@@ -62,6 +84,11 @@ export function checkNoPositiveTabindex(el: Element): Finding | null {
     : null;
 }
 
+// jsdom lets focus() succeed on elements that a real browser would refuse —
+// hidden, display:none, or behind an inert ancestor — because it does not
+// compute layout or inertness. This check is therefore weaker here than in
+// a browser: it can only catch elements that are unfocusable for reasons
+// jsdom does model (e.g. no tabindex and not natively focusable).
 export function checkFocusLands(el: Element, doc: Document): Finding | null {
   (el as HTMLElement).focus();
   return doc.activeElement === el
@@ -74,7 +101,7 @@ export function checkFocusLands(el: Element, doc: Document): Finding | null {
 }
 
 export function checkHiddenFocusable(el: Element): Finding | null {
-  return el.closest('[aria-hidden="true"]')
+  return el.closest('[aria-hidden="true" i]')
     ? {
         rule: "hidden-focusable",
         message:
@@ -92,12 +119,29 @@ export function focusVisibleSelectors(css: string): string[] {
     .filter((sel) => sel.includes(":focus-visible"));
 }
 
+// The subject compound (rightmost) is what the declarations style; :not()
+// groups are removed first so :focus:not(:focus-visible) — ring removal —
+// never counts as a ring.
 export function checkFocusVisibleStyled(el: Element, css: string): Finding | null {
   const classes = [...el.classList];
-  const selectors = focusVisibleSelectors(css);
+  // Strip :not(...) groups before matching so a ring explicitly removed via
+  // :not(:focus-visible) (e.g. ":focus:not(:focus-visible) { outline: none }")
+  // does not count as styling it — ":focus-visible" surviving inside a
+  // :not() is a red herring, not coverage.
+  const subjects = focusVisibleSelectors(css).flatMap((sel) =>
+    sel
+      .replace(/:not\([^)]*\)/g, "")
+      .split(",")
+      .map((branch) => {
+        const compounds = branch.trim().split(/\s*[>+~]\s*|\s+/);
+        return compounds[compounds.length - 1];
+      }),
+  );
   const styled = classes.some((c) => {
-    const token = new RegExp(`\\.${escapeRe(c)}(?![\\w-])`);
-    return selectors.some((sel) => token.test(sel));
+    const classToken = new RegExp(`\\.${escapeRe(c)}(?![\\w-])`);
+    return subjects.some(
+      (subject) => classToken.test(subject) && subject.includes(":focus-visible"),
+    );
   });
   if (styled) return null;
   return {
@@ -114,7 +158,7 @@ export function checkFragment(doc: Document, css: string): Finding[] {
   const findings: Finding[] = [];
   for (const el of interactiveElements(doc)) {
     for (const f of [
-      checkFocusable(el),
+      checkFocusable(el, doc),
       checkNoPositiveTabindex(el),
       checkFocusLands(el, doc),
       checkHiddenFocusable(el),

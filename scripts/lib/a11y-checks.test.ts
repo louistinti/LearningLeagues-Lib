@@ -4,6 +4,7 @@
 // Run: node --test scripts/lib/a11y-checks.test.ts
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { JSDOM } from "jsdom";
 import { checkFragment, focusVisibleSelectors, interactiveElements } from "./a11y-checks.ts";
 
@@ -86,4 +87,81 @@ test("DOCUMENTED LIMITATION — a <div> acting as a button is invisible to the g
   // commitment is the reviewer's check. If this blind spot is ever closed,
   // update this test AND the design record.
   assert.deepEqual(rules(`<div class="ll-button">Go</div>`), []);
+});
+
+test("real Button: both renderings with the real button.css pass every check", () => {
+  const css = readFileSync("packages/ui/src/components/button/button.css", "utf8");
+  assert.deepEqual(
+    rules(
+      `<button class="ll-button ll-button--primary" type="button">Start</button><a class="ll-button ll-button--secondary" href="/rules">Rules</a>`,
+      css,
+    ),
+    [],
+  );
+});
+
+test("never short-circuits: two defective elements report every finding, in document order", () => {
+  const f = checkFragment(
+    doc(
+      `<span class="ll-a" role="button">One</span><button class="ll-b" type="button" tabindex="2">Two</button>`,
+    ),
+    "",
+  );
+  assert.deepEqual(
+    f.map((x) => x.rule),
+    [
+      "focusable",
+      "focus-lands",
+      "focus-visible-styled",
+      "no-positive-tabindex",
+      "focus-visible-styled",
+    ],
+  );
+});
+
+test("focusable: a roving tablist (one tab in the tab order, the rest tabindex=-1) passes", () => {
+  const css = ".ll-tab:focus-visible { outline: 2px solid var(--ll-accent); }";
+  assert.deepEqual(
+    rules(
+      `<div role="tablist"><button class="ll-tab" role="tab" tabindex="0">A</button><button class="ll-tab" role="tab" tabindex="-1">B</button><button class="ll-tab" role="tab" tabindex="-1">C</button></div>`,
+      css,
+    ),
+    [],
+  );
+});
+
+test("focusable: a lone tabindex=-1 control with no roving sibling is unreachable", () => {
+  assert.ok(
+    rules(`<button class="ll-button" type="button" tabindex="-1">Go</button>`).includes(
+      "focusable",
+    ),
+  );
+});
+
+test("focus-visible-styled: removing the ring via :not(:focus-visible) does not count as styling it", () => {
+  const css = ".ll-button:focus:not(:focus-visible) { outline: none; }";
+  assert.deepEqual(rules(`<button class="ll-button" type="button">Go</button>`, css), [
+    "focus-visible-styled",
+  ]);
+});
+
+test("focus-visible-styled: a rule targeting a descendant of the focused element does not count", () => {
+  const css = ".ll-button:focus-visible .icon { opacity: 1; }";
+  assert.deepEqual(rules(`<button class="ll-button" type="button">Go</button>`, css), [
+    "focus-visible-styled",
+  ]);
+});
+
+test("focus-visible-styled: modifier-only class is not covered by the base class rule (realistic direction)", () => {
+  assert.deepEqual(rules(`<button class="ll-button--primary" type="button">Go</button>`), [
+    "focus-visible-styled",
+  ]);
+});
+
+test("disabled: a control inside <fieldset disabled> is skipped; <a href disabled> is not", () => {
+  assert.deepEqual(
+    interactiveElements(doc(`<fieldset disabled><button type="button">Go</button></fieldset>`)),
+    [],
+  );
+  assert.equal(interactiveElements(doc(`<a href="/x" disabled>Go</a>`)).length, 1);
 });

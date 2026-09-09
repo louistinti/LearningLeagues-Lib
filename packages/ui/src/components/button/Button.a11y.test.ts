@@ -1,6 +1,9 @@
 // Button — local keyboard/behaviour suite (RFC §4, design record 2026-09-09
 // §4). Discovered and run by scripts/check-a11y-engine.ts. Proves what the
 // generic checks cannot: the two renderings and the forwarded onClick.
+// Enter/Space activation is deliberately NOT simulated: it is native browser
+// behaviour jsdom cannot prove; RFC §4.2 commits to no custom key handling,
+// which is a review-of-source fact.
 // Run: node --test packages/ui/src/components/button/Button.a11y.test.ts
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -19,6 +22,7 @@ test('no href: native <button type="button">, focusable, onClick fires on click'
     "Start",
   );
   assert.equal(root.tagName, "BUTTON");
+  assert.equal(root.getAttribute("role"), null); // RFC §4.1: no ARIA role override
   assert.equal(root.getAttribute("type"), "button");
   (root as HTMLElement).focus();
   assert.equal(window.document.activeElement, root);
@@ -36,6 +40,7 @@ test("href: native <a href>, type ignored, focusable, onClick fires on click", a
     "View the rules",
   );
   assert.equal(root.tagName, "A");
+  assert.equal(root.getAttribute("role"), null); // RFC §4.1: no ARIA role override
   assert.equal(root.getAttribute("href"), "/rules");
   assert.equal(root.getAttribute("type"), null);
   (root as HTMLElement).focus();

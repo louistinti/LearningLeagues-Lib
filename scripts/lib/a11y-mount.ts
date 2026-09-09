@@ -89,6 +89,9 @@ module.exports = async (container, exportName, props, children) => {
     unmount: async () => {
       await unmount();
       window.close();
+      // Clear the stale globals so a later test does not see this closed window/document.
+      delete (globalThis as { window?: unknown }).window;
+      delete (globalThis as { document?: unknown }).document;
     },
   };
 }

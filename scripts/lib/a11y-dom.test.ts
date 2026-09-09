@@ -17,6 +17,7 @@ test("healthy button + link fragment: zero violations under the fragment rule li
   const r = await runAxe(window);
   window.close();
   assert.deepEqual(r.violations, []);
+  assert.ok(r.passes > 0);
 });
 
 test("empty button label is an axe violation (button-name)", async () => {
@@ -61,4 +62,23 @@ test("DOCUMENTED LIMITATION — color-contrast comes back incomplete, never a vi
   window.close();
   assert.ok(r.incomplete.some((v) => v.id === "color-contrast"));
   assert.ok(!r.violations.some((v) => v.id === "color-contrast"));
+});
+
+test("createWindow contract: data-accent, lang, and the style block land verbatim", () => {
+  const window = createWindow({
+    html: `<button type="button">Go</button>`,
+    css: CSS,
+    accent: "ambre",
+  });
+  assert.equal(window.document.documentElement.getAttribute("data-accent"), "ambre");
+  assert.equal(window.document.documentElement.getAttribute("lang"), "en");
+  assert.equal(window.document.querySelector("style")?.textContent, CSS);
+  window.close();
+});
+
+test("createWindow guards: accent and css are rejected loudly, not interpolated", () => {
+  assert.throws(() => createWindow({ html: "", css: "", accent: 'x" data-foo="1' }));
+  assert.throws(() =>
+    createWindow({ html: "", css: "</style><script>1</script>", accent: "bleu" }),
+  );
 });

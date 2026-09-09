@@ -148,3 +148,11 @@ stable` moving from "BLOCKED on a11y pending" to "READY". Restores use
   contrast gate.
 - A selected/aria-current Button state — the pilot's product ask, returns via
   RFC.
+
+## Addendum — proof findings (2026-09-09)
+
+Injection B (positive tabindex) showed axe's `tabindex` rule never fires under
+the gate's WCAG tags: it carries only `cat.keyboard` and `best-practice`. The
+generic `no-positive-tabindex` check is therefore the only coverage for that
+defect (PROOF-OF-BLOCKING, "A11y engine — positive tabindex"). §2 and §6 above
+are kept as written; this note corrects the expectation.

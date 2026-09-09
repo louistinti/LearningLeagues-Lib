@@ -4,7 +4,8 @@
 // Run: node --test scripts/lib/a11y-dom.test.ts (wrapped by check-detectors.ts)
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { createWindow, runAxe, FRAGMENT_DISABLED_RULES } from "./a11y-dom.ts";
+import axe from "axe-core";
+import { createWindow, runAxe, FRAGMENT_DISABLED_RULES, WCAG_TAGS } from "./a11y-dom.ts";
 
 const CSS = ".ll-button:focus-visible { outline: 2px solid var(--ll-accent); }";
 
@@ -81,4 +82,9 @@ test("createWindow guards: accent and css are rejected loudly, not interpolated"
   assert.throws(() =>
     createWindow({ html: "", css: "</style><script>1</script>", accent: "bleu" }),
   );
+});
+
+test("every WCAG tag the gate passes selects at least one axe rule (a typo would drop a level silently)", () => {
+  for (const tag of WCAG_TAGS)
+    assert.ok(axe.getRules([tag]).length > 0, `tag ${tag} selects no rule`);
 });

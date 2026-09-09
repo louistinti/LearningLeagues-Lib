@@ -78,10 +78,13 @@ for (const slug of dirs) {
     // A meta file that throws on import must not abort the report for the
     // others (never short-circuit): that's this component's problem, and
     // the loop continues to the next one with meta left undefined below —
-    // so the examples/suite work for this component is simply skipped.
+    // one red line for the import failure, and the `imported` flag below
+    // keeps the "exports no `meta`" line from firing on top of it.
     let meta: { name: string; examples?: Example[] } | undefined;
+    let imported = false;
     try {
       ({ meta } = await import(pathToFileURL(resolve(dir, metaFile)).href));
+      imported = true;
     } catch (e) {
       problems.push(`meta import failed: ${(e as Error).message}`);
     }
@@ -177,7 +180,7 @@ for (const slug of dirs) {
           );
         }
       }
-    } else {
+    } else if (imported) {
       problems.push(`${metaFile} exports no \`meta\` — nothing rendered, so nothing is verified`);
     }
   }

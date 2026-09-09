@@ -29,6 +29,7 @@ const posix = (p: string) => p.replace(/\\/g, "/");
 const failures: string[] = [];
 const warnings: string[] = [];
 const rows: string[] = [];
+const redPages = new Set<string>(); // pages with at least one failure (per-page or cross-page)
 const incompleteById = new Map<string, Set<string>>();
 const subjects = new Map<string, string[]>(); // title subject → pages
 
@@ -72,17 +73,25 @@ for (const page of pages) {
   } catch (e) {
     problems.push(`load/engine failed: ${(e as Error).message}`);
   }
-  rows.push(
-    `| ${name} | ${axeViolations} | ${findings} | ${problems.length ? "**FAIL**" : "PASS"} |`,
-  );
+  rows.push(`| ${name} | ${axeViolations} | ${findings} | VERDICT |`);
+  if (problems.length) redPages.add(name);
   failures.push(...problems.map((p) => `${name}: ${p}`));
 }
 
+// Cross-page: title subjects must be unique. An empty subject is skipped here —
+// each such page already carries a clearer `page-title` finding of its own.
 for (const [subject, where] of subjects)
-  if (where.length > 1)
+  if (subject && where.length > 1) {
     failures.push(
       `unique-title — "${subject}" is the title subject of ${where.length} pages: ${where.join(", ")}`,
     );
+    for (const name of where) redPages.add(name);
+  }
+for (let i = 0; i < rows.length; i++)
+  rows[i] = rows[i].replace(
+    "| VERDICT |",
+    redPages.has(posix(pages[i])) ? "| **FAIL** |" : "| PASS |",
+  );
 
 const COVERED: Record<string, string> = {
   "color-contrast": "contrast is proved by the contrast gate from resolved tokens",

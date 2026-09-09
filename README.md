@@ -13,7 +13,7 @@ code. The system it implements is specified by the SYSTEM-BLUEPRINT
 
 Milestone 5 shipped: the token pipeline runs Figma → generated stylesheet
 (128 tokens — colours, spacing, layout, typography and the extracted `type/*`
-text styles), the conformity CI job blocks on 8 executable gates, the first
+text styles), the conformity CI job blocks on 9 executable gates, the first
 component (Button) went through the RFC circuit, and the documentation site is
 generated from the component contracts.
 

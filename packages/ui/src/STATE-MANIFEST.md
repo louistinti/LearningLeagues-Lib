@@ -43,9 +43,9 @@ its row; if none match, it is a doctrine gap — flag it.
 
 ## Component registry
 
-| Component | Status | Owner | Branch | PR  | Priority | RFC                                               | Notes                                                                                                                                                                                                                                                                         | `conflictsWith` |
-| --------- | ------ | ----- | ------ | --- | -------- | ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
-| button    | draft  | —     | —      | —   | 1        | `packages/ui/src/components/button/Button.rfc.md` | First component through the circuit (M5). **Adopted by LearningLeagues** 2026-08-31 (site `main` b6f0d0c, dist pin 6be46f6): 12 rendered usages, zero compensations, legacy button CSS deleted. Open library asks: selected/aria-current state (nav CTA). No session owns it. | —               |
+| Component | Status | Owner                        | Branch                  | PR  | Priority | RFC                                               | Notes                                                                                                                                                                                                                                                     | `conflictsWith` |
+| --------- | ------ | ---------------------------- | ----------------------- | --- | -------- | ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| button    | stable | a11y-engine session (Claude) | `feat/a11y-engine-gate` | #22 | 1        | `packages/ui/src/components/button/Button.rfc.md` | First component through the circuit (M5). **Adopted by LearningLeagues** 2026-08-31 (site `main` b6f0d0c, dist pin 6be46f6): 12 rendered usages, zero compensations, legacy button CSS deleted. Open library asks: selected/aria-current state (nav CTA). | —               |
 
 ---
 
@@ -53,7 +53,7 @@ its row; if none match, it is a doctrine gap — flag it.
 
 A component is promoted from `draft` to `stable` when:
 
-1. **Gates pass:** conformity pipeline green (format, drift, schema, lint, contrast, a11y).
+1. **Gates pass:** conformity pipeline green (format, drift, schema, lint, contrast, a11y status, a11y engine, playbook, detectors).
 2. **Design sign-off:** design lead approves the RFC and the visual implementation.
 3. **Documentation complete:** RFC has real sections (not placeholders), examples, documented props, design link.
 4. **Product adoption clear:** at least one consuming product has a confirmed use case and is ready to import.
@@ -64,7 +64,7 @@ A component is promoted to `exported` (shipped to consumers) when:
 2. **Accessibility status is `pass`** — or a documented `fail` covered by a time-boxed allowlist entry.
 3. **No breaking changes in flight** — RFC reflects the current implementation.
 
-The promotion script verifies all criteria, flips the contract status, regenerates the registry and the documentation site, and commits in one change. It fails with a detailed blocker list if any criterion is not met.
+The promotion script verifies all criteria, flips the contract status, regenerates the registry and the documentation site, and commits in one change. It also flips the contract's `a11y.status` from `pending` to `pass` when — and only when — the accessibility engine gate executed green for that component in the same run. It fails with a detailed blocker list if any criterion is not met.
 
 ---
 

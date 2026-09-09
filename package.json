@@ -24,12 +24,15 @@
     "gate:lint-tokens": "node scripts/check-token-lint.ts",
     "gate:contrast": "node scripts/check-contrast.ts",
     "gate:a11y": "node scripts/check-a11y-status.ts",
+    "gate:a11y-engine": "node scripts/check-a11y-engine.ts",
     "gate:playbook": "node scripts/check-playbook-drift.ts",
     "gate:detectors": "node scripts/check-detectors.ts",
     "conformity": "node scripts/check-conformity.ts"
   },
   "devDependencies": {
+    "axe-core": "4.13.0",
     "esbuild": "0.28.2",
+    "jsdom": "30.0.1",
     "prettier": "3.6.2",
     "react": "19.2.8",
     "react-dom": "19.2.8"

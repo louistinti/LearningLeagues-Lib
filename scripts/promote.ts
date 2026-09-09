@@ -6,6 +6,8 @@
 // The human gestures stay human: the §6 ratification checkboxes in the RFC
 // are the design lead's attestation — this script refuses while they are
 // unticked, it never ticks them.
+// The a11y status is flipped pending → pass here too, only when the
+// accessibility engine gate executed green for the component in the same run.
 // Usage: node scripts/promote.ts <component> <stable|exported> [--write]
 import { readFileSync, writeFileSync, existsSync, readdirSync } from "node:fs";
 import { join, resolve } from "node:path";
@@ -50,11 +52,46 @@ const row = manifest.split("\n").find((l) => l.startsWith(`| ${name} `));
 
 // ── Criteria (draft → stable; exported adds its own) ───────────────────────
 // 1. Every blocking gate green, executed now — a summary is not evidence.
+//    The start time gates the engine report below: only a report written by
+//    THIS run counts (never a stale file from an earlier session).
+const runStartedAt = Date.now(); // both timestamps come from the same clock, and the
+// engine writes strictly after this line, so >= holds causally — no margin needed
 const conf = spawnSync(process.execPath, ["scripts/check-conformity.ts"], { encoding: "utf8" });
 check(
   "gates green (pnpm conformity, executed)",
   conf.status === 0,
   conf.status === 0 ? undefined : "conformity FAILED — fix before promoting",
+);
+
+// 1b. Accessibility engine green for THIS component, read from the JSON the
+//     engine gate wrote during the conformity run above.
+const ENGINE_JSON = "reports/a11y-engine.json";
+type EngineReport = {
+  generatedAt: string;
+  components: Record<string, { verdict: "PASS" | "FAIL" }>;
+};
+let engine: EngineReport | undefined;
+let engineReadError: string | undefined;
+if (existsSync(ENGINE_JSON)) {
+  try {
+    engine = JSON.parse(readFileSync(ENGINE_JSON, "utf8"));
+  } catch (err) {
+    engineReadError = err instanceof Error ? err.message : String(err);
+  }
+}
+const engineFresh = !!engine && Date.parse(engine.generatedAt) >= runStartedAt;
+const engineRow = engineFresh ? engine?.components?.[name] : undefined;
+const engineReason = engineReadError
+  ? `engine report unreadable (${engineReadError})`
+  : !engineFresh
+    ? "no engine report written by this run — see the conformity output"
+    : !engineRow
+      ? "component absent from the engine report"
+      : `engine verdict ${engineRow.verdict} — see reports/a11y-engine.md`;
+check(
+  "accessibility engine green for this component (reports/a11y-engine.json, this run)",
+  engineRow?.verdict === "PASS",
+  engineReason,
 );
 
 // 2. RFC approved + design sign-off attestation (§6 checkboxes, human-ticked).
@@ -87,11 +124,15 @@ check(
 );
 
 // 5. Post-flip gate prediction: stable requires a11y "pass" (check-a11y-status
-//    would red the repository right after the flip otherwise).
+//    would red the repository right after the flip otherwise). A "pending"
+//    status with the engine green is flipped to "pass" by --write — the only
+//    legal way that status changes (design record 2026-09-09).
+const a11yStatus: string | undefined = contract.a11y?.status;
+const a11yFlip = a11yStatus === "pending" && engineRow?.verdict === "PASS";
 check(
-  'a11y status "pass" (stable-gate rule in check-a11y-status)',
-  contract.a11y?.status === "pass",
-  `currently "${contract.a11y?.status}"${/never by assertion/i.test(contract.a11y?.notes ?? "") ? " — the contract's own notes require the accessibility engine gate, not an assertion" : ""}`,
+  'a11y status "pass" — or "pending" with the engine green (flipped by --write)',
+  a11yStatus === "pass" || a11yFlip,
+  `currently "${a11yStatus}"${a11yStatus === "pending" ? ` — ${engineReason}` : ""}`,
 );
 
 if (target === "exported") {
@@ -102,8 +143,9 @@ if (target === "exported") {
   const today = new Date().toISOString().slice(0, 10);
   const allow = loadAllowlist("scripts/a11y-allowlist.json", today);
   const covered =
-    contract.a11y?.status === "pass" ||
-    (contract.a11y?.status === "fail" && allow.entries.some((e) => e.scope === name));
+    a11yStatus === "pass" ||
+    a11yFlip ||
+    (a11yStatus === "fail" && allow.entries.some((e) => e.scope === name));
   check('a11y "pass" or time-boxed allowlisted "fail" (export gate)', covered);
 }
 
@@ -134,6 +176,7 @@ if (target === "exported") {
   contract.status = "stable";
   contract.exported = true;
 }
+if (a11yFlip) contract.a11y.status = "pass"; // verified by execution above, never by hand
 writeFileSync(contractPath, JSON.stringify(contract, null, 2) + "\n");
 writeFileSync(
   MANIFEST,
@@ -162,7 +205,12 @@ console.log(`\non branch: ${branch}`);
 const add = spawnSync("git", ["add", contractPath, MANIFEST, "docs"], { stdio: "inherit" });
 const commit = spawnSync(
   "git",
-  ["commit", "-m", `feat(${name}): promote to ${target} — criteria verified by scripts/promote.ts`],
+  [
+    "commit",
+    "-m",
+    `feat(${name}): promote to ${target} — criteria verified by scripts/promote.ts` +
+      (a11yFlip ? " (a11y pending → pass by the accessibility engine gate)" : ""),
+  ],
   { stdio: "inherit" },
 );
 if (add.status !== 0 || commit.status !== 0) {

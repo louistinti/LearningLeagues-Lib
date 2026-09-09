@@ -65,9 +65,9 @@
 </div>
 </nav>
 <main id="main">
-<h1>Button <span class="badge badge--draft">draft</span></h1>
+<h1>Button <span class="badge badge--stable">stable</span></h1>
 <p>Action trigger: accent-filled primary with corner brackets, outlined secondary. Renders a native &lt;a&gt; when href is set (all measured site usages navigate), a native &lt;button&gt; otherwise.</p>
-<p class="facts">Variants: <code>primary</code> <code>secondary</code> · A11y: <span class="badge badge--pending">pending</span></p>
+<p class="facts">Variants: <code>primary</code> <code>secondary</code> · A11y: <span class="badge badge--pass">pass</span></p>
 <p class="notes">Hover and focus-visible are CSS states, never props (RFC §3). Chrome lives in button.css; the label typography is the extracted type/button text style (--ll-type-button-*).</p>
 <p class="meta-links">RFC: <code>Button.rfc.md</code> · Figma node: <code>16:18</code></p>
 <h2 id="examples">Examples</h2>
@@ -190,7 +190,7 @@
       </tr>
   </tbody>
 </table>
-<h2 id="accessibility">Accessibility <span class="badge badge--pending">pending</span></h2>
+<h2 id="accessibility">Accessibility <span class="badge badge--pass">pass</span></h2>
 <dl class="a11y">
     <div><dt>Semantic structure</dt><dd>Native &lt;button type&gt; or native &lt;a href&gt; when href is set; link semantics kept deliberately (Enter activates, Space scrolls). No ARIA overrides; uppercase is CSS text-transform, AT reads the author's casing.</dd></div>
     <div><dt>Keyboard</dt><dd>Native activation, no custom key handling; focus ring only on :focus-visible — 2px accent outline, 3px offset, both variants.</dd></div>

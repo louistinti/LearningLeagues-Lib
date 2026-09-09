@@ -40,6 +40,10 @@ stable across the move.
   - Rule: before measuring or editing a consuming repository, `git fetch` and verify the tree sits on `origin/main` — a stale sibling checkout is active misinformation (axiom 6 applied to product repositories).
   - Gate: none; candidate is a prerequisite check in the adapted product playbook (blueprint §8 phase 1 — "every check run and reported").
 
+- **L10** — The design record assumed axe's `tabindex` rule would red a positive tabindex; under the gate's WCAG tag set it never runs (best-practice tag only), and only the injection proof revealed the gap.
+  - Rule: every "the engine catches X" claim is verified by injection under the gate's real configuration before being relied on; a rule id the gate relies on is locked by a detector test.
+  - Gate: `pnpm gate:detectors` locks that every WCAG tag selects rules (since 2026-09-09); per-rule coverage claims remain proved by injection, so the lesson stays active.
+
 ## Archive (closed, verbatim)
 
 <a id="l03"></a>

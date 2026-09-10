@@ -1,7 +1,7 @@
 // jsdom window factory + axe-core runner for the accessibility engine gate
-// (blueprint §5.1 row 9). The audited unit is a RENDERED FRAGMENT of a real
-// component with the library's real CSS — never a page, never an
-// approximation. axe runs INSIDE the window (window.eval of axe.source, the
+// (blueprint §5.1 row 9) and the docs-site gate. By default the audited unit
+// is a RENDERED FRAGMENT of a real component with the library's real CSS —
+// never an approximation. axe runs INSIDE the window (window.eval of axe.source, the
 // pattern axe documents for jsdom) so no global leaks between renders.
 // runAxe has two modes: fragment mode (default, gate 9) keeps the
 // page-level rules off since a fragment has no landmarks; page mode (the

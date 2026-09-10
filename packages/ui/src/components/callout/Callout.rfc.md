@@ -1,6 +1,6 @@
 # RFC: Callout
 
-> **Status:** draft
+> **Status:** approved
 > **Author:** Callout RFC session (Claude, sup. Louis Tinthilier)
 > **Date:** 2026-09-11
 > **Design node:** `61:26` — [link](https://www.figma.com/design/6zp7CvEjdiFXzwh6ZGGwB8/Lib?node-id=61-26)

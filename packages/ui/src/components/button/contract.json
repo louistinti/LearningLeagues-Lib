@@ -4,6 +4,7 @@
   "component": "Button",
   "rfc": "Button.rfc.md",
   "designNode": "16:18",
+  "docsNode": "54:3",
   "variants": ["primary", "secondary"],
   "props": {
     "variant": {

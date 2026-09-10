@@ -4,7 +4,7 @@
 // outside this repository is explicit opt-in (--write --target <path>).
 // The pin header names the exact lib commit the artefacts were built from.
 // Usage: node scripts/vendor-dist.ts [--write] --target <consuming-repo-path>
-import { readFileSync, writeFileSync, mkdirSync, existsSync, statSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, statSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { execSync } from "node:child_process";
 
@@ -39,6 +39,44 @@ if (dirty && write) {
   process.exit(1);
 }
 
+// Page wiring (LEARNINGS L11): in a buildless host the library is a classic
+// script, and a shared product component (the site's Nav) renders LL.* on
+// every page — including pages that never asked for a library component.
+// So every *.html at the target root that runs product JSX (a text/babel
+// script) must load lib/ll-lib.jsx AND link lib/ll-lib.css. Enumerate the
+// pages, never the usages. Reported on every run; --write refuses.
+const pages = readdirSync(target)
+  .filter((n) => n.endsWith(".html"))
+  .sort();
+const jsxPages: string[] = [];
+const unwired: string[] = [];
+for (const page of pages) {
+  const html = readFileSync(join(target, page), "utf8");
+  if (!/type="text\/babel"/.test(html)) continue;
+  jsxPages.push(page);
+  const missing: string[] = [];
+  if (!/src="lib\/ll-lib\.jsx"/.test(html)) missing.push("lib/ll-lib.jsx");
+  if (!/href="lib\/ll-lib\.css"/.test(html)) missing.push("lib/ll-lib.css");
+  if (missing.length)
+    unwired.push(`${page}: runs product JSX but does not load ${missing.join(" + ")}`);
+}
+if (unwired.length) {
+  console.error(
+    `vendor-dist: ${unwired.length} page(s) run product JSX without the library (L11 — a shared component rendering LL.* crashes there):\n` +
+      unwired.map((u) => `  - ${u}`).join("\n"),
+  );
+  if (write) {
+    console.error(
+      "vendor-dist: refusing --write until every such page loads lib/ll-lib.{css,jsx} — wire the pages first, then vendor.",
+    );
+    process.exit(1);
+  }
+} else {
+  console.log(
+    `vendor-dist: page wiring OK — ${jsxPages.length} page(s) run product JSX and every one loads the library`,
+  );
+}
+
 for (const f of FILES) {
   const dest = join(target, DEST_DIR, f);
   const header = `/* VENDORED from LearningLeagues-Lib @ ${sha} (dist/${f}).
@@ -52,7 +90,7 @@ for (const f of FILES) {
     console.log(`vendor-dist: wrote ${dest} (pin ${sha.slice(0, 7)})`);
   } else {
     console.log(
-      `vendor-dist (DRY RUN): would write ${dest} (${content.length} bytes, pin ${sha.slice(0, 7)}${dirty ? "; BLOCKED if --write: dirty tree" : ""})`,
+      `vendor-dist (DRY RUN): would write ${dest} (${content.length} bytes, pin ${sha.slice(0, 7)}${dirty ? "; BLOCKED if --write: dirty tree" : ""}${unwired.length ? "; BLOCKED if --write: unwired page(s)" : ""})`,
     );
   }
 }

@@ -11,11 +11,15 @@ code. The system it implements is specified by the SYSTEM-BLUEPRINT
 
 ## Status
 
-Milestone 5 shipped: the token pipeline runs Figma → generated stylesheet
-(128 tokens — colours, spacing, layout, typography and the extracted `type/*`
-text styles), the conformity CI job blocks on 10 executable gates, the first
-component (Button) went through the RFC circuit, and the documentation site is
-generated from the component contracts.
+The machine runs end to end: the token pipeline goes Figma → generated
+stylesheet (128 tokens — colours, spacing, layout, typography and the extracted
+`type/*` text styles), the conformity CI job blocks on 10 executable gates
+(including the accessibility engine and the docs-site structural audit), two
+components (Button, Callout) are `stable` and exported after the RFC circuit
+and the site's adoption, and the documentation site is generated from the
+component contracts. Each component's rules are authored first on a Figma page
+`Docs / <Component>` and imported once at RFC time (`process/PROJECT-CONTEXT.md`,
+Design source).
 
 - **Documentation site:** <https://louistinti.github.io/LearningLeagues-Lib/>
   — component registry, per-component pages, and the design-tokens reference.

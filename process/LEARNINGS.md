@@ -44,10 +44,6 @@ stable across the move.
   - Rule: every "the engine catches X" claim is verified by injection under the gate's real configuration before being relied on; a rule id the gate relies on is locked by a detector test.
   - Gate: `pnpm gate:detectors` locks that every WCAG tag selects rules (since 2026-09-09); per-rule coverage claims remain proved by injection, so the lesson stays active.
 
-- **L11** — The Button pilot wired the vendored lib into the three pages that used the Button, but `Nav` (shared, loaded by every page) also started rendering `LL.Button`: seven pages shipped with a crashing Nav, green everywhere, found only by the next adoption run.
-  - Rule: when a shared product component starts consuming the library, every page that loads that component loads the library — enumerate the pages, never the usages.
-  - Gate: none; candidate is a check in `vendor-dist.ts` (every HTML loading `components.jsx` must load `lib/ll-lib.jsx`) reported as a warning at vendoring time.
-
 ## Archive (closed, verbatim)
 
 <a id="l03"></a>
@@ -62,3 +58,9 @@ stable across the move.
     ignore) the moment it is introduced.
   - Gate: `pnpm tokens:check` in the required CI job goes red if any formatter
     (or hand) rewrites the token artefacts.
+
+<a id="l11"></a>
+
+- **L11** (2026-09-11, retired the same day) — The Button pilot wired the vendored lib into the three pages that used the Button, but `Nav` (shared, loaded by every page) also started rendering `LL.Button`: seven pages shipped with a crashing Nav, green everywhere, found only by the next adoption run.
+  - Rule: when a shared product component starts consuming the library, every page that loads that component loads the library — enumerate the pages, never the usages.
+  - Gate: `node scripts/vendor-dist.ts --target <path>` lists every page that runs product JSX without loading `lib/ll-lib.{css,jsx}` on every run, and `--write` refuses while one exists (since 2026-09-11).

@@ -1,6 +1,6 @@
 {
   "status": "stable",
-  "exported": false,
+  "exported": true,
   "component": "Button",
   "rfc": "Button.rfc.md",
   "designNode": "16:18",

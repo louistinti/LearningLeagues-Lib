@@ -22,4 +22,21 @@ function Button({
     </button>;
 }
 
-window.LL = Object.assign(window.LL || {}, { Button });
+// ── Callout (callout) ──
+const LABELS = {
+  key: "Key concept",
+  pro: "Pro tip",
+  trap: "Trap"
+};
+function Callout({ type, title, children }) {
+  return <article className={`ll-callout ll-callout--${type}`}>
+      <span className="ll-callout-tag">
+        <i className="ll-callout-glyph" aria-hidden="true" />
+        {LABELS[type]}
+      </span>
+      {title ? <h3 className="ll-callout-title">{title}</h3> : null}
+      <div className="ll-callout-body">{children}</div>
+    </article>;
+}
+
+window.LL = Object.assign(window.LL || {}, { Button, Callout });

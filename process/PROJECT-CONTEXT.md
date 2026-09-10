@@ -35,6 +35,17 @@ approval label.
 | File  | `Lib` — key `6zp7CvEjdiFXzwh6ZGGwB8` |
 | Owner | Louis Tinthilier                     |
 
+Component documentation pages (since 2026-09-11): one Figma page per
+component, named `Docs / <Component>`, in the 8-block skeleton — anatomy
+(bound variables, no redlines), states, golden rules, contents & examples,
+how to use, API & behaviours (each rule tagged by what enforces it: TOKEN /
+TEST / GATE / HUMAN), accessibility, out of scope. The flow is one-way, like
+tokens: Louis writes the page BEFORE a component's RFC; the RFC-generation
+prompt imports it once into the contract (`docsNode` records the page); later
+changes go through an RFC §7 follow-up, never a live sync. For a component
+that predates the convention the page is generated FROM the contract as a
+rendering (Button: `Docs / Button`, node 54:3, 2026-09-11).
+
 The Figma variables were bootstrapped ONCE from the site's historical
 `styles.css` values (code → Figma, a one-time seeding, 2026-08-12). From that
 point on the flow is strictly Figma → code; the historical CSS is reference,

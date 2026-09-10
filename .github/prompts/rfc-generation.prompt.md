@@ -15,6 +15,11 @@ approval is a human lock (`AGENTS.md`, human locks).
   with nothing to cross-reference, there is no RFC to write).
 - **Consuming repositories** to measure, as local paths (optional — see
   Step 3 for the mandatory behaviour when absent).
+- **Figma docs page** `Docs / <Component>` id + link (optional — the design
+  lead's written documentation of the component, in the 8-block skeleton:
+  anatomy, states, golden rules, contents, how to use, API & behaviours,
+  accessibility, out of scope; see `process/PROJECT-CONTEXT.md`, "Design
+  source"). Absent → write `no docs page — reported <YYYY-MM-DD>` in §1.
 
 ## Step 0 — Read repository context (BLOCKING)
 
@@ -49,6 +54,16 @@ Read, in this order, before writing anything:
    commitment.
 3. Leave every `HUMAN ONLY` block (§5, §6) and §7 Arbitration log untouched
    for now.
+   3b. If a Figma docs page was given, read it through the Figma MCP
+   (`get_screenshot` at full size, `get_metadata`) and import it ONCE, block
+   by block: golden rules and how-to-use → the contract's `guidelines`
+   (`golden`, `do`, `dont`), states → `meta.states` notes, API & behaviours
+   → §3 (each rule tagged TEST / GATE / HUMAN by what will enforce it),
+   accessibility → §4, out of scope → a closed question for §7. Record the
+   page id as `docsNode` in `contract.json`. Every rule the page states as
+   prose and nothing can enforce becomes a closed question, never a silent
+   promise. Never quote the page as the source of a token value — values
+   come from the bound variables, not from annotations.
 4. In the same folder, create the honest draft `contract.json` — the a11y
    gate requires one in every component folder, and `draft` + not exported +
    a11y `pending` is its legal pre-scaffold state:

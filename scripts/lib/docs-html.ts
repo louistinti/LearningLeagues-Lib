@@ -22,6 +22,7 @@ export interface ComponentDoc {
     status: string;
     rfc?: string;
     designNode?: string;
+    docsNode?: string; // Figma page "Docs / <Component>" — a rendering of this contract
     props?: Record<string, { type: string; default?: string; optional?: boolean; note?: string }>;
     a11y: {
       status: string;
@@ -33,6 +34,11 @@ export interface ComponentDoc {
   };
   renderedExamples: string[]; // same order as meta.examples
 }
+
+// The design source file (process/PROJECT-CONTEXT.md, "Design source").
+const FIGMA_FILE = "6zp7CvEjdiFXzwh6ZGGwB8";
+const figmaUrl = (nodeId: string): string =>
+  `https://www.figma.com/design/${FIGMA_FILE}/Lib?node-id=${esc(nodeId).replace(":", "-")}`;
 
 export const esc = (s: unknown): string =>
   String(s)
@@ -320,7 +326,7 @@ ${c.renderedExamples.map((html) => `  ${withForcedState(html, s.state)}`).join("
 <p>${esc(c.meta.description)}</p>
 <p class="facts">Variants: ${c.meta.variants.map((v) => `<code>${esc(v.variant)}</code>`).join(" ") || "—"} · A11y: <span class="badge badge--${esc(a.status)}">${esc(a.status)}</span></p>
 ${c.meta.notes ? `<p class="notes">${esc(c.meta.notes)}</p>` : ""}
-<p class="meta-links">${c.contract.rfc ? `RFC: <code>${esc(c.contract.rfc)}</code>` : ""}${c.contract.designNode ? ` · Figma node: <code>${esc(c.contract.designNode)}</code>` : ""}</p>
+<p class="meta-links">${c.contract.rfc ? `RFC: <code>${esc(c.contract.rfc)}</code>` : ""}${c.contract.designNode ? ` · Figma node: <a href="${figmaUrl(c.contract.designNode)}"><code>${esc(c.contract.designNode)}</code></a>` : ""}${c.contract.docsNode ? ` · Figma docs page: <a href="${figmaUrl(c.contract.docsNode)}"><code>${esc(c.contract.docsNode)}</code></a>` : ""}</p>
 <h2 id="examples">Examples</h2>
 <p>Live renders — hover and keyboard states all work here.</p>
 ${exampleStage}

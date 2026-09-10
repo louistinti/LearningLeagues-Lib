@@ -93,6 +93,11 @@ for (let i = 0; i < rows.length; i++)
     redPages.has(posix(pages[i])) ? "| **FAIL** |" : "| PASS |",
   );
 
+// Policy on axe "incomplete" ids (Louis, 2026-09-11): while axe-core is pinned
+// to an exact version, an id outside this map stays a visible WARNING — the
+// report is read, the gate stays green. The day axe is bumped, switch to red
+// on any id not listed here and re-prove the gate (ORCHESTRATION: a changed
+// scan surface is re-proved).
 const COVERED: Record<string, string> = {
   "color-contrast": "contrast is proved by the contrast gate from resolved tokens",
   "landmark-one-main": "covered by the structural `landmarks` check",

@@ -1,6 +1,6 @@
 {
   "status": "stable",
-  "exported": false,
+  "exported": true,
   "component": "Callout",
   "rfc": "Callout.rfc.md",
   "designNode": "61:26",

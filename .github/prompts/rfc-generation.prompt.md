@@ -69,7 +69,10 @@ Read, in this order, before writing anything:
    a11y `pending` is its legal pre-scaffold state:
    `{ "status": "draft", "exported": false, "a11y": { "status": "pending",
 "notes": "RFC stage — not scaffolded yet." } }`
-   (The scaffold never overwrites it later.)
+   (The scaffold never overwrites it later.) Prettier-format it. This folder
+   is now RFC stage: the docs/dist generators and the a11y engine skip it
+   visibly until a `*.meta.ts` exists (ORCHESTRATION, "You created an
+   RFC-stage component folder").
 
 ## Step 3 — Product usage analysis, or STOP
 

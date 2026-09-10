@@ -32,7 +32,7 @@ const REPORT = "reports/a11y-engine.md";
 const REPORT_JSON = "reports/a11y-engine.json";
 
 export interface ComponentVerdict {
-  verdict: "PASS" | "FAIL";
+  verdict: "PASS" | "FAIL" | "SKIPPED"; // SKIPPED = RFC stage (no *.meta.ts yet)
   renders: number;
   violations: number;
   findings: number;
@@ -70,10 +70,20 @@ for (const slug of dirs) {
     suite: "none",
   };
   components[slug] = v;
+  let rfcStageNote: string | undefined;
 
   const metaFile = readdirSync(dir).find((n) => n.endsWith(".meta.ts"));
-  if (!existsSync(join(dir, "contract.json")) || !metaFile) {
-    problems.push("no contract.json / *.meta.ts — unverified surface");
+  if (!existsSync(join(dir, "contract.json"))) {
+    problems.push("no contract.json — unverified surface");
+  } else if (!metaFile) {
+    // RFC stage (arbitrated 2026-09-11): contract.json without a *.meta.ts is
+    // a component whose RFC is being written. Nothing renders, so nothing is
+    // verified — recorded as SKIPPED in both reports, never as a pass (the
+    // promotion script accepts only PASS). A folder WITH a meta.ts must be
+    // complete. check-a11y-status keeps requiring the draft contract.
+    v.verdict = "SKIPPED";
+    rfcStageNote =
+      "RFC stage — contract.json without *.meta.ts: nothing rendered, nothing verified";
   } else {
     // A meta file that throws on import must not abort the report for the
     // others (never short-circuit): that's this component's problem, and
@@ -185,6 +195,7 @@ for (const slug of dirs) {
     }
   }
   if (problems.length) v.verdict = "FAIL";
+  if (rfcStageNote) warnings.push(`${slug}: ${rfcStageNote}`);
   failures.push(...problems.map((p) => `${slug}: ${p}`));
 }
 
@@ -223,7 +234,7 @@ writeFileSync(
         Object.entries(components)
           .map(
             ([s, c]) =>
-              `| ${s} | ${c.renders} | ${c.violations} | ${c.findings} | ${c.suite} | ${c.verdict === "PASS" ? "PASS" : "**FAIL**"} |`,
+              `| ${s} | ${c.renders} | ${c.violations} | ${c.findings} | ${c.suite} | ${c.verdict === "PASS" ? "PASS" : c.verdict === "SKIPPED" ? "SKIPPED (RFC stage)" : "**FAIL**"} |`,
           )
           .join("\n") +
         `\n\n## Renders\n\n| Component | Accent | Example | axe violations | Keyboard findings | Verdict |\n| --- | --- | --- | --- | --- | --- |\n${rows.join("\n")}\n`

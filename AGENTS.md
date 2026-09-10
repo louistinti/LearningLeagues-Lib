@@ -52,7 +52,8 @@ merger — single-human team).
 ## Six non-negotiable axioms
 
 1. **Never hardcode a design value.** Not in a class, not in an inline style,
-   not "just this once". (Gate: token lint — planned, Milestone 3.)
+   not "just this once". (Gate: `pnpm gate:lint-tokens`, in the conformity job
+   since Milestone 3.)
 2. **Never hand-edit a generated file.** Regenerate from the source; commit the
    artefact in the same commit as its source.
 3. **Accessibility conformance is a hard requirement.** A non-conformant
@@ -62,7 +63,8 @@ merger — single-human team).
 5. **One writing session per repository at a time.** Isolated worktrees; run
    `git branch --show-current` immediately before every commit.
 6. **A stale file is active misinformation.** Recurring hygiene audit
-   (`process/HYGIENE-AUDIT.md` — planned), blocking before any major session's PR.
+   (`process/HYGIENE-AUDIT.md`: inventory → plan → human approval → execute),
+   before any major session's last PR.
 
 ## Token rules
 
@@ -96,7 +98,8 @@ merger — single-human team).
 - Component folder: kebab-case. The exported identifier comes from the
   component's own contract, never reconstructed from the folder name.
 - Language: **everything in this repository, its commits and its PRs is
-  English.** (Gate: language gate — planned, Milestone 3.)
+  English.** (No gate yet — the human reviewer holds this line; the blueprint's
+  language gate stays a candidate.)
 
 ## Generated vs hand-written
 

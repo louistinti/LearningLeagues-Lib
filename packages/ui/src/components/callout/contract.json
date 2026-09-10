@@ -1,0 +1,31 @@
+{
+  "status": "draft",
+  "exported": false,
+  "component": "Callout",
+  "rfc": "Callout.rfc.md",
+  "designNode": "61:26",
+  "docsNode": "66:3",
+  "variants": ["key", "pro", "trap"],
+  "props": {
+    "type": {
+      "type": "\"key\" | \"pro\" | \"trap\"",
+      "note": "required, no fallback (RFC §7 Q5); selects the tag label and glyph"
+    },
+    "title": {
+      "type": "string",
+      "optional": true,
+      "note": "optional serif title; absent → no <h3> is rendered"
+    },
+    "children": {
+      "type": "ReactNode",
+      "note": "the body: rich inline content (bold, glossary terms)"
+    }
+  },
+  "a11y": {
+    "status": "pending",
+    "semanticStructure": "<article> holding, in order, the tag (plain text: Key concept / Pro tip / Trap — the type's meaning), an optional <h3> under the section's <h2>, and the body. No ARIA role overrides; the uppercase tag is CSS text-transform, AT reads the author's casing.",
+    "keyboard": "Nothing to do: no interactive element inside the component. Interactive children (glossary terms) keep their own semantics, product-side.",
+    "decisions": "The glyph (diamond / circle / triangle, 10px) is decorative — aria-hidden, no alternative text, the label already says it (RFC §7 Q3). Contrast is computed by the gate from resolved tokens: accent/default on surface/default (tag), fg/dim on surface/default (body), fg/default on surface/default (title, bold).",
+    "notes": "Implemented per RFC §4; this status moves to pass only through the accessibility engine gate, never by assertion."
+  }
+}

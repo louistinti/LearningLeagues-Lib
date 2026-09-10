@@ -1,0 +1,12 @@
+{
+  "status": "draft",
+  "exported": false,
+  "component": "Callout",
+  "rfc": "Callout.rfc.md",
+  "designNode": "61:26",
+  "docsNode": "66:3",
+  "a11y": {
+    "status": "pending",
+    "notes": "RFC stage — not scaffolded yet."
+  }
+}

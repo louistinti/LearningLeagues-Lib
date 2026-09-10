@@ -17,6 +17,7 @@ const TOKENS_CSS = "packages/ui/src/tokens/tokens.css";
 const OUT = "dist";
 
 const errors: string[] = [];
+const rfcStage: string[] = []; // contract.json without *.meta.ts — skipped visibly
 
 const slugs = readdirSync(COMPONENTS_DIR)
   .filter((n) => statSync(join(COMPONENTS_DIR, n)).isDirectory())
@@ -41,7 +42,10 @@ for (const slug of slugs) {
   const dir = join(COMPONENTS_DIR, slug);
   const metaFile = readdirSync(dir).find((n) => n.endsWith(".meta.ts"));
   if (!metaFile) {
-    errors.push(`${slug}: no *.meta.ts contract`);
+    // RFC stage (arbitrated 2026-09-11): contract.json without a *.meta.ts is
+    // not shippable surface — left out of the dist, visibly (see the log line
+    // below). A folder WITH a meta.ts must be complete.
+    rfcStage.push(slug);
     continue;
   }
   const { meta } = await import(pathToFileURL(resolve(dir, metaFile)).href);
@@ -77,6 +81,8 @@ if (errors.length) {
   console.error("generate-dist: FAILED\n" + errors.map((e) => `  - ${e}`).join("\n"));
   process.exit(1);
 }
+for (const slug of rfcStage)
+  console.log(`generate-dist: skipped ${slug} (RFC stage - contract.json without *.meta.ts)`);
 
 const outputs: Record<string, string> = {
   [join(OUT, "ll-lib.css")]:

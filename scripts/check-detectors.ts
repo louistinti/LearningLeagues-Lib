@@ -11,6 +11,7 @@ const SUITES = [
   "scripts/lib/detectors.test.ts", // token-lint detectors
   "scripts/lib/a11y-checks.test.ts", // a11y engine — generic keyboard checks
   "scripts/lib/a11y-dom.test.ts", // a11y engine — jsdom + axe plumbing
+  "scripts/lib/docs-a11y-checks.test.ts", // docs a11y — structural checks
 ];
 const REPORT = "reports/detectors.md";
 

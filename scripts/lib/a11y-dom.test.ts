@@ -88,3 +88,28 @@ test("every WCAG tag the gate passes selects at least one axe rule (a typo would
   for (const tag of WCAG_TAGS)
     assert.ok(axe.getRules([tag]).length > 0, `tag ${tag} selects no rule`);
 });
+
+test("page mode: page-level rules stay on and best-practice joins the tags", async () => {
+  // A bare fragment audited AS A PAGE must fail `region` (content outside
+  // landmarks). Uses a <p>, not a <button>: axe-core's region check
+  // explicitly exempts button-role elements (findRegionlessElms), so a bare
+  // button never fires `region` regardless of mode — a plain text node does.
+  const window = createWindow({ html: `<p>Just some text.</p>`, css: "", accent: "ambre" });
+  const r = await runAxe(window, { page: true });
+  window.close();
+  assert.ok(
+    r.violations.some((v) => v.id === "region"),
+    "region should fire in page mode",
+  );
+});
+
+test("fragment mode is the default: the same fragment stays green", async () => {
+  const window = createWindow({
+    html: `<button type="button">Go</button>`,
+    css: "",
+    accent: "ambre",
+  });
+  const r = await runAxe(window);
+  window.close();
+  assert.deepEqual(r.violations, []);
+});

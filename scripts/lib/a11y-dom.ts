@@ -1,8 +1,12 @@
 // jsdom window factory + axe-core runner for the accessibility engine gate
-// (blueprint §5.1 row 9). The audited unit is a RENDERED FRAGMENT of a real
-// component with the library's real CSS — never a page, never an
-// approximation. axe runs INSIDE the window (window.eval of axe.source, the
+// (blueprint §5.1 row 9) and the docs-site gate. By default the audited unit
+// is a RENDERED FRAGMENT of a real component with the library's real CSS —
+// never an approximation. axe runs INSIDE the window (window.eval of axe.source, the
 // pattern axe documents for jsdom) so no global leaks between renders.
+// runAxe has two modes: fragment mode (default, gate 9) keeps the
+// page-level rules off since a fragment has no landmarks; page mode (the
+// docs-site structural gate) keeps them on and adds the best-practice tag,
+// since there the audited unit really is a whole page.
 import { JSDOM, VirtualConsole } from "jsdom";
 import axe from "axe-core";
 
@@ -72,15 +76,23 @@ const pick = (list: axe.Result[]): AxeIssue[] =>
     nodes: Array.from(r.nodes, (n) => n.html),
   }));
 
-export async function runAxe(window: Window): Promise<AxeOutcome> {
+export interface RunAxeOptions {
+  // Page mode (docs gate): the audited unit IS a page, so the page-level
+  // rules stay on and the best-practice tag joins the WCAG tags.
+  page?: boolean;
+}
+
+export async function runAxe(window: Window, opts: RunAxeOptions = {}): Promise<AxeOutcome> {
   // ~70ms per window to eval the 1.3MB axe.source — unavoidable, since each
   // jsdom window is its own V8 context. Guard it so a caller that already
   // ran axe in this window (or reused it) doesn't pay the cost twice.
   if (!("axe" in window)) window.eval(axe.source);
   const inWindow = (window as unknown as { axe: typeof axe }).axe;
   const result = await inWindow.run(window.document, {
-    runOnly: { type: "tag", values: WCAG_TAGS },
-    rules: Object.fromEntries(FRAGMENT_DISABLED_RULES.map((id) => [id, { enabled: false }])),
+    runOnly: { type: "tag", values: opts.page ? [...WCAG_TAGS, "best-practice"] : WCAG_TAGS },
+    rules: opts.page
+      ? {}
+      : Object.fromEntries(FRAGMENT_DISABLED_RULES.map((id) => [id, { enabled: false }])),
   });
   return {
     violations: pick(result.violations),

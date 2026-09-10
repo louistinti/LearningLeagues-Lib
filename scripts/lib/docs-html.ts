@@ -106,9 +106,10 @@ function sidebar(
       const sub = sections(c)
         .map((s) => `        <li><a href="${href}#${s.anchor}">${esc(s.label)}</a></li>`)
         .join("\n");
-      return `    <li>
+      return `    <li class="nav-item">
+      <a href="${href}"${isCurrent ? ' aria-current="page"' : ""}>${esc(c.meta.name)}</a>
       <details${isCurrent ? " open" : ""}>
-        <summary><a href="${href}"${isCurrent ? ' aria-current="page"' : ""}>${esc(c.meta.name)}</a></summary>
+        <summary aria-label="${esc(c.meta.name)} sections"></summary>
         <ul class="sub">
 ${sub}
         </ul>
@@ -121,9 +122,10 @@ ${sub}
   <a class="registry-link" href="${relRoot}/index.html"${current === "registry" ? ' aria-current="page"' : ""}>Registry</a>
   <p class="sidebar-label">Foundations</p>
   <ul class="nav-list">
-    <li>
+    <li class="nav-item">
+      <a href="${tokensHref}"${tokensCurrent ? ' aria-current="page"' : ""}>Tokens</a>
       <details${tokensCurrent ? " open" : ""}>
-        <summary><a href="${tokensHref}"${tokensCurrent ? ' aria-current="page"' : ""}>Tokens</a></summary>
+        <summary aria-label="Tokens sections"></summary>
         <ul class="sub">
 ${tokensSub}
         </ul>

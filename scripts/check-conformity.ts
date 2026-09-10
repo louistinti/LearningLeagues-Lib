@@ -28,6 +28,11 @@ const GATES: { name: string; command: string; args?: string[]; shell?: boolean }
     args: ["scripts/check-a11y-engine.ts"],
   },
   {
+    name: "Docs accessibility",
+    command: process.execPath,
+    args: ["scripts/check-docs-a11y.ts"],
+  },
+  {
     name: "Playbook anti-drift",
     command: process.execPath,
     args: ["scripts/check-playbook-drift.ts"],

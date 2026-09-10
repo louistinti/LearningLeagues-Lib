@@ -4,3 +4,6 @@ node_modules/
 reports/
 *.log
 .DS_Store
+# Session-local tooling (launch configs, parallel worktrees): never repository content.
+# vendor-dist's clean-tree check counts untracked files, so this must be ignored.
+.claude/

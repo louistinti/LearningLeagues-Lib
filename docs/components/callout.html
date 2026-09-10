@@ -80,9 +80,9 @@
 </div>
 </nav>
 <main id="main">
-<h1>Callout <span class="badge badge--draft">draft</span></h1>
+<h1>Callout <span class="badge badge--stable">stable</span></h1>
 <p>An emphasised aside inside a guide section: a typed tag (Key concept / Pro tip / Trap — a decorative glyph and a mono label in the live accent), an optional serif title, a body of rich inline content. Not interactive.</p>
-<p class="facts">Variants: <code>key</code> <code>pro</code> <code>trap</code> · A11y: <span class="badge badge--pending">pending</span></p>
+<p class="facts">Variants: <code>key</code> <code>pro</code> <code>trap</code> · A11y: <span class="badge badge--pass">pass</span></p>
 <p class="notes">Key / Pro / Trap are types, not states: no hover, no focus (RFC §3). Chrome lives in callout.css; the 2-column grid the site lays callouts in stays product-side (RFC §7 Q4).</p>
 <p class="meta-links">RFC: <code>Callout.rfc.md</code> · Figma node: <a href="https://www.figma.com/design/6zp7CvEjdiFXzwh6ZGGwB8/Lib?node-id=61-26"><code>61:26</code></a> · Figma docs page: <a href="https://www.figma.com/design/6zp7CvEjdiFXzwh6ZGGwB8/Lib?node-id=66-3"><code>66:3</code></a></p>
 <h2 id="examples">Examples</h2>
@@ -177,7 +177,7 @@
       </tr>
   </tbody>
 </table>
-<h2 id="accessibility">Accessibility <span class="badge badge--pending">pending</span></h2>
+<h2 id="accessibility">Accessibility <span class="badge badge--pass">pass</span></h2>
 <dl class="a11y">
     <div><dt>Semantic structure</dt><dd>&lt;article&gt; holding, in order, the tag (plain text: Key concept / Pro tip / Trap — the type's meaning), an optional &lt;h3&gt; under the section's &lt;h2&gt;, and the body. No ARIA role overrides; the uppercase tag is CSS text-transform, AT reads the author's casing.</dd></div>
     <div><dt>Keyboard</dt><dd>Nothing to do: no interactive element inside the component. Interactive children (glossary terms) keep their own semantics, product-side.</dd></div>

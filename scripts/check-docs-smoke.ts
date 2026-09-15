@@ -12,7 +12,7 @@ import { existsSync, writeFileSync, mkdirSync } from "node:fs";
 import { createRequire } from "node:module";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
-import { chromium, type Browser } from "playwright";
+import { chromium, type Browser, type BrowserContext } from "playwright";
 import { htmlFiles } from "./lib/docs-files.ts";
 import { collectFacts, judgePage, type Finding } from "./lib/docs-smoke.ts";
 
@@ -22,7 +22,7 @@ const VIEWPORT = { width: 1280, height: 800 };
 const INSTALL = "pnpm exec playwright install chromium";
 const PW_VERSION: string = createRequire(import.meta.url)("playwright/package.json").version;
 const posix = (p: string) => p.replace(/\\/g, "/");
-const firstLine = (e: unknown) => String((e as Error)?.message ?? e).split("\n")[0];
+const firstLine = (e: unknown) => String((e as Error)?.message || e).split("\n")[0];
 
 const failures: string[] = [];
 const rows: string[] = [];
@@ -50,8 +50,9 @@ if (browser)
     const name = posix(page);
     const events: string[] = [];
     let findings: Finding[] = [];
-    const context = await browser.newContext({ viewport: VIEWPORT });
+    let context: BrowserContext | null = null;
     try {
+      context = await browser.newContext({ viewport: VIEWPORT });
       const tab = await context.newPage();
       tab.on("console", (m) => {
         if (m.type() === "error") events.push(`console error: ${m.text()}`);
@@ -69,7 +70,7 @@ if (browser)
     } catch (e) {
       findings = [{ rule: "load", message: `load/engine failed: ${firstLine(e)}` }];
     } finally {
-      await context.close();
+      await context?.close();
     }
     rows.push(
       `| ${name} | ${events.length} | ${findings.length} | ${findings.length ? "**FAIL**" : "PASS"} |`,

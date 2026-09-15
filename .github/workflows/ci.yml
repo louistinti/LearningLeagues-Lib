@@ -25,6 +25,18 @@ jobs:
           node-version-file: .node-version
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # Gate 17 renders the docs pages in Playwright's PINNED Chromium — the
+      # browser build follows the playwright version in package.json, so the
+      # cache key does too. `--with-deps` installs the OS libraries every run
+      # (they are not cached); the browser download itself is skipped on a hit.
+      - name: Playwright version
+        id: playwright
+        run: echo "version=$(node -p "require('./package.json').devDependencies.playwright")" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
+      - run: pnpm exec playwright install --with-deps chromium
       # One aggregator, one required job (blueprint §5.1): it runs every
       # blocking gate, never short-circuits, and reports all failures at once.
       - name: Conformity aggregator

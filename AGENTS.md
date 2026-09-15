@@ -139,14 +139,17 @@ Four rules:
 3. No owner does NOT mean free — read `notes` and `conflictsWith` first.
 4. Status moves in the same commit as the work.
 
-## Distribution contract (planned — recorded now so no decision contradicts it)
+## Distribution contract (phase 1 delivered 2026-08-30; phase 2 planned — recorded so no decision contradicts it)
 
 - The published stylesheet ships **no global CSS reset**; the host owns its
   reset, and every element the library renders is self-defensive about browser
   defaults, structurally (shared base), not per call site.
-- Consumption phase 1 is a git dependency pinned to a **commit** (never a
-  branch), with this root manifest maintained as the install proxy for
-  `packages/ui`. Phase 2 is a registry; consumer import specifiers never change.
+- Consumption phase 1 (delivered 2026-08-30, `scripts/vendor-dist.ts`): the
+  consumer vendors `dist/ll-lib.{css,jsx}` at a **commit** pin (never a
+  branch) — the buildless site cannot install a package — and this root
+  manifest stays the install proxy for `packages/ui` for the day a building
+  consumer arrives. Phase 2 is a registry; consumer import specifiers never
+  change.
 - The toolchain pin lives in `engines` (not `packageManager`), and every CI
   workflow sets the package-manager version explicitly. No gate catches drift
   between the two — grep by hand when bumping.

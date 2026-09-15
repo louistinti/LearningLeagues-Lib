@@ -12,6 +12,7 @@ const SUITES = [
   "scripts/lib/a11y-checks.test.ts", // a11y engine — generic keyboard checks
   "scripts/lib/a11y-dom.test.ts", // a11y engine — jsdom + axe plumbing
   "scripts/lib/docs-a11y-checks.test.ts", // docs a11y — structural checks
+  "scripts/lib/docs-smoke.test.ts", // docs smoke — pure judgement over browser facts
 ];
 const REPORT = "reports/detectors.md";
 

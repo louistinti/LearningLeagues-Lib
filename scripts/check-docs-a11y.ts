@@ -6,24 +6,16 @@
 // subjects must be unique across pages. No allowlist. Never short-circuits.
 // Report: reports/docs-a11y.md.
 // Usage: node scripts/check-docs-a11y.ts  (pnpm gate:docs-a11y)
-import { readdirSync, statSync, existsSync, writeFileSync, mkdirSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { existsSync, writeFileSync, mkdirSync } from "node:fs";
+import { resolve } from "node:path";
 import { JSDOM, VirtualConsole } from "jsdom";
+import { htmlFiles } from "./lib/docs-files.ts";
 import { runAxe } from "./lib/a11y-dom.ts";
 import { checkPage, titleSubject } from "./lib/docs-a11y-checks.ts";
 
 const DOCS = "docs";
 const REPORT = "reports/docs-a11y.md";
 
-function htmlFiles(dir: string): string[] {
-  const out: string[] = [];
-  for (const name of readdirSync(dir).sort()) {
-    const p = join(dir, name);
-    if (statSync(p).isDirectory()) out.push(...htmlFiles(p));
-    else if (name.endsWith(".html")) out.push(p);
-  }
-  return out;
-}
 const posix = (p: string) => p.replace(/\\/g, "/");
 
 const failures: string[] = [];

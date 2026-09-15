@@ -5,8 +5,9 @@
 //     stay self-contained — no imports, no outer-scope references, plain
 //     data out. Layout facts are getBoundingClientRect boxes and innerText
 //     lengths, the two things a simulated DOM can never give (spike
-//     2026-09-15: an emptied demo stage keeps a padded box but no text;
-//     inactive tab panels are 0×0 by design).
+//     2026-09-15: an emptied demo stage keeps a padded box but no text, so
+//     the stage and tile rules look at visible descendants AND rendered
+//     text; inactive tab panels are 0×0 by design).
 //   - judgePage() is pure over those facts plus the browser events the gate
 //     collected, so gate 10 locks every rule.
 // Types are the DOM's; Node strips them.
@@ -20,8 +21,8 @@ export interface Facts {
   bodyPainted: boolean; // computed background-color of <body> is not fully transparent
   main: { box: Box; text: number } | null;
   h1: { box: Box; text: number } | null;
-  stages: { visibleDescendants: number }[]; // every .stage — descendants with a non-zero box
-  tiles: { name: string; visibleDescendants: number }[]; // every .accent-tile — descendants with a non-zero box, outside the .accent-name subtree
+  stages: { visibleDescendants: number; text: number }[]; // every .stage — descendants with a non-zero box, rendered text length
+  tiles: { name: string; visibleDescendants: number; text: number }[]; // every .accent-tile — descendants with a non-zero box outside the .accent-name subtree, rendered text length beyond the name
   hasPanels: boolean; // the page carries [role=tabpanel] elements
   activePanel: { id: string; box: Box; tables: number } | null; // the one not hidden
 }
@@ -59,11 +60,18 @@ export function collectFacts(): Facts {
     h1: h1 ? { box: box(h1), text: text(h1) } : null,
     stages: Array.from(document.querySelectorAll(".stage")).map((s) => ({
       visibleDescendants: visibleDescendants(s),
+      text: text(s),
     })),
-    tiles: Array.from(document.querySelectorAll(".accent-tile")).map((t) => ({
-      name: (t.querySelector(".accent-name")?.textContent ?? "").trim(),
-      visibleDescendants: visibleDescendants(t, ".accent-name"),
-    })),
+    tiles: Array.from(document.querySelectorAll(".accent-tile")).map((t) => {
+      // A tile with no .accent-name subtracts nothing — never the whole tile.
+      const label = t.querySelector(".accent-name");
+      const tileText = text(t) - (label ? text(label) : 0);
+      return {
+        name: (label?.textContent ?? "").trim(),
+        visibleDescendants: visibleDescendants(t, ".accent-name"),
+        text: Math.max(0, tileText),
+      };
+    }),
     hasPanels: panels.length > 0,
     activePanel: active
       ? { id: active.id, box: box(active), tables: active.querySelectorAll("table").length }
@@ -95,12 +103,22 @@ export function judgePage(facts: Facts, events: string[]): Finding[] {
         rule: "demo-stage",
         message: `demo stage #${i + 1} renders nothing visible — the blank-demo incident (blueprint §5.2.10)`,
       });
+    else if (s.text === 0)
+      out.push({
+        rule: "demo-stage",
+        message: `demo stage #${i + 1} renders no text — a visible box with nothing in it (blueprint §5.2.10)`,
+      });
   });
   for (const t of facts.tiles)
     if (t.visibleDescendants === 0)
       out.push({
         rule: "accent-tile",
         message: `accent tile "${t.name}" renders nothing beyond its name`,
+      });
+    else if (t.text === 0)
+      out.push({
+        rule: "accent-tile",
+        message: `accent tile "${t.name}" renders no text beyond its name`,
       });
   if (facts.hasPanels) {
     if (!facts.activePanel)

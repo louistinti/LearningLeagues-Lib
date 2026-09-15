@@ -31,7 +31,10 @@ jobs:
       # (they are not cached); the browser download itself is skipped on a hit.
       - name: Playwright version
         id: playwright
-        run: echo "version=$(node -p "require('./package.json').devDependencies.playwright")" >> "$GITHUB_OUTPUT"
+        run: |
+          v="$(node -p "require('./package.json').devDependencies.playwright ?? ''")"
+          test -n "$v" || { echo "playwright is not a root devDependency"; exit 1; }
+          echo "version=$v" >> "$GITHUB_OUTPUT"
       - uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright

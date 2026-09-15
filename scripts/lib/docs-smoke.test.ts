@@ -13,12 +13,14 @@ const good = (): Facts => ({
   bodyPainted: true,
   main: { box: { w: 1040, h: 3401 }, text: 3755 },
   h1: { box: { w: 976, h: 54 }, text: 13 },
-  stages: [{ visibleChildren: 3 }],
-  tiles: [{ name: "ambre", visibleChildren: 1 }],
+  stages: [{ visibleDescendants: 3 }],
+  tiles: [{ name: "ambre", visibleDescendants: 1 }],
   hasPanels: false,
   activePanel: null,
 });
 const rules = (f: Facts, events: string[] = []) => judgePage(f, events).map((x) => x.rule);
+// The first finding's message — so a rule that reds on the wrong branch is caught too.
+const message = (f: Facts) => judgePage(f, [])[0].message;
 
 test("a healthy page has no findings", () => assert.deepEqual(rules(good()), []));
 
@@ -41,17 +43,23 @@ test("main-content: no <main>, an empty box, or no text — each is red", () => 
   assert.deepEqual(rules({ ...good(), main: { box: { w: 10, h: 10 }, text: 0 } }), [
     "main-content",
   ]);
+  assert.ok(message({ ...good(), main: null }).includes("no <main>"));
+  assert.ok(message({ ...good(), main: { box: { w: 0, h: 0 }, text: 5 } }).includes("empty box"));
+  assert.ok(message({ ...good(), main: { box: { w: 10, h: 10 }, text: 0 } }).includes("no text"));
 });
 
 test("heading: no <h1>, an empty box, or no text — each is red", () => {
   assert.deepEqual(rules({ ...good(), h1: null }), ["heading"]);
   assert.deepEqual(rules({ ...good(), h1: { box: { w: 0, h: 54 }, text: 5 } }), ["heading"]);
   assert.deepEqual(rules({ ...good(), h1: { box: { w: 10, h: 10 }, text: 0 } }), ["heading"]);
+  assert.ok(message({ ...good(), h1: null }).includes("no <h1>"));
+  assert.ok(message({ ...good(), h1: { box: { w: 0, h: 54 }, text: 5 } }).includes("empty box"));
+  assert.ok(message({ ...good(), h1: { box: { w: 10, h: 10 }, text: 0 } }).includes("no text"));
 });
 
 test("demo-stage: a stage with nothing visible is red, and names its position", () => {
   const out = judgePage(
-    { ...good(), stages: [{ visibleChildren: 2 }, { visibleChildren: 0 }] },
+    { ...good(), stages: [{ visibleDescendants: 2 }, { visibleDescendants: 0 }] },
     [],
   );
   assert.deepEqual(
@@ -66,7 +74,7 @@ test("demo-stage: a page without stages (registry, tokens) is not red", () => {
 });
 
 test("accent-tile: a tile with nothing beyond its name is red, naming the accent", () => {
-  const out = judgePage({ ...good(), tiles: [{ name: "jade", visibleChildren: 0 }] }, []);
+  const out = judgePage({ ...good(), tiles: [{ name: "jade", visibleDescendants: 0 }] }, []);
   assert.deepEqual(
     out.map((f) => f.rule),
     ["accent-tile"],
@@ -92,6 +100,21 @@ test("tab-panel: panels present but none active, an empty active box, or no tabl
     }),
     ["tab-panel"],
   );
+  assert.ok(message({ ...good(), hasPanels: true, activePanel: null }).includes("none is visible"));
+  assert.ok(
+    message({
+      ...good(),
+      hasPanels: true,
+      activePanel: { id: "primitives", box: { w: 0, h: 0 }, tables: 3 },
+    }).includes("empty box"),
+  );
+  assert.ok(
+    message({
+      ...good(),
+      hasPanels: true,
+      activePanel: { id: "primitives", box: { w: 976, h: 1756 }, tables: 0 },
+    }).includes("no table"),
+  );
 });
 
 test("tab-panel: a healthy tokens page passes", () => {
@@ -111,8 +134,9 @@ test("page-title: an empty or blank title is red", () => {
 });
 
 test("never short-circuits: several symptoms are all listed", () => {
-  const out = rules({ ...good(), bodyPainted: false, h1: null, stages: [{ visibleChildren: 0 }] }, [
-    "page error: x",
-  ]);
+  const out = rules(
+    { ...good(), bodyPainted: false, h1: null, stages: [{ visibleDescendants: 0 }] },
+    ["page error: x"],
+  );
   assert.deepEqual(out, ["page-events", "stylesheet", "heading", "demo-stage"]);
 });

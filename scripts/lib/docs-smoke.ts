@@ -20,8 +20,8 @@ export interface Facts {
   bodyPainted: boolean; // computed background-color of <body> is not fully transparent
   main: { box: Box; text: number } | null;
   h1: { box: Box; text: number } | null;
-  stages: { visibleChildren: number }[]; // every .stage — descendants with a non-zero box
-  tiles: { name: string; visibleChildren: number }[]; // every .accent-tile — beyond its .accent-name
+  stages: { visibleDescendants: number }[]; // every .stage — descendants with a non-zero box
+  tiles: { name: string; visibleDescendants: number }[]; // every .accent-tile — descendants with a non-zero box, outside the .accent-name subtree
   hasPanels: boolean; // the page carries [role=tabpanel] elements
   activePanel: { id: string; box: Box; tables: number } | null; // the one not hidden
 }
@@ -43,9 +43,9 @@ export function collectFacts(): Facts {
     const r = el.getBoundingClientRect();
     return r.width > 0 && r.height > 0;
   };
-  const visibleChildren = (root: Element, skip?: string): number =>
+  const visibleDescendants = (root: Element, skip?: string): number =>
     Array.from(root.querySelectorAll("*")).filter(
-      (el) => !(skip && el.matches(skip)) && visible(el),
+      (el) => !(skip && el.closest(skip)) && visible(el),
     ).length;
   const text = (el: Element): number => ((el as HTMLElement).innerText || "").trim().length;
   const main = document.querySelector("main");
@@ -58,11 +58,11 @@ export function collectFacts(): Facts {
     main: main ? { box: box(main), text: text(main) } : null,
     h1: h1 ? { box: box(h1), text: text(h1) } : null,
     stages: Array.from(document.querySelectorAll(".stage")).map((s) => ({
-      visibleChildren: visibleChildren(s),
+      visibleDescendants: visibleDescendants(s),
     })),
     tiles: Array.from(document.querySelectorAll(".accent-tile")).map((t) => ({
       name: (t.querySelector(".accent-name")?.textContent ?? "").trim(),
-      visibleChildren: visibleChildren(t, ".accent-name"),
+      visibleDescendants: visibleDescendants(t, ".accent-name"),
     })),
     hasPanels: panels.length > 0,
     activePanel: active
@@ -90,14 +90,14 @@ export function judgePage(facts: Facts, events: string[]): Finding[] {
   else if (empty(facts.h1.box)) out.push({ rule: "heading", message: "<h1> has an empty box" });
   else if (facts.h1.text === 0) out.push({ rule: "heading", message: "<h1> renders no text" });
   facts.stages.forEach((s, i) => {
-    if (s.visibleChildren === 0)
+    if (s.visibleDescendants === 0)
       out.push({
         rule: "demo-stage",
         message: `demo stage #${i + 1} renders nothing visible — the blank-demo incident (blueprint §5.2.10)`,
       });
   });
   for (const t of facts.tiles)
-    if (t.visibleChildren === 0)
+    if (t.visibleDescendants === 0)
       out.push({
         rule: "accent-tile",
         message: `accent tile "${t.name}" renders nothing beyond its name`,

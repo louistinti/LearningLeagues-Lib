@@ -24,10 +24,6 @@ stable across the move.
   - Rule: the human reviewer checks the RFC status on every component PR until then.
   - Gate: partial since 2026-08-31 — `scripts/promote.ts` refuses any promotion without RFC `approved` + a fully ticked §6; code landing pre-approval is still only caught by the human reviewer, so the lesson stays active.
 
-- **L06** — The test-button scaffold's intentional red lived inside the required CI job, making it permanently red: the first PR it blocked was the one shipping the circuit itself (arbitrated 2026-08-12: fixture deleted, evidence kept in PROOF-OF-BLOCKING).
-  - Rule: an intentional red is proved by injection-then-revert, never by a committed fixture the required job scans.
-  - Gate: the required job's green-on-merge requirement is itself the gate, now that no permanent red is committed.
-
 - **L07** — Stacked PRs (#10 on #9's branch, #11 on #10's) were merged into their stacked bases; only #9 reached main, and the work sat invisible on intermediate branches until noticed.
   - Rule: a stacked PR is retargeted to `main` the moment its base merges — before pressing its own merge; "merged" means merged-to-main, verified on `main`'s log, not on the PR badge.
   - Gate: none; candidate is a repo check that flags merged PRs whose base was not `main`.
@@ -58,6 +54,12 @@ stable across the move.
     ignore) the moment it is introduced.
   - Gate: `pnpm tokens:check` in the required CI job goes red if any formatter
     (or hand) rewrites the token artefacts.
+
+<a id="l06"></a>
+
+- **L06** (2026-08-12, retired 2026-09-16 at the hygiene audit; the required job is `conformity` in `.github/workflows/ci.yml`) — The test-button scaffold's intentional red lived inside the required CI job, making it permanently red: the first PR it blocked was the one shipping the circuit itself (arbitrated 2026-08-12: fixture deleted, evidence kept in PROOF-OF-BLOCKING).
+  - Rule: an intentional red is proved by injection-then-revert, never by a committed fixture the required job scans.
+  - Gate: the required job's green-on-merge requirement is itself the gate, now that no permanent red is committed.
 
 <a id="l11"></a>
 

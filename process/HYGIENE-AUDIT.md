@@ -36,7 +36,8 @@ catches generated artefacts, nothing catches prose that stopped being true.
 
 ## Log
 
-| Date       | Session                                  | Fixes                                                                                                                                           | Deletions |
-| ---------- | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
-| 2026-08-30 | post-tokens audit (PR #15)               | README refresh, generated-files table, manifest row                                                                                             | none      |
-| 2026-09-11 | gate 9 → Callout circuit → L11 (this PR) | README status (two exported components, docs-page convention, 10 gates); AGENTS.md: token-lint and language-gate annotations, this file created | none      |
+| Date       | Session                                 | Fixes                                                                                                                                            | Deletions |
+| ---------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | --------- |
+| 2026-08-30 | post-tokens audit (PR #15)              | README refresh, generated-files table, manifest row                                                                                              | none      |
+| 2026-09-11 | gate 9 → Callout circuit → L11 (PR #32) | README status (two exported components, docs-page convention, 10 gates); AGENTS.md: token-lint and language-gate annotations, this file created  | none      |
+| 2026-09-16 | gate 17 → Button `current` (this PR)    | manifest: button row on site `main`, promotion criterion names the 11 gates; PLAYBOOK sync note; AGENTS.md axiom 3 gate annotation; L06 archived | none      |

@@ -90,6 +90,13 @@ states via mirrors, attribute states via the attribute itself) instead of the
 Button-specific sentence it carries today. No new gate: the docs a11y and
 smoke gates audit the output as before.
 
+Checkpoint addendum (Louis, 2026-09-16): the current example stays in every
+States stage ("je garde les exemples"); the default and hover notes name the
+exception. Consequence accepted knowingly: the Button docs page announces
+nine `aria-current="page"` (eight demo specimens plus the sidebar's genuine
+marker) — demos stay audible to assistive tech, they are the material the
+gates audit.
+
 ### 2.7 Generated artefacts and manifest
 
 `pnpm docs:build` and `pnpm dist:build` in the same commit as the source.

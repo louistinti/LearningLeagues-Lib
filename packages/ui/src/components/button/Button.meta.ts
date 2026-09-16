@@ -4,10 +4,13 @@ export const meta = {
     "Action trigger: accent-filled primary with corner brackets, outlined secondary. Renders a native <a> when href is set (all measured site usages navigate), a native <button> otherwise.",
   variants: [{ variant: "primary" }, { variant: "secondary" }],
   states: [
-    { state: "default", note: "The resting chrome — what every example renders." },
+    {
+      state: "default",
+      note: "The resting chrome — what every example renders, except the current example, which holds its own state everywhere (its props emit aria-current).",
+    },
     {
       state: "hover",
-      note: "Versus default: primary's fill lightens toward white and an accent glow ring appears; secondary recolors its border and label to the accent. Pure CSS, never a prop (RFC §3).",
+      note: "Versus default: primary's fill lightens toward white and an accent glow ring appears; secondary recolors its border and label to the accent. Pure CSS, never a prop (RFC §3). The current example stays filled: hover is inert on it by design.",
     },
     {
       state: "focus-visible",

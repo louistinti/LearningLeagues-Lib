@@ -3,20 +3,24 @@
 // file://, one fresh context per page) and checked for CONTENT PRESENT —
 // never how it looks: no console/page error, no failed asset, a painted
 // body, a non-empty <main> and <h1>, every demo stage and accent tile
-// visibly non-empty, the active tab panel rendered. Facts are collected 250
-// ms after load; a component page (docs/components/) must carry at least
-// one stage and one tile. Facts are collected inside the page and judged by
-// lib/docs-smoke.ts (pure, locked by gate 10).
+// visibly non-empty, the active tab panel rendered. Facts are collected
+// inside the page SETTLE_MS after load (so a late thrown error is judged)
+// and judged by lib/docs-smoke.ts (pure, locked by gate 10); a component
+// page (docs/components/) must carry at least one stage and one tile, and
+// the gate is red when no component page exists at all.
 // No allowlist. A missing browser binary is RED with the install command —
 // never green by absence. Never short-circuits. Report: reports/docs-smoke.md.
 // Usage: node scripts/check-docs-smoke.ts  (pnpm gate:docs-smoke)
 import { existsSync, writeFileSync, mkdirSync } from "node:fs";
 import { createRequire } from "node:module";
-import { resolve } from "node:path";
+import { resolve, join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { chromium, type Browser, type BrowserContext } from "playwright";
 import { htmlFiles } from "./lib/docs-files.ts";
 import { collectFacts, judgePage, type Finding, type PageKind } from "./lib/docs-smoke.ts";
+
+const posix = (p: string) => p.replace(/\\/g, "/");
+const firstLine = (e: unknown) => String((e as Error)?.message || e).split("\n")[0];
 
 const DOCS = "docs";
 const REPORT = "reports/docs-smoke.md";
@@ -27,11 +31,9 @@ const VIEWPORT = { width: 1280, height: 800 };
 const SETTLE_MS = 250;
 // docs/components/*.html are component pages: at least one demo stage and
 // one accent tile expected (registry and tokens pages have none by design).
-const COMPONENT_PAGES = `${DOCS}/components/`;
+const COMPONENT_PAGES = posix(join(DOCS, "components")) + "/"; // built the way `name` is
 const INSTALL = "pnpm exec playwright install chromium";
 const PW_VERSION: string = createRequire(import.meta.url)("playwright/package.json").version;
-const posix = (p: string) => p.replace(/\\/g, "/");
-const firstLine = (e: unknown) => String((e as Error)?.message || e).split("\n")[0];
 
 const failures: string[] = [];
 const rows: string[] = [];
@@ -40,6 +42,10 @@ let engine = "not launched";
 const pages = existsSync(DOCS) ? htmlFiles(DOCS) : [];
 if (pages.length === 0)
   failures.push(`no page under ${DOCS}/ — the site always has at least the registry`);
+else if (!pages.some((p) => posix(p).startsWith(COMPONENT_PAGES)))
+  failures.push(
+    `no component page under ${COMPONENT_PAGES} — Button is always documented; the stricter component-page rule would apply to nothing`,
+  );
 
 let browser: Browser | null = null;
 try {
@@ -84,7 +90,7 @@ if (browser)
       await context?.close();
     }
     rows.push(
-      `| ${name} | ${events.length} | ${findings.length} | ${findings.length ? "**FAIL**" : "PASS"} |`,
+      `| ${name} | ${kind} | ${events.length} | ${findings.length} | ${findings.length ? "**FAIL**" : "PASS"} |`,
     );
     failures.push(...findings.map((f) => `${name}: ${f.rule} — ${f.message}`));
   }
@@ -96,7 +102,7 @@ writeFileSync(
   REPORT,
   `# check-docs-smoke — ${verdict}\n\n${pages.length} page(s) under ${DOCS}/ rendered by ${engine} (headless, file://, ${VIEWPORT.width}×${VIEWPORT.height}); content present — browser events (until load + ${SETTLE_MS} ms), painted body, <main> and <h1>, demo stages, accent tiles (component pages: at least one of each), active tab panel.\n` +
     (rows.length
-      ? `\n| Page | Browser events | Findings | Verdict |\n| --- | --- | --- | --- |\n${rows.join("\n")}\n`
+      ? `\n| Page | Kind | Browser events | Findings | Verdict |\n| --- | --- | --- | --- | --- |\n${rows.join("\n")}\n`
       : "") +
     (failures.length ? `\n## Failures\n\n${failures.map((f) => `- ${f}`).join("\n")}\n` : ""),
 );

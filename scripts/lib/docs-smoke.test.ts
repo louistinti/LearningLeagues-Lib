@@ -18,14 +18,14 @@ const good = (): Facts => ({
   hasPanels: false,
   activePanel: null,
 });
-const rules = (f: Facts, events: string[] = []) => judgePage(f, events).map((x) => x.rule);
+const rules = (f: Facts, events: string[] = []) => judgePage(f, events, "other").map((x) => x.rule);
 // The first finding's message — so a rule that reds on the wrong branch is caught too.
-const message = (f: Facts) => judgePage(f, [])[0].message;
+const message = (f: Facts) => judgePage(f, [], "other")[0].message;
 
 test("a healthy page has no findings", () => assert.deepEqual(rules(good()), []));
 
 test("page-events: every collected event is a finding of its own", () => {
-  const out = judgePage(good(), ["page error: boom", "request failed: x.css"]);
+  const out = judgePage(good(), ["page error: boom", "request failed: x.css"], "other");
   assert.deepEqual(
     out.map((f) => f.rule),
     ["page-events", "page-events"],
@@ -67,6 +67,7 @@ test("demo-stage: a stage with nothing visible is red, and names its position", 
       ],
     },
     [],
+    "other",
   );
   assert.deepEqual(
     out.map((f) => f.rule),
@@ -76,7 +77,7 @@ test("demo-stage: a stage with nothing visible is red, and names its position", 
 });
 
 test("demo-stage: visible descendants but no rendered text is red (an empty padded block)", () => {
-  const out = judgePage({ ...good(), stages: [{ visibleDescendants: 1, text: 0 }] }, []);
+  const out = judgePage({ ...good(), stages: [{ visibleDescendants: 1, text: 0 }] }, [], "other");
   assert.deepEqual(
     out.map((f) => f.rule),
     ["demo-stage"],
@@ -84,7 +85,7 @@ test("demo-stage: visible descendants but no rendered text is red (an empty padd
   assert.ok(out[0].message.includes("renders no text"));
 });
 
-test("demo-stage: a page without stages (registry, tokens — kind other, the default) is not red", () => {
+test("demo-stage: a page without stages (registry, tokens — kind other) is not red", () => {
   assert.deepEqual(rules({ ...good(), stages: [] }), []);
   assert.deepEqual(judgePage({ ...good(), stages: [] }, [], "other"), []);
 });
@@ -102,6 +103,7 @@ test("accent-tile: a tile with nothing beyond its name is red, naming the accent
   const out = judgePage(
     { ...good(), tiles: [{ name: "jade", visibleDescendants: 0, text: 0 }] },
     [],
+    "other",
   );
   assert.deepEqual(
     out.map((f) => f.rule),
@@ -114,6 +116,7 @@ test("accent-tile: visible descendants but no text beyond the name is red", () =
   const out = judgePage(
     { ...good(), tiles: [{ name: "bleu", visibleDescendants: 1, text: 0 }] },
     [],
+    "other",
   );
   assert.deepEqual(
     out.map((f) => f.rule),
@@ -197,4 +200,12 @@ test("never short-circuits: several symptoms are all listed", () => {
     ["page error: x"],
   );
   assert.deepEqual(out, ["page-events", "stylesheet", "heading", "demo-stage"]);
+  assert.deepEqual(
+    judgePage(
+      { ...good(), bodyPainted: false, h1: null, stages: [] },
+      ["page error: x"],
+      "component",
+    ).map((f) => f.rule),
+    ["page-events", "stylesheet", "heading", "demo-stage"],
+  );
 });

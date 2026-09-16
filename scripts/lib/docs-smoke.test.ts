@@ -84,8 +84,18 @@ test("demo-stage: visible descendants but no rendered text is red (an empty padd
   assert.ok(out[0].message.includes("renders no text"));
 });
 
-test("demo-stage: a page without stages (registry, tokens) is not red", () => {
+test("demo-stage: a page without stages (registry, tokens — kind other, the default) is not red", () => {
   assert.deepEqual(rules({ ...good(), stages: [] }), []);
+  assert.deepEqual(judgePage({ ...good(), stages: [] }, [], "other"), []);
+});
+
+test("demo-stage: a component page with no stage at all is red", () => {
+  const out = judgePage({ ...good(), stages: [] }, [], "component");
+  assert.deepEqual(
+    out.map((f) => f.rule),
+    ["demo-stage"],
+  );
+  assert.ok(out[0].message.includes("no demo stage at all"));
 });
 
 test("accent-tile: a tile with nothing beyond its name is red, naming the accent", () => {
@@ -110,6 +120,24 @@ test("accent-tile: visible descendants but no text beyond the name is red", () =
     ["accent-tile"],
   );
   assert.ok(out[0].message.includes("no text beyond its name"));
+});
+
+test("accent-tile: a component page with no tile at all is red; kind other is not", () => {
+  const out = judgePage({ ...good(), tiles: [] }, [], "component");
+  assert.deepEqual(
+    out.map((f) => f.rule),
+    ["accent-tile"],
+  );
+  assert.ok(out[0].message.includes("no accent tile at all"));
+  assert.deepEqual(judgePage({ ...good(), tiles: [] }, [], "other"), []);
+});
+
+test("component page: no stage AND no tile are both listed, and a healthy component page passes", () => {
+  assert.deepEqual(
+    judgePage({ ...good(), stages: [], tiles: [] }, [], "component").map((f) => f.rule),
+    ["demo-stage", "accent-tile"],
+  );
+  assert.deepEqual(judgePage(good(), [], "component"), []);
 });
 
 test("tab-panel: panels present but none active, an empty active box, or no table — each is red", () => {

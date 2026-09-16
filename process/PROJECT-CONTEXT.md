@@ -46,6 +46,14 @@ changes go through an RFC §7 follow-up, never a live sync. For a component
 that predates the convention the page is generated FROM the contract as a
 rendering (Button: `Docs / Button`, node 54:3, 2026-09-11).
 
+Addendum 2026-09-16 (Louis): the page is optional. The rules may instead
+be arbitrated in session and recorded verbatim in the RFC's §7 — the contract
+is the source either way after import. What stays mandatory is the Figma
+component set (the design node), where visual values are arbitrated. A usage
+analysis of the consuming product comes BEFORE any page or RFC, because it
+can conclude that a candidate is not a component at all
+(`process/archives/2026-09-16-mono-label-usage-analysis.md`).
+
 The Figma variables were bootstrapped ONCE from the site's historical
 `styles.css` values (code → Figma, a one-time seeding, 2026-08-12). From that
 point on the flow is strictly Figma → code; the historical CSS is reference,

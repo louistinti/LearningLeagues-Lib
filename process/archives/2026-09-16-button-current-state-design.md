@@ -109,7 +109,7 @@ variant property gains the option `Current` by the clone's name alone (Figma
 derives options from variant names). Component-property references (`Label`,
 `Icon ?`) survive the clone. Written with `use_figma` after loading the
 `figma-use` skill; read back (`get_design_context`) to verify the bindings;
-Louis's visual checkpoint before the PR (human lock). `docsNode` 54:3 untouched.
+Louis's visual checkpoint before the PR (human lock). `docsNode` 54:3 untouched. Written 2026-09-16 as node 73:2; at the checkpoint Louis also approved clearing the pre-existing unbound white fill on the seven icon frames (one more write, nodes 43:2–43:12 and 73:4).
 
 ## 4. Verification
 

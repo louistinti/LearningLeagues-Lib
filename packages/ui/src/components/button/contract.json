@@ -21,6 +21,11 @@
       "default": "button",
       "note": "button rendering only"
     },
+    "current": {
+      "type": "boolean",
+      "default": "false",
+      "note": "emits aria-current=\"page\" on either rendering; secondary shows the filled state, primary only the attribute (RFC §5)"
+    },
     "onClick": {
       "type": "(e: MouseEvent) => void",
       "optional": true
@@ -28,7 +33,7 @@
   },
   "a11y": {
     "status": "pass",
-    "semanticStructure": "Native <button type> or native <a href> when href is set; link semantics kept deliberately (Enter activates, Space scrolls). No ARIA overrides; uppercase is CSS text-transform, AT reads the author's casing.",
+    "semanticStructure": "Native <button type> or native <a href> when href is set; link semantics kept deliberately (Enter activates, Space scrolls). No ARIA overrides; uppercase is CSS text-transform, AT reads the author's casing. current adds aria-current=\"page\" (valid on both elements) — the one ARIA attribute the component emits.",
     "keyboard": "Native activation, no custom key handling; focus ring only on :focus-visible — 2px accent outline, 3px offset, both variants.",
     "decisions": "Corner brackets and hover glow are decorative pseudo-elements/box-shadow, invisible to AT. Disabled is out of v1 by arbitration (RFC §7). Contrast is computed by the gate from resolved tokens, never declared here.",
     "notes": "Implemented per RFC §4; this status moves to pass only through the accessibility engine gate, never by assertion."

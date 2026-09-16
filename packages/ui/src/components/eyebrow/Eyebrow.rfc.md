@@ -81,8 +81,8 @@ files (10) — same population, different unit.
   case) cannot be met for it — out of scope for v1 (Step 4 question).
 - Three tag usages sit inside a heading (`.build-block h3 .tag`,
   `role-sections.jsx`): there the label becomes part of the heading's
-  accessible name. The component does not prevent it; whether the product
-  keeps it is a Step 4 question.
+  accessible name. Arbitrated 2026-09-17 (§7 Q9): forbidden — the adoption
+  run moves the Eyebrow before those three headings.
 - The Callout's own tag (`.ll-callout-tag`) is the same recipe with a border
   and a glyph. It stays inside the Callout: no refactor in v1, no dependency
   between the two components.
@@ -109,17 +109,17 @@ HUMAN (review).
 
 Naming rule: `tone` names a colour and nothing else. `variant` stays
 reserved for visual styles with chrome (Button); `type` for an editorial kind
-(Callout §7 Q6). Proposed here, not yet arbitrated — a Step 4 question if the
-reviewer objects.
+(Callout §7 Q6). Arbitrated 2026-09-17 (§7 Q10).
 
-Element: renders a `<span>` — inline, so the parent decides block or row
-placement. Whether an `as` prop (`span` | `p`) is wanted for the section-head
-usage is a Step 4 question; this draft assumes `<span>` only.
+Element: renders a `<span>` only — inline, so the parent decides block or row
+placement; no `as` prop (§7 Q4). Sizes and weight: one recipe, 11px / 400
+(§7 Q7) — no `size` prop.
 
 ### 3.2 Slots / Children
 
 `children` is the whole content. No other slot, no glyph, no icon: the
-`qz-tag` diamond is a Step 4 question, not a silent slot.
+`qz-tag` diamond stays product-side (§7 Q5), the `.ds-chip` bordered chip is
+out of scope in v1 (§7 Q6).
 
 ### 3.3 Events / Callbacks
 
@@ -146,6 +146,12 @@ None. Not interactive.
   contract examples × 5 accents. GATE
 - Wording: short, a category or a counter, never a sentence; at most one
   per title; the author's own casing in the source. HUMAN
+- Never inside a heading element: the Eyebrow is placed BEFORE the `h2` /
+  `h3`, never inside it, so the heading's accessible name stays the title
+  alone (§7 Q9) — a `dont` guideline in the contract; the three measured
+  in-heading usages are restructured at adoption. HUMAN
+- Positioning stays product-side, sigil included (§7 Q8): the stylesheet
+  ships no `position`, margin or alignment for it. HUMAN
 
 ---
 
@@ -159,9 +165,9 @@ author's casing (an all-caps source string would be spelled out letter by
 letter by some readers — the guideline is to write it in the source as
 prose). The Eyebrow is not a heading and carries no heading semantics: the
 serif title next to it stays the heading, the Eyebrow is a caption before it.
-Placed inside a heading element by the product (three measured usages, §2.3)
-it becomes part of that heading's accessible name — the product's choice,
-Step 4 question.
+Placed inside a heading element it would join that heading's accessible
+name: forbidden by the `dont` guideline (§7 Q9); the three measured usages
+are restructured at adoption.
 
 ### 4.2 Keyboard interaction
 
@@ -216,8 +222,16 @@ semantics — product-side.
      question as asked (closed, with options and consequences), the human's
      answer as given, the date. Never paraphrase, never backfill. -->
 
-| Date       | Question (as asked)                                                                                                                                                                          | Decision (verbatim)                                                                                                                                                                                                          | Decided by       |
-| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
-| 2026-09-16 | Q1 — « Que faire du candidat « tag / eyebrow » ? » [options: Composant Eyebrow / STOP / Sigil plutôt — asked on the usage analysis, before any Figma page or RFC]                            | « Composant Eyebrow » [an Eyebrow component — the site's own word and the 2026-08-12 arbitration's word; the Figma set 80:7 was then written as the design node this RFC requires]                                           | Louis Tinthilier |
-| 2026-09-16 | Q2 — « Typographie de l'Eyebrow : quelle recette ? » [options: type/meta en capitales comme le Callout / nouveau style type/eyebrow dans Figma / type/meta + un token d'interlettrage large] | « type/meta en capitales, comme le Callout » [11px, weight 400, tracking 0.06em from the existing tokens, `text-transform: uppercase`; no token change; the site aligns on the library — its 10px and 0.12–0.18em disappear] | Louis Tinthilier |
-| 2026-09-16 | Q3 — « Tons de l'Eyebrow : lesquels ? » [options: mute (défaut) et accent / mute, accent et dim / accent seul]                                                                               | « mute (défaut) et accent » [mute is the default tone; accent follows the accent axis; no `dim`]                                                                                                                             | Louis Tinthilier |
+| Date       | Question (as asked)                                                                                                                                                                                                                                                                                                                                                                                                    | Decision (verbatim)                                                                                                                                                                                                          | Decided by       |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| 2026-09-16 | Q1 — « Que faire du candidat « tag / eyebrow » ? » [options: Composant Eyebrow / STOP / Sigil plutôt — asked on the usage analysis, before any Figma page or RFC]                                                                                                                                                                                                                                                      | « Composant Eyebrow » [an Eyebrow component — the site's own word and the 2026-08-12 arbitration's word; the Figma set 80:7 was then written as the design node this RFC requires]                                           | Louis Tinthilier |
+| 2026-09-16 | Q2 — « Typographie de l'Eyebrow : quelle recette ? » [options: type/meta en capitales comme le Callout / nouveau style type/eyebrow dans Figma / type/meta + un token d'interlettrage large]                                                                                                                                                                                                                           | « type/meta en capitales, comme le Callout » [11px, weight 400, tracking 0.06em from the existing tokens, `text-transform: uppercase`; no token change; the site aligns on the library — its 10px and 0.12–0.18em disappear] | Louis Tinthilier |
+| 2026-09-16 | Q3 — « Tons de l'Eyebrow : lesquels ? » [options: mute (défaut) et accent / mute, accent et dim / accent seul]                                                                                                                                                                                                                                                                                                         | « mute (défaut) et accent » [mute is the default tone; accent follows the accent axis; no `dim`]                                                                                                                             | Louis Tinthilier |
+| 2026-09-16 | Q4 — « Élément rendu : `<span>` seul, ou une prop `as` (span \| p) pour l'usage en tête de section ? » [options: `<span>` seul — one render path, the section head stacks it by its own layout / prop `as` — block semantics for free, two render paths to test]                                                                                                                                                       | « `<span>` seul » [one element, no `as` prop]                                                                                                                                                                                | Louis Tinthilier |
+| 2026-09-17 | Q5 — « Le glyphe losange de `qz-tag` (1 usage, le quiz) : hors périmètre, ou un booléen `glyph` dans l'API ? » [options: hors périmètre — the quiz keeps a product-side ornament or drops it / booléen `glyph` — a decorative aria-hidden ornament enters the API for one usage]                                                                                                                                       | « Hors périmètre » [no glyph in the API; product-side]                                                                                                                                                                       | Louis Tinthilier |
+| 2026-09-17 | Q6 — « Le chip bordé `.ds-chip` (4 usages, vitrine design-system seulement) : hors périmètre v1, ou une variante chip maintenant ? » [options: hors périmètre v1 — promotion criterion 4 unmet, returns via §7 if a product needs it / variante chip maintenant — chrome, padding, border to arbitrate with no product usage]                                                                                          | « Hors périmètre v1 » [no chip variant]                                                                                                                                                                                      | Louis Tinthilier |
+| 2026-09-17 | Q7 — « Tailles et graisse : l'arbitrage typo ramène déjà les 9,5 / 10 px et la graisse 500 du site à 11 px / 400. Confirmer, ou prévoir une prop `size` ? » [options: confirmer — visible change on ~20 in-card labels, judged at the adoption checkpoint / prop `size` plus tard via §7 — no 10px text token exists, readability floor]                                                                               | « Confirmer » [one recipe, 11px / 400; no `size` prop]                                                                                                                                                                       | Louis Tinthilier |
+| 2026-09-17 | Q8 — « L'étiquette du sigil (positionnée en absolu dans le carré) : l'Eyebrow est le texte seul et le positionnement reste produit, ou le composant possède son positionnement ? » [options: texte seul, position produit — like the Callout grid, no layout in the stylesheet / le composant positionne — breaks the no-layout rule for one context, 10 / 12px become tokens]                                         | « Texte seul, position produit » [the stylesheet ships no positioning]                                                                                                                                                       | Louis Tinthilier |
+| 2026-09-17 | Q9 — « Une étiquette à l'intérieur d'un titre (`.build-block h3 .tag`, 3 usages) : le tag rejoint le nom accessible du titre. Interdire par une règle don't, ou laisser au produit ? » [options: interdire (don't) — accessibility is a hard requirement, the site restructures 3 headings at adoption: the Eyebrow before the h3, not inside / laisser au produit — the accessible name of 3 headings stays polluted] | « Interdire (don't) » [a `dont` guideline; the three headings are restructured at adoption]                                                                                                                                  | Louis Tinthilier |
+| 2026-09-17 | Q10 — « Nom de la prop de couleur : `tone`, ou `variant` par cohérence avec le Button ? » [options: `tone` — names a colour only; `variant` reserved for chrome styles, `type` for editorial kinds / `variant` — same word as the Button, conflates colour with chrome]                                                                                                                                                | « tone » [prop `tone`]                                                                                                                                                                                                       | Louis Tinthilier |
+| 2026-09-17 | Q11 — « Priorité de l'Eyebrow dans le manifeste (votre lock) ? » [options: 3 — after Button (1) and Callout (2), the order of arrival / 1 — ahead of the two delivered components]                                                                                                                                                                                                                                     | « 3 » [manifest priority 3]                                                                                                                                                                                                  | Louis Tinthilier |

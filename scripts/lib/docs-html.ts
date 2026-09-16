@@ -77,7 +77,8 @@ function withForcedState(
 ): string {
   if (state === "default") return html;
   if (attribute) {
-    if (html.includes(` ${attribute.name}=`)) return html;
+    const rootTag = html.match(/^<[a-zA-Z][\w-]*[^>]*>/)?.[0] ?? "";
+    if (rootTag.includes(` ${attribute.name}=`)) return html;
     return html.replace(/^<([a-zA-Z][\w-]*)/, `<$1 ${attribute.name}="${esc(attribute.value)}"`);
   }
   return html.replace(/class="/, `class="ll-docs-force-${state} `);

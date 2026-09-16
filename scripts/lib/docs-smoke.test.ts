@@ -86,7 +86,6 @@ test("demo-stage: visible descendants but no rendered text is red (an empty padd
 });
 
 test("demo-stage: a page without stages (registry, tokens — kind other) is not red", () => {
-  assert.deepEqual(rules({ ...good(), stages: [] }), []);
   assert.deepEqual(judgePage({ ...good(), stages: [] }, [], "other"), []);
 });
 

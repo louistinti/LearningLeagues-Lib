@@ -155,3 +155,11 @@ review outcomes went beyond §3–§4: `judgePage` takes the kind with NO defaul
 lenient branch silently), and the gate is red when `docs/components/` holds
 no page at all (the expectation could otherwise vanish by path drift). The
 report table gained a Kind column.
+
+The two §3 messages were reworded at review to name the missing selector
+rather than a cause (`… — no .stage in the DOM (template or contract
+examples; blueprint §5.2.10)`, `… — no .accent-tile in the DOM (the accent
+axis section)`); the gate 10 fallback reads `(no test line found — a crash
+before any test ran; see Output)`; the §5 "registry unaffected" control is
+observed inside the no-stage and no-component-page rows, and the sixth row
+proves the absence guard instead.

@@ -597,4 +597,7 @@ plan's `if (false && …)` no longer reds since the padded-empty-stage
 hardening; Proof B fails six cases, not four (the review added CRLF and tap
 directive cases); a sixth proof covers the no-component-page guard added at
 review; suite totals are 90, not 88 (two review-added cases). Counts in the
-task text are superseded by PROOF-OF-BLOCKING's rows.
+task text are superseded by PROOF-OF-BLOCKING's rows. `judgePage` takes the
+kind with no default and the report has a Kind column (design addendum),
+so Task 2's `kind = "other"` default and the test name "kind other, the
+default" are superseded.

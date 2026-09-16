@@ -1,5 +1,27 @@
 {
   "status": "draft",
   "exported": false,
-  "a11y": { "status": "pending", "notes": "RFC stage — not scaffolded yet." }
+  "component": "Eyebrow",
+  "rfc": "Eyebrow.rfc.md",
+  "designNode": "80:7",
+  "variants": ["mute", "accent"],
+  "props": {
+    "tone": {
+      "type": "\"mute\" | \"accent\"",
+      "default": "mute",
+      "optional": true,
+      "note": "a colour and nothing else (RFC §7 Q10): fg/mute by default (§7 Q3) or accent/default, which follows the accent axis; emits ll-eyebrow--{tone}. No other tone, no size, no as prop (§7 Q3, Q4, Q7)"
+    },
+    "children": {
+      "type": "ReactNode",
+      "note": "the label: a short string or inline nodes — a category or a counter, never a sentence (§3.4); passed through untouched, the uppercase is CSS"
+    }
+  },
+  "a11y": {
+    "status": "pending",
+    "semanticStructure": "Exactly one <span class=\"ll-eyebrow ll-eyebrow--{tone}\"> whose only content is children: no wrapper, no pseudo-element content, no ARIA role, no label, no live region (RFC §3.4, §4.1). Not a heading and carries no heading semantics — the serif title next to it stays the heading. The uppercase is CSS text-transform, so assistive tech reads the author's casing.",
+    "keyboard": "Nothing to do: no interactive element, nothing focusable — no a, button, input or tabindex is rendered by the component (RFC §3.3, §4.2). Interactive children are not expected; if the product nests one it keeps its own semantics, product-side.",
+    "decisions": "Never inside a heading element: placed before the h2/h3, never inside, so the heading's accessible name stays the title alone (RFC §7 Q9 — a dont guideline; three site usages are restructured at adoption). Nothing is decorative, so nothing is aria-hidden: the label IS the meaning (unlike the Callout's glyph). Contrast is computed by the gate from resolved tokens, never declared here: fg/mute and accent/default on surface/default and on bg/default, under the five accents, at the normal-text threshold (11px is not large text, WCAG 1.4.3). The 0.06em tracking is the type/meta token (§7 Q2), a design arbitration already made — not an accessibility defect to reopen.",
+    "notes": "Implemented per RFC §4; this status moves to pass only through the accessibility engine gate, never by assertion."
+  }
 }

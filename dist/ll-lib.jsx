@@ -41,4 +41,9 @@ function Callout({ type, title, children }) {
     </article>;
 }
 
-window.LL = Object.assign(window.LL || {}, { Button, Callout });
+// ── Eyebrow (eyebrow) ──
+function Eyebrow({ tone = "mute", children }) {
+  return <span className={`ll-eyebrow ll-eyebrow--${tone}`}>{children}</span>;
+}
+
+window.LL = Object.assign(window.LL || {}, { Button, Callout, Eyebrow });

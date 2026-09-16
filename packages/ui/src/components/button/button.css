@@ -77,6 +77,17 @@
   color: var(--ll-accent);
 }
 
+/* Current — "you are here" (RFC §3.1 / §4.1, §7 2026-09-16): the site's
+   measured filled state, keyed on the semantic attribute so the visual never
+   exists without it. Hover is inert on a current button: the state is
+   stable, not an invitation. Primary + current: attribute only (RFC §5). */
+.ll-button--secondary[aria-current="page"],
+.ll-button--secondary[aria-current="page"]:hover {
+  background: var(--ll-accent);
+  color: var(--ll-bg);
+  border-color: var(--ll-accent);
+}
+
 /* Keyboard-only focus ring (§4.2): 2px accent, 3px offset, both variants. */
 .ll-button:focus-visible {
   outline: 2px solid var(--ll-accent);

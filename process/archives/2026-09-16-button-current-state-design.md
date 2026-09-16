@@ -23,7 +23,7 @@ not frozen").
 
 - Site history: `aede856` introduced `.nav-cta.is-active { background: var(--accent); color: var(--bg); }` (no hover override — the rule follows `.nav-cta:hover` at equal specificity and wins); `d02ff72` retired it with the adoption. Only `quiz-app.jsx` renders `<Nav activeKey="quiz" />`, so the state shows on the Quiz page alone.
 - Contrast: the pair `Semantic/bg/default on Semantic/accent/default` is already declared (`contrast-pairs.json`, computed 8.43) — the filled state adds no pair. The contrast gate is re-run anyway (ORCHESTRATION: a touched colour → `pnpm gate:contrast`).
-- Figma set 16:18: variants `Style=Primary|Secondary × State=Default|Hover|Focus`, boolean `Icon ?`, text prop `Label`. `Style=Secondary, State=Default` is node 16:10.
+- Figma set 16:18: variants `Style=Primary|Secondary × State=Default|Hover|Focus` (six components at x=24, y=24+64·i), boolean `Icon ?#43:0`, text prop `Label#16:0`. `Style=Secondary, State=Default` (16:10, at y=216): no fill, stroke bound to `border/default` (1px), horizontal auto-layout 22/12 padding, gap 10; label TEXT 16:11 bound to `fg/default` (JetBrains Mono Bold, text style `type/button`); icon FRAME 43:8 (14×14) holding VECTOR 43:9 with stroke bound to `fg/default`. Pre-existing, out of scope: the icon frame carries an unbound white fill (the `createAutoLayout` default) on every variant — flagged to Louis at the visual checkpoint, not changed here.
 - 18 `LL.Button` usages on the site; none passes an unknown prop, so the new optional prop is invisible to them.
 
 ## 2. The change — library
@@ -52,7 +52,7 @@ After the secondary hover rule:
 
 ### 2.3 Contract (`Button.meta.ts`, `contract.json`)
 
-- `states` gains `{ state: "current", note: "Versus default (secondary): accent fill, bg-coloured label, accent border; hover inert; the focus ring is unchanged. Emitted by the current prop as aria-current=\"page\" — the CSS hooks on the attribute, so the visual never exists without the semantic (RFC §3.1). Primary: attribute only, no visual (RFC §5)." }`.
+- `states` gains `{ state: "current", attribute: { name: "aria-current", value: "page" }, note: "Versus default (secondary): accent fill, bg-coloured label, accent border; hover inert; the focus ring is unchanged. Emitted by the current prop as aria-current=\"page\" — the CSS hooks on the attribute, so the visual never exists without the semantic (RFC §3.1). Primary: attribute only, no visual (RFC §5)." }` — see §2.6 for why the entry names the attribute.
 - `examples` gains `{ label: "Current — you are here (secondary, href)", props: { variant: "secondary", href: "#", current: true }, children: "Role quiz" }` — audited by the a11y engine × 5 accents like every example.
 - `guidelines.golden` gains `{ rule: "Current says where you are, not what you chose", detail: "current marks the navigation target the reader is on (aria-current=\"page\"); a pressed/toggled control is aria-pressed — a different state, out of scope (RFC §7, 2026-09-16)." }`; `do`: "Set current on the one Button that leads to the page being viewed (the site's nav CTA on Quiz)."; `dont`: "Don't use current as a toggle or a selection — that is aria-pressed, not aria-current."
 - `contract.json`: prop `current` (`boolean`, default `false`, note "emits aria-current=\"page\" on either rendering; secondary shows the filled state, primary shows nothing (RFC §5)"); `a11y.semanticStructure` gains the sentence "current adds aria-current=\"page\" (valid on both elements); no other ARIA."
@@ -73,7 +73,24 @@ checks and axe cover the rest.
 - §7: one row dated 2026-09-16, the four questions as asked (closed, with options) and the answers verbatim ("Prop `current` → aria-current=\"page\" (Recommended)"; "Secondary seul, recette du site (Recommended)"; "Variante seule, maintenant (Recommended)"; "Oui, après le merge lib (Recommended)"), decided by Louis Tinthilier.
 - Status stays `approved`; §6 ticks stay (additive change; conformity re-run is the evidence).
 
-### 2.6 Generated artefacts and manifest
+### 2.6 Docs generator — attribute-driven states (agent decision, within the approved §3)
+
+The docs site's "States" section holds every example in each declared state.
+Today the mechanism is docs-only mirror rules derived from the component
+stylesheet for pseudo-class states (`:hover` → `.ll-docs-force-hover`,
+`generate-docs.ts` `forceStateRules`). A state keyed on an attribute has no
+pseudo-class to mirror, and a class mirror would show the visual WITHOUT the
+attribute — the exact thing this design forbids. So a `meta.states` entry may
+declare `attribute: { name, value }`; `docs-html.ts` `withForcedState` then
+sets that attribute on the example's root element instead of adding a class
+(skipped when the root already carries it), and the component's real CSS
+applies. `generate-docs.ts` validates the shape (both non-empty strings, the
+name `^[a-z][a-z0-9-]*$`). The States intro prose becomes generic (pseudo-class
+states via mirrors, attribute states via the attribute itself) instead of the
+Button-specific sentence it carries today. No new gate: the docs a11y and
+smoke gates audit the output as before.
+
+### 2.7 Generated artefacts and manifest
 
 `pnpm docs:build` and `pnpm dist:build` in the same commit as the source.
 STATE-MANIFEST `button` row: owner/branch claimed in the branch's first commit
@@ -83,9 +100,14 @@ STATE-MANIFEST `button` row: owner/branch claimed in the branch's first commit
 ## 3. Figma — one write
 
 `Style=Secondary, State=Current` cloned from `Style=Secondary, State=Default`
-(16:10) inside set 16:18: fill bound to `Semantic/accent/default`, stroke bound
-to the same, `Label` text fill bound to `Semantic/bg/default`, `Icon ?` and its
-stroke binding following the label. Written with `use_figma` after loading the
+(16:10) inside set 16:18, placed at y=408 (the next 64px slot; the set grows
+to fit): a solid fill bound to `Semantic/accent/default`, the stroke re-bound
+to `Semantic/accent/default`, the label TEXT fill re-bound to
+`Semantic/bg/default`, the icon VECTOR stroke re-bound to `Semantic/bg/default`
+(so the trailing glyph follows the label as on the other variants). The `State`
+variant property gains the option `Current` by the clone's name alone (Figma
+derives options from variant names). Component-property references (`Label`,
+`Icon ?`) survive the clone. Written with `use_figma` after loading the
 `figma-use` skill; read back (`get_design_context`) to verify the bindings;
 Louis's visual checkpoint before the PR (human lock). `docsNode` 54:3 untouched.
 

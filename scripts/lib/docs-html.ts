@@ -9,7 +9,12 @@ export interface ComponentDoc {
     name: string;
     description: string;
     variants: { variant: string }[];
-    states?: { state: string; note: string }[];
+    // A state is held in the docs either by a docs-only mirror of its
+    // pseudo-class rules (hover, focus-visible, active) or — when `attribute`
+    // is declared — by setting that attribute on the example, so the
+    // component's real CSS applies and the visual never appears without its
+    // semantic (design record 2026-09-16 §2.6).
+    states?: { state: string; note: string; attribute?: { name: string; value: string } }[];
     notes?: string;
     examples: { label: string; props: Record<string, unknown>; children?: string }[];
     guidelines?: {
@@ -61,10 +66,20 @@ function jsxSource(name: string, e: ComponentDoc["meta"]["examples"][number]): s
     : `<${name}${attrs} />`;
 }
 
-// Decorate a rendered example's root element with a docs-only class (the
-// forced-state mirrors in the generated lib.css target these classes).
-function withForcedState(html: string, state: string): string {
+// Hold a rendered example in a state. Pseudo-class states get a docs-only
+// class (the mirror rules in the generated lib.css target it); attribute
+// states get the attribute itself on the root element — the component's real
+// CSS applies. An example already carrying the attribute is left alone.
+function withForcedState(
+  html: string,
+  state: string,
+  attribute?: { name: string; value: string },
+): string {
   if (state === "default") return html;
+  if (attribute) {
+    if (html.includes(` ${attribute.name}=`)) return html;
+    return html.replace(/^<([a-zA-Z][\w-]*)/, `<$1 ${attribute.name}="${esc(attribute.value)}"`);
+  }
   return html.replace(/class="/, `class="ll-docs-force-${state} `);
 }
 
@@ -288,7 +303,7 @@ ${g.dont.map((d) => `      <li>${esc(d)}</li>`).join("\n")}
       (s) => `<h3 id="state-${esc(s.state)}"><code>${esc(s.state)}</code></h3>
 <p>${esc(s.note)}</p>
 <div class="stage">
-${c.renderedExamples.map((html) => `  ${withForcedState(html, s.state)}`).join("\n")}
+${c.renderedExamples.map((html) => `  ${withForcedState(html, s.state, s.attribute)}`).join("\n")}
 </div>`,
     )
     .join("\n");
@@ -338,7 +353,7 @@ ${accentTiles}
 ${
   states
     ? `<h2 id="states">States</h2>
-<p>Hover and focus-visible are CSS states, never props (RFC §3). Each stage below shows the examples held in that exact state via docs-only mirror rules derived from the component's own stylesheet.</p>
+<p>Each stage below holds the examples in that state. Pseudo-class states (hover, focus-visible) are never props — they are mirrored by docs-only rules derived from the component's own stylesheet. An attribute state is set on the example exactly as the component emits it from its props, so the real stylesheet applies.</p>
 ${states}
 `
     : ""

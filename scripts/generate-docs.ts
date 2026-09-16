@@ -68,9 +68,22 @@ for (const slug of slugs) {
   if (meta?.states !== undefined) {
     if (!Array.isArray(meta.states)) fail(`${slug}: meta.states must be an array`);
     else
-      for (const s of meta.states)
+      for (const s of meta.states) {
         if (typeof s?.state !== "string" || !s.state || typeof s?.note !== "string" || !s.note)
           fail(`${slug}: every meta.states entry needs a state name and a note (vs default)`);
+        if (s?.attribute !== undefined) {
+          const a = s.attribute;
+          if (
+            typeof a?.name !== "string" ||
+            !/^[a-z][a-z0-9-]*$/.test(a.name) ||
+            typeof a?.value !== "string" ||
+            !a.value
+          )
+            fail(
+              `${slug}: state "${s?.state}" attribute must be { name: /^[a-z][a-z0-9-]*$/, value: non-empty string }`,
+            );
+        }
+      }
   }
   if (meta?.guidelines !== undefined) {
     const g = meta.guidelines;

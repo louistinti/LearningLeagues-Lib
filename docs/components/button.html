@@ -147,7 +147,7 @@
     </div>
 </div>
 <h2 id="states">States</h2>
-<p>Hover and focus-visible are CSS states, never props (RFC §3). Each stage below shows the examples held in that exact state via docs-only mirror rules derived from the component's own stylesheet.</p>
+<p>Each stage below holds the examples in that state. Pseudo-class states (hover, focus-visible) are never props — they are mirrored by docs-only rules derived from the component's own stylesheet. An attribute state is set on the example exactly as the component emits it from its props, so the real stylesheet applies.</p>
 <h3 id="state-default"><code>default</code></h3>
 <p>The resting chrome — what every example renders.</p>
 <div class="stage">

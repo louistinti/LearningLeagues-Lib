@@ -9,7 +9,10 @@
 //     the stage and tile rules look at visible descendants AND rendered
 //     text; inactive tab panels are 0×0 by design).
 //   - judgePage() is pure over those facts plus the browser events the gate
-//     collected, so gate 10 locks every rule.
+//     collected, so gate 10 locks every rule. A component page (kind passed
+//     by the gate) must also carry at least one stage and one tile — a
+//     template that stopped emitting the wrappers would otherwise ship
+//     green (follow-up from PR #33).
 // Types are the DOM's; Node strips them.
 
 export interface Box {
@@ -30,6 +33,12 @@ export interface Finding {
   rule: string;
   message: string;
 }
+// The gate derives the kind from the path: docs/components/*.html is a
+// component page and must render at least one demo stage and one accent
+// tile; the registry and tokens pages ("other") legitimately have none.
+// judgePage() takes kind with no default — a permissive default on a gate
+// rule would let a future caller land on the lenient branch silently.
+export type PageKind = "component" | "other";
 
 // Evaluated in the browser: every helper is declared inside, nothing from
 // this module's scope is referenced (Playwright serialises the function's
@@ -81,7 +90,7 @@ export function collectFacts(): Facts {
 
 const empty = (b: Box): boolean => b.w === 0 || b.h === 0;
 
-export function judgePage(facts: Facts, events: string[]): Finding[] {
+export function judgePage(facts: Facts, events: string[], kind: PageKind): Finding[] {
   const out: Finding[] = [];
   for (const e of events) out.push({ rule: "page-events", message: e });
   if (!facts.bodyPainted)
@@ -109,6 +118,12 @@ export function judgePage(facts: Facts, events: string[]): Finding[] {
         message: `demo stage #${i + 1} renders no text — a visible box with nothing in it (blueprint §5.2.10)`,
       });
   });
+  if (kind === "component" && facts.stages.length === 0)
+    out.push({
+      rule: "demo-stage",
+      message:
+        "component page renders no demo stage at all — no .stage in the DOM (template or contract examples; blueprint §5.2.10)",
+    });
   for (const t of facts.tiles)
     if (t.visibleDescendants === 0)
       out.push({
@@ -120,6 +135,12 @@ export function judgePage(facts: Facts, events: string[]): Finding[] {
         rule: "accent-tile",
         message: `accent tile "${t.name}" renders no text beyond its name`,
       });
+  if (kind === "component" && facts.tiles.length === 0)
+    out.push({
+      rule: "accent-tile",
+      message:
+        "component page renders no accent tile at all — no .accent-tile in the DOM (the accent axis section)",
+    });
   if (facts.hasPanels) {
     if (!facts.activePanel)
       out.push({ rule: "tab-panel", message: "tab panels present but none is visible" });

@@ -231,7 +231,7 @@
 </table>
 <h2 id="accessibility">Accessibility <span class="badge badge--pass">pass</span></h2>
 <dl class="a11y">
-    <div><dt>Semantic structure</dt><dd>Native &lt;button type&gt; or native &lt;a href&gt; when href is set; link semantics kept deliberately (Enter activates, Space scrolls). No ARIA overrides; uppercase is CSS text-transform, AT reads the author's casing. current adds aria-current=&quot;page&quot; (valid on both elements) — the one ARIA attribute the component emits.</dd></div>
+    <div><dt>Semantic structure</dt><dd>Native &lt;button type&gt; or native &lt;a href&gt; when href is set; link semantics kept deliberately (Enter activates, Space scrolls). No ARIA role overrides; uppercase is CSS text-transform, AT reads the author's casing. current adds aria-current=&quot;page&quot; (valid on both elements) — the one ARIA attribute the component emits.</dd></div>
     <div><dt>Keyboard</dt><dd>Native activation, no custom key handling; focus ring only on :focus-visible — 2px accent outline, 3px offset, both variants.</dd></div>
     <div><dt>Decisions</dt><dd>Corner brackets and hover glow are decorative pseudo-elements/box-shadow, invisible to AT. Disabled is out of v1 by arbitration (RFC §7). Contrast is computed by the gate from resolved tokens, never declared here.</dd></div>
     <div><dt>Notes</dt><dd>Implemented per RFC §4; this status moves to pass only through the accessibility engine gate, never by assertion.</dd></div>

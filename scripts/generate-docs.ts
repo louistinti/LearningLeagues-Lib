@@ -75,12 +75,12 @@ for (const slug of slugs) {
           const a = s.attribute;
           if (
             typeof a?.name !== "string" ||
-            !/^[a-z][a-z0-9-]*$/.test(a.name) ||
+            !/^(aria|data)-[a-z][a-z0-9-]*$/.test(a.name) ||
             typeof a?.value !== "string" ||
             !a.value
           )
             fail(
-              `${slug}: state "${s?.state}" attribute must be { name: /^[a-z][a-z0-9-]*$/, value: non-empty string }`,
+              `${slug}: state "${s?.state}" attribute must be { name: /^(aria|data)-[a-z][a-z0-9-]*$/ (never a reserved HTML attribute), value: non-empty string }`,
             );
         }
       }

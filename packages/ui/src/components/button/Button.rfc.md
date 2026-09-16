@@ -121,7 +121,8 @@ outline offset 3px, on both variants.
 
 - `current` on `primary` has no visual: no product usage was measured (the
   only measured you-are-here control is the outlined nav CTA); the attribute
-  is still emitted. Arbitrated 2026-09-16 (§7).
+  is still emitted. Arbitrated 2026-09-16 (§7): "Secondary seul, recette du
+  site (Recommended)".
 
 ---
 

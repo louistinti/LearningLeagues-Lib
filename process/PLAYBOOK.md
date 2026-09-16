@@ -36,8 +36,11 @@ Milestone 4.)
 
 Notes:
 
-- The blueprint's `sync` stage is deferred until a build/dist exists —
-  `transform` currently writes the library stylesheet directly.
+- The blueprint's `sync` stage (a fourth executable overwriting the library
+  stylesheet) was never built and is not planned: `transform` writes
+  `tokens.css` directly, and `pnpm dist:build` (since 2026-08-30) concatenates
+  it for consumers. Revisit only if the transform output ever stops being the
+  library stylesheet.
 - `pnpm conformity` is the single required CI step and never short-circuits.
   The token diff gate stays outside it on purpose: expected-red, human label.
 - Adding a generator = add it to `GENERATORS` in `scripts/check-drift.ts` in

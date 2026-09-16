@@ -40,6 +40,10 @@ stable across the move.
   - Rule: every "the engine catches X" claim is verified by injection under the gate's real configuration before being relied on; a rule id the gate relies on is locked by a detector test.
   - Gate: `pnpm gate:detectors` locks that every WCAG tag selects rules (since 2026-09-09); per-rule coverage claims remain proved by injection, so the lesson stays active.
 
+- **L12** — Two RFCs (Callout §4.3, Eyebrow §4.3) and their contracts state that contrast is "computed by the gate under the five accents"; the contrast gate resolves `Semantic/accent/default` once (its alias, `ambre`) and never loops the accent axis, so four of the five accents are unproved — the tightest pairs (`rouge` and `fg/mute` on `surface/default`) sit at 4.94:1, computed by hand at the Eyebrow review (2026-09-17).
+  - Rule: a gate claim in an RFC names the gate's real scan surface; "under every axis value" is a promise only a gate that iterates the axis can keep — until then the RFC says "the default accent" and the other four are a listed follow-up.
+  - Gate: none yet; candidate is `check-contrast.ts` expanding any `Semantic/accent/*` pair across `Primitives/accent/*` (the a11y engine already derives the five), or the ten explicit primitive pairs in `contrast-pairs.json`.
+
 ## Archive (closed, verbatim)
 
 <a id="l03"></a>

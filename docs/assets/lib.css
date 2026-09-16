@@ -360,6 +360,39 @@
   color: var(--ll-fg);
 }
 
+/* Eyebrow — Eyebrow.rfc.md §3–§4, design node 80:7 (component set `Eyebrow`,
+   variants Tone=Mute 80:3 / Tone=Accent 80:5). One recipe: the type/meta
+   text style (11px / 400 / 0.06em — RFC §7 Q2, 2026-09-16, and Q7,
+   2026-09-17) plus text-transform: uppercase, the treatment the Callout's
+   tag already uses. The uppercase is the literal keyword, not
+   var(--ll-type-meta-case) (which is `none`): the capitals are the Q2
+   arbitration, not the text style. The uppercase is CSS so assistive tech
+   reads the author's casing (§4.1). No layout ships here — no margin,
+   padding, border, background, position, alignment or display override
+   (§3.4, §7 Q8): the component is inline text, and the parent stacks it
+   above a title, puts it in a row or positions it inside a sigil. Every
+   value is a token (axiom 1); the "no layout" rule has no detector — the
+   reviewer reads this file. */
+
+.ll-eyebrow {
+  font-family: var(--ll-type-meta-family);
+  font-size: var(--ll-type-meta-size);
+  font-weight: var(--ll-type-meta-weight);
+  font-style: var(--ll-type-meta-style);
+  letter-spacing: var(--ll-type-meta-tracking);
+  line-height: var(--ll-type-meta-line-height);
+  text-transform: uppercase;
+}
+
+/* Tones — a colour and nothing else (§7 Q10); neither is a state (§3).
+   Accent follows the accent axis ([data-accent] / [data-role]). */
+.ll-eyebrow--mute {
+  color: var(--ll-fg-mute);
+}
+.ll-eyebrow--accent {
+  color: var(--ll-accent);
+}
+
 /* Docs-only forced-state mirrors — derived by `pnpm docs:build` from the
  * component rules above; never hand-written. */
 .ll-button--primary.ll-docs-force-hover {

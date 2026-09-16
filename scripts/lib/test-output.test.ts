@@ -8,7 +8,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { failingTests } from "./test-output.ts";
 
-const SPEC = `✔ green one (0.8791ms)
+const SPEC_OUTPUT = `✔ green one (0.8791ms)
 ✖ red one: names (its) position (2.5216ms)
 ▶ group
   ✖ red nested (13.0531ms)
@@ -33,7 +33,7 @@ test at red.test.mjs:5:27
   AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
 `;
 
-const TAP = `TAP version 13
+const TAP_OUTPUT = `TAP version 13
 # Subtest: green one
 ok 1 - green one
   ---
@@ -68,11 +68,19 @@ not ok 3 - group
 `;
 
 test("spec reporter: red names in order of first appearance, nested included, header and repeats dropped", () => {
-  assert.deepEqual(failingTests(SPEC), ["red one: names (its) position", "red nested", "group"]);
+  assert.deepEqual(failingTests(SPEC_OUTPUT), [
+    "red one: names (its) position",
+    "red nested",
+    "group",
+  ]);
 });
 
 test("tap reporter: not-ok names in order, nested included", () => {
-  assert.deepEqual(failingTests(TAP), ["red one: names (its) position", "red nested", "group"]);
+  assert.deepEqual(failingTests(TAP_OUTPUT), [
+    "red one: names (its) position",
+    "red nested",
+    "group",
+  ]);
 });
 
 test("a green run and an empty output yield nothing", () => {
@@ -90,4 +98,18 @@ test("a suite line counts: a suite holding a red test is red", () => {
 test("the duration is stripped, the name keeps its own parentheses", () => {
   assert.deepEqual(failingTests("✖ names (its) position (2.5ms)"), ["names (its) position"]);
   assert.deepEqual(failingTests("✖ no duration at all"), ["no duration at all"]);
+  assert.deepEqual(failingTests("✖ ends with (3ms) (1.4ms)"), ["ends with (3ms)"]);
+});
+
+test("CRLF output (Windows spawnSync) is split like LF", () => {
+  assert.deepEqual(failingTests("✖ x (1ms)\r\nnot ok 2 - y\r\n"), ["x", "y"]);
+});
+
+test("tap directives: a # TODO line is not a failure, a # SKIP directive is stripped from the name", () => {
+  assert.deepEqual(
+    failingTests(
+      "not ok 2 - todo red # TODO later\nnot ok 3 - real\nnot ok 4 - skipped # SKIP why",
+    ),
+    ["real", "skipped"],
+  );
 });

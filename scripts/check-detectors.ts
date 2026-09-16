@@ -35,7 +35,7 @@ const summary = output
 const failing = ok ? [] : failingTests(output);
 const failingSection = ok
   ? ""
-  : `\n## Failing tests\n\n${failing.length ? failing.map((n) => `- ${n}`).join("\n") : "(no test line found — a crash before any test ran; see Output)"}\n`;
+  : `\n## Failing tests\n\n${failing.length ? failing.map((n) => `- \`${n}\``).join("\n") : "(no test line found — a crash before any test ran; see Output)"}\n`;
 
 mkdirSync("reports", { recursive: true });
 writeFileSync(

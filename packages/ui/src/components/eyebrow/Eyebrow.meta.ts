@@ -40,15 +40,14 @@ export const meta = {
     ],
     do: [
       "Place it before the h2 / h3 it captions — a sibling of the heading, never a child (§7 Q9).",
-      'Write the label as prose in the source ("Rift compass", not "RIFT COMPASS"): the capitals are CSS.',
-      'Use tone="accent" when the label should follow the page accent; keep the default mute otherwise.',
+      'Write the label as prose in the source ("Rift compass", not "RIFT COMPASS"): the capitals are CSS (§4.1).',
+      'Use tone="accent" when the label should follow the page accent; keep the default mute otherwise (§3.1).',
       "Keep positioning product-side: the parent's stack, row or sigil places the Eyebrow (§7 Q8).",
     ],
     dont: [
       "Don't put an Eyebrow inside a heading element — place it before the h2/h3, never inside, so the heading's accessible name stays the title alone (§7 Q9).",
       "Don't add a glyph or an ornament: the quiz tag's diamond stays product-side (§7 Q5).",
       "Don't turn it into a chip — no border, no padding: the bordered showcase chip is out of scope in v1 (§7 Q6).",
-      "Don't write a sentence in it, and don't stack two Eyebrows on one title (§3.4).",
       "Don't override its size, weight or tracking product-side — one recipe (§7 Q2, Q7).",
     ],
   },

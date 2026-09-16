@@ -57,7 +57,7 @@ stable across the move.
 
 <a id="l06"></a>
 
-- **L06** (2026-08-12, retired 2026-09-16 at the hygiene audit — the named gate is the required `conformity` job of `.github/workflows/ci.yml`) — The test-button scaffold's intentional red lived inside the required CI job, making it permanently red: the first PR it blocked was the one shipping the circuit itself (arbitrated 2026-08-12: fixture deleted, evidence kept in PROOF-OF-BLOCKING).
+- **L06** (2026-08-12, retired 2026-09-16 at the hygiene audit; the required job is `conformity` in `.github/workflows/ci.yml`) — The test-button scaffold's intentional red lived inside the required CI job, making it permanently red: the first PR it blocked was the one shipping the circuit itself (arbitrated 2026-08-12: fixture deleted, evidence kept in PROOF-OF-BLOCKING).
   - Rule: an intentional red is proved by injection-then-revert, never by a committed fixture the required job scans.
   - Gate: the required job's green-on-merge requirement is itself the gate, now that no permanent red is committed.
 

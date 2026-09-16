@@ -58,8 +58,8 @@ merger — single-human team).
    artefact in the same commit as its source.
 3. **Accessibility conformance is a hard requirement.** A non-conformant
    deliverable is never shippable. (Gates, all in the conformity job:
-   `pnpm gate:a11y`, `pnpm gate:a11y-engine`, `pnpm gate:docs-a11y`,
-   `pnpm gate:docs-smoke`.)
+   `pnpm gate:contrast`, `pnpm gate:a11y`, `pnpm gate:a11y-engine`,
+   `pnpm gate:docs-a11y`.)
 4. **Never create a local approximation of a missing library component.**
    File the gap and stop.
 5. **One writing session per repository at a time.** Isolated worktrees; run

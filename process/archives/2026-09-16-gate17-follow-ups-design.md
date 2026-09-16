@@ -146,3 +146,12 @@ generated artefact depends on these scripts).
 - Raising or removing the 4000 / 2000 truncation — the names are the
   information; the raw excerpt stays an excerpt.
 - Exact stage/tile counts from the sources (rejected above).
+
+Addendum 2026-09-16 (execution): the no-stage / no-tile proofs rename the
+class (`class="stage` → `class="stagex`) instead of removing the blocks —
+same fact for the gate (zero matching elements), well-formed HTML kept. Two
+review outcomes went beyond §3–§4: `judgePage` takes the kind with NO default
+(a permissive default on a gate rule would let a future caller get the
+lenient branch silently), and the gate is red when `docs/components/` holds
+no page at all (the expectation could otherwise vanish by path drift). The
+report table gained a Kind column.

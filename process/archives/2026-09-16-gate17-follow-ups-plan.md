@@ -590,3 +590,11 @@ Every commit ends with `Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>
 - **Spec coverage:** design §2 (helper, wiring, tests) → Task 1; §3 (kind, two findings, tests) → Task 2 steps 1–4; §4 (settle window, report sentence) → Task 2 step 5; §5 (five proofs + header) → Task 3; §6 (no paperwork beyond PROOF) → nothing else touched; the "registry unaffected" control is observed in Proof C's row (registry and tokens still PASS).
 - **Placeholders:** none — every code step carries its code, every proof its command and expected text.
 - **Type consistency:** `PageKind` exported from `docs-smoke.ts`, imported as a type in `check-docs-smoke.ts`; `judgePage(facts, events, kind)` order identical in lib, tests and gate; `failingTests` name identical in helper, suite and gate 10; suite count 80 → 85 after Task 1 (5 cases in `test-output.test.ts`) → 88 after Task 2 (`docs-smoke.test.ts` 12 → 15: one case split in two, two appended); every expected line and proof row uses 85 for Task 1 and 88 from Task 2 on — if a real run differs, the discrepancy is a finding to report, not a number to adjust silently.
+
+Addendum 2026-09-16 (execution): Task 3's Proof A injection is a rule rename
+(`rule: "demo-stage"` → `"demo-stagex"` on the nothing-visible branch) — the
+plan's `if (false && …)` no longer reds since the padded-empty-stage
+hardening; Proof B fails six cases, not four (the review added CRLF and tap
+directive cases); a sixth proof covers the no-component-page guard added at
+review; suite totals are 90, not 88 (two review-added cases). Counts in the
+task text are superseded by PROOF-OF-BLOCKING's rows.

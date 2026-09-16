@@ -1,6 +1,7 @@
 // Failing test names out of `node --test` output, in both reporters Node
 // emits: spec (`✖ name (1.2ms)`, the default under Node 24 even when piped)
-// and tap (`not ok 3 - name`). Pure — gate 10 (check-detectors.ts) prints the
+// and tap (`not ok 3 - name`; a `# TODO` directive is not a failure, a
+// `# SKIP` directive is stripped from the name). Pure — gate 10 (check-detectors.ts) prints the
 // result BEFORE its truncated raw excerpt, so a red suite always names its
 // red tests whatever the excerpt cuts off. Deduped in order of first
 // appearance: spec repeats every red test under its "✖ failing tests:"
@@ -22,6 +23,7 @@ export function failingTests(output: string): string[] {
   for (const line of output.split(/\r?\n/)) {
     const m = SPEC.exec(line) ?? TAP.exec(line);
     if (!m) continue;
+    // Tap only — SPEC has no group 2: a "# TODO" test does not fail the run.
     if (m[2] === "TODO") continue;
     const name = m[1].trim();
     if (name === SPEC_HEADER || seen.has(name)) continue;

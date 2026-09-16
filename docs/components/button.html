@@ -58,6 +58,7 @@
         <li><a href="../components/button.html#state-default">default</a></li>
         <li><a href="../components/button.html#state-hover">hover</a></li>
         <li><a href="../components/button.html#state-focus-visible">focus-visible</a></li>
+        <li><a href="../components/button.html#state-current">current</a></li>
         <li><a href="../components/button.html#props">Props</a></li>
         <li><a href="../components/button.html#accessibility">Accessibility</a></li>
         </ul>
@@ -91,10 +92,12 @@
   <button class="ll-button ll-button--primary" type="button">Start a league</button>
   <button class="ll-button ll-button--secondary" type="button">View the rules</button>
   <a class="ll-button ll-button--primary" href="#">Open the guide</a>
+  <a class="ll-button ll-button--secondary" href="#" aria-current="page">Role quiz</a>
 </div>
 <pre class="code"><code>&lt;Button variant=&quot;primary&quot;&gt;Start a league&lt;/Button&gt;
 &lt;Button variant=&quot;secondary&quot;&gt;View the rules&lt;/Button&gt;
-&lt;Button variant=&quot;primary&quot; href=&quot;#&quot;&gt;Open the guide&lt;/Button&gt;</code></pre>
+&lt;Button variant=&quot;primary&quot; href=&quot;#&quot;&gt;Open the guide&lt;/Button&gt;
+&lt;Button variant=&quot;secondary&quot; href=&quot;#&quot; current={true}&gt;Role quiz&lt;/Button&gt;</code></pre>
 <h2 id="guidelines">Guidelines</h2>
 <div class="golden">
   <p class="golden-title">Golden rules</p>
@@ -102,6 +105,7 @@
     <li><strong>Primary carries the view's main action.</strong> Secondary supports it — same format, different weight in the hierarchy (RFC §7: iso-format arbitration; measured zones: landing CTA vs supporting actions).</li>
     <li><strong>Navigation wears the same chrome.</strong> When the action navigates, set href: the component renders a real &lt;a&gt; with identical chrome and link semantics kept (RFC §3.1 — all 11 measured site usages navigate).</li>
     <li><strong>Write labels in original casing.</strong> The uppercase treatment is CSS (text-transform), so assistive tech reads the author's casing — write children as a normal sentence (RFC §4.1).</li>
+    <li><strong>Current says where you are, not what you chose.</strong> current marks the navigation target the reader is on (aria-current=&quot;page&quot;); a pressed or toggled control is aria-pressed — a different state, out of scope (RFC §7, 2026-09-16).</li>
   </ol>
 </div>
 <div class="dos-donts">
@@ -111,6 +115,7 @@
       <li>Write the label in sentence case — the uppercase is CSS.</li>
       <li>Use href when the action navigates; type only applies to the &lt;button&gt; rendering.</li>
       <li>Put inline SVG glyphs inside children — the site's Explore-arrow pattern (RFC §3.2).</li>
+      <li>Set current on the one Button that leads to the page being viewed — the site's nav CTA on the Quiz page.</li>
     </ul>
   </div>
   <div class="donts">
@@ -119,6 +124,7 @@
       <li>Don't fake a disabled state product-side — disabled is arbitrated out of v1 and returns via RFC (§7, 2026-08-14).</li>
       <li>Don't wrap Button in an &lt;a&gt; — use the href prop instead.</li>
       <li>Don't use secondary for the view's main call-to-action.</li>
+      <li>Don't use current as a toggle or a selection — that is aria-pressed, not aria-current.</li>
     </ul>
   </div>
 </div>
@@ -147,20 +153,22 @@
     </div>
 </div>
 <h2 id="states">States</h2>
-<p>Hover and focus-visible are CSS states, never props (RFC §3). Each stage below shows the examples held in that exact state via docs-only mirror rules derived from the component's own stylesheet.</p>
+<p>Each stage below holds the examples in that state. Pseudo-class states (hover, focus-visible) are never props — they are mirrored by docs-only rules derived from the component's own stylesheet. An attribute state is set on the example exactly as the component emits it from its props, so the real stylesheet applies.</p>
 <h3 id="state-default"><code>default</code></h3>
-<p>The resting chrome — what every example renders.</p>
+<p>The resting chrome — what every example renders, except the current example, which holds its own state everywhere (its props emit aria-current).</p>
 <div class="stage">
   <button class="ll-button ll-button--primary" type="button">Start a league</button>
   <button class="ll-button ll-button--secondary" type="button">View the rules</button>
   <a class="ll-button ll-button--primary" href="#">Open the guide</a>
+  <a class="ll-button ll-button--secondary" href="#" aria-current="page">Role quiz</a>
 </div>
 <h3 id="state-hover"><code>hover</code></h3>
-<p>Versus default: primary's fill lightens toward white and an accent glow ring appears; secondary recolors its border and label to the accent. Pure CSS, never a prop (RFC §3).</p>
+<p>Versus default: primary's fill lightens toward white and an accent glow ring appears; secondary recolors its border and label to the accent. Pure CSS, never a prop (RFC §3). The current example stays filled: hover is inert on it by design.</p>
 <div class="stage">
   <button class="ll-docs-force-hover ll-button ll-button--primary" type="button">Start a league</button>
   <button class="ll-docs-force-hover ll-button ll-button--secondary" type="button">View the rules</button>
   <a class="ll-docs-force-hover ll-button ll-button--primary" href="#">Open the guide</a>
+  <a class="ll-docs-force-hover ll-button ll-button--secondary" href="#" aria-current="page">Role quiz</a>
 </div>
 <h3 id="state-focus-visible"><code>focus-visible</code></h3>
 <p>Versus default: a 2px accent outline at 3px offset, both variants. Keyboard-only — pointer clicks never show it (RFC §4.2).</p>
@@ -168,6 +176,15 @@
   <button class="ll-docs-force-focus-visible ll-button ll-button--primary" type="button">Start a league</button>
   <button class="ll-docs-force-focus-visible ll-button ll-button--secondary" type="button">View the rules</button>
   <a class="ll-docs-force-focus-visible ll-button ll-button--primary" href="#">Open the guide</a>
+  <a class="ll-docs-force-focus-visible ll-button ll-button--secondary" href="#" aria-current="page">Role quiz</a>
+</div>
+<h3 id="state-current"><code>current</code></h3>
+<p>Versus default (secondary): accent fill, bg-coloured label, accent border; hover inert; the focus ring is unchanged. Emitted by the current prop as aria-current=&quot;page&quot; — the CSS keys on the attribute, so the visual never exists without the semantic (RFC §3.1). Primary: attribute only, no visual (RFC §5).</p>
+<div class="stage">
+  <button aria-current="page" class="ll-button ll-button--primary" type="button">Start a league</button>
+  <button aria-current="page" class="ll-button ll-button--secondary" type="button">View the rules</button>
+  <a aria-current="page" class="ll-button ll-button--primary" href="#">Open the guide</a>
+  <a class="ll-button ll-button--secondary" href="#" aria-current="page">Role quiz</a>
 </div>
 <h2 id="props">Props</h2>
 <table>
@@ -197,6 +214,13 @@
         <td>button rendering only</td>
       </tr>
       <tr>
+        <th scope="row"><code>current</code></th>
+        <td><code>boolean</code></td>
+        <td><code>false</code></td>
+        <td>no</td>
+        <td>emits aria-current=&quot;page&quot; on either rendering; secondary shows the filled state, primary only the attribute (RFC §5)</td>
+      </tr>
+      <tr>
         <th scope="row"><code>onClick</code></th>
         <td><code>(e: MouseEvent) =&gt; void</code></td>
         <td>—</td>
@@ -207,7 +231,7 @@
 </table>
 <h2 id="accessibility">Accessibility <span class="badge badge--pass">pass</span></h2>
 <dl class="a11y">
-    <div><dt>Semantic structure</dt><dd>Native &lt;button type&gt; or native &lt;a href&gt; when href is set; link semantics kept deliberately (Enter activates, Space scrolls). No ARIA overrides; uppercase is CSS text-transform, AT reads the author's casing.</dd></div>
+    <div><dt>Semantic structure</dt><dd>Native &lt;button type&gt; or native &lt;a href&gt; when href is set; link semantics kept deliberately (Enter activates, Space scrolls). No ARIA role overrides; uppercase is CSS text-transform, AT reads the author's casing. current adds aria-current=&quot;page&quot; (valid on both elements) — the one ARIA attribute the component emits.</dd></div>
     <div><dt>Keyboard</dt><dd>Native activation, no custom key handling; focus ring only on :focus-visible — 2px accent outline, 3px offset, both variants.</dd></div>
     <div><dt>Decisions</dt><dd>Corner brackets and hover glow are decorative pseudo-elements/box-shadow, invisible to AT. Disabled is out of v1 by arbitration (RFC §7). Contrast is computed by the gate from resolved tokens, never declared here.</dd></div>
     <div><dt>Notes</dt><dd>Implemented per RFC §4; this status moves to pass only through the accessibility engine gate, never by assertion.</dd></div>

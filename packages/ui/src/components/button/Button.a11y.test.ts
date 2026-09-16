@@ -61,3 +61,34 @@ test("label reaches the accessible name as authored (uppercase is CSS only)", as
   assert.equal(root.textContent, "Start a league");
   await unmount();
 });
+
+// current (RFC §3.1 / §4.1, 2026-09-16): the one ARIA attribute the component
+// emits, on either rendering — the filled visual keys on it in button.css, so
+// there is no way to show the state without announcing it.
+test('current: <a href> carries aria-current="page"', async () => {
+  const { root, unmount } = await mountComponent(
+    DIR,
+    "Button",
+    { variant: "secondary", href: "/quiz", current: true },
+    "Role quiz",
+  );
+  assert.equal(root.tagName, "A");
+  assert.equal(root.getAttribute("aria-current"), "page");
+  await unmount();
+});
+
+test('current: <button> carries aria-current="page" too (valid on any element)', async () => {
+  const { root, unmount } = await mountComponent(DIR, "Button", { current: true }, "Here");
+  assert.equal(root.tagName, "BUTTON");
+  assert.equal(root.getAttribute("aria-current"), "page");
+  await unmount();
+});
+
+test("without current, neither rendering carries aria-current", async () => {
+  const a = await mountComponent(DIR, "Button", { href: "/rules" }, "Rules");
+  assert.equal(a.root.getAttribute("aria-current"), null);
+  await a.unmount();
+  const b = await mountComponent(DIR, "Button", { current: false }, "Start");
+  assert.equal(b.root.getAttribute("aria-current"), null);
+  await b.unmount();
+});

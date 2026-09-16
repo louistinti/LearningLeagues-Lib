@@ -8,16 +8,18 @@ function Button({
   variant = "primary",
   href,
   type = "button",
+  current = false,
   onClick,
   children
 }) {
   const className = `ll-button ll-button--${variant}`;
+  const ariaCurrent = current ? "page" : void 0;
   if (href !== void 0) {
-    return <a className={className} href={href} onClick={onClick}>
+    return <a className={className} href={href} aria-current={ariaCurrent} onClick={onClick}>
         {children}
       </a>;
   }
-  return <button className={className} type={type} onClick={onClick}>
+  return <button className={className} type={type} aria-current={ariaCurrent} onClick={onClick}>
       {children}
     </button>;
 }

@@ -1,5 +1,5 @@
 {
-  "status": "draft",
+  "status": "stable",
   "exported": false,
   "component": "Eyebrow",
   "rfc": "Eyebrow.rfc.md",
@@ -18,7 +18,7 @@
     }
   },
   "a11y": {
-    "status": "pending",
+    "status": "pass",
     "semanticStructure": "Exactly one <span class=\"ll-eyebrow ll-eyebrow--{tone}\"> whose only content is children: no wrapper, no pseudo-element content, no ARIA role, no label, no live region (RFC §3.4, §4.1). Not a heading and carries no heading semantics — the serif title next to it stays the heading. The uppercase is CSS text-transform, so assistive tech reads the author's casing.",
     "keyboard": "Nothing to do: no interactive element, nothing focusable — no a, button, input or tabindex is rendered by the component (RFC §3.3, §4.2). Interactive children are not expected; if the product nests one it keeps its own semantics, product-side.",
     "decisions": "Never inside a heading element: placed before the h2/h3, never inside, so the heading's accessible name stays the title alone (RFC §7 Q9 — a dont guideline; three site usages are restructured at adoption). Nothing is decorative, so nothing is aria-hidden: the label IS the meaning (unlike the Callout's glyph). Contrast is computed by the gate from resolved tokens, never declared here: fg/dim and accent/default on surface/default and on bg/default, under the five accents, at the normal-text threshold (11px is not large text, WCAG 1.4.3). The 0.06em tracking is the type/meta token (§7 Q2), a design arbitration already made — not an accessibility defect to reopen.",

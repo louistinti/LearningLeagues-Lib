@@ -42,7 +42,7 @@ function Callout({ type, title, children }) {
 }
 
 // ── Eyebrow (eyebrow) ──
-function Eyebrow({ tone = "mute", children }) {
+function Eyebrow({ tone = "dim", children }) {
   return <span className={`ll-eyebrow ll-eyebrow--${tone}`}>{children}</span>;
 }
 

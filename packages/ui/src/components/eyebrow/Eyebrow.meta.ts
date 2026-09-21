@@ -1,17 +1,17 @@
 export const meta = {
   name: "Eyebrow",
   description:
-    "The library's one mono label: a short uppercase caption in JetBrains Mono, muted by default or in the live accent, set above a section title (eyebrow) or inside a card, a row or a sigil (tag). Text only — no chrome, no states, laid out by its parent.",
+    "The library's one mono label: a short uppercase caption in JetBrains Mono, dimmed by default or in the live accent, set above a section title (eyebrow) or inside a card, a row or a sigil (tag). Text only — no chrome, no states, laid out by its parent.",
   // The docs' generic "variant" column carries the tone (RFC §7 Q10: the
   // prop is `tone` — a colour and nothing else; `variant` stays reserved for
   // visual styles with chrome, `type` for editorial kinds).
-  variants: [{ variant: "mute" }, { variant: "accent" }],
+  variants: [{ variant: "dim" }, { variant: "accent" }],
   // The accent example comes first: the docs tile the first example under
   // the five accents, and only the accent tone follows the axis.
   examples: [
     { label: "Accent tag", props: { tone: "accent" }, children: "Mech" },
-    { label: "Section eyebrow", props: { tone: "mute" }, children: "Rift · Compass" },
-    { label: "In a row", props: { tone: "mute" }, children: "Map" },
+    { label: "Section eyebrow", props: { tone: "dim" }, children: "Rift · Compass" },
+    { label: "In a row", props: { tone: "dim" }, children: "Map" },
   ],
   // Usage guidance — no Figma docs page for this component (the first
   // without one, RFC header): every line traces to the rules arbitrated in
@@ -26,7 +26,7 @@ export const meta = {
       {
         rule: "A tone is a colour, nothing else",
         detail:
-          "mute (the default) for a quiet caption; accent when the label should carry the live accent — it follows data-accent (RFC §3.1, §7 Q3, Q10). Neither is a state: no hover, no focus.",
+          "dim (the default) for a quiet caption; accent when the label should carry the live accent — it follows data-accent (RFC §3.1, §7 Q10, Q13). Neither is a state: no hover, no focus.",
       },
       {
         rule: "Text only — the parent lays it out",
@@ -41,7 +41,7 @@ export const meta = {
     do: [
       "Place it before the h2 / h3 it captions — a sibling of the heading, never a child (§7 Q9).",
       'Write the label as prose in the source ("Rift compass", not "RIFT COMPASS"): the capitals are CSS (§4.1).',
-      'Use tone="accent" when the label should follow the page accent; keep the default mute otherwise (§3.1).',
+      'Use tone="accent" when the label should follow the page accent; keep the default dim otherwise (§3.1).',
       "Keep positioning product-side: the parent's stack, row or sigil places the Eyebrow (§7 Q8).",
     ],
     dont: [
@@ -52,5 +52,5 @@ export const meta = {
     ],
   },
   notes:
-    "Mute and accent are tones, not states: no hover, no focus (RFC §3). The recipe lives in eyebrow.css and ships no layout (§3.4, §7 Q8). The Callout's own tag shares the recipe but stays inside the Callout — no dependency in v1 (RFC §2.3).",
+    "Dim and accent are tones, not states: no hover, no focus (RFC §3). The recipe lives in eyebrow.css and ships no layout (§3.4, §7 Q8). The Callout's own tag shares the recipe but stays inside the Callout — no dependency in v1 (RFC §2.3).",
 };

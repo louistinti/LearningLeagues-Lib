@@ -1,5 +1,5 @@
 /* Eyebrow — Eyebrow.rfc.md §3–§4, design node 80:7 (component set `Eyebrow`,
-   variants Tone=Mute 80:3 / Tone=Accent 80:5). One recipe: the type/meta
+   variants Tone=Dim 80:3 / Tone=Accent 80:5). One recipe: the type/meta
    text style (11px / 400 / 0.06em — RFC §7 Q2, 2026-09-16, and Q7,
    2026-09-17) plus text-transform: uppercase, the treatment the Callout's
    tag already uses. The uppercase is the literal keyword, not
@@ -24,8 +24,8 @@
 
 /* Tones — a colour and nothing else (§7 Q10); neither is a state (§3).
    Accent follows the accent axis ([data-accent] / [data-role]). */
-.ll-eyebrow--mute {
-  color: var(--ll-fg-mute);
+.ll-eyebrow--dim {
+  color: var(--ll-fg-dim);
 }
 .ll-eyebrow--accent {
   color: var(--ll-accent);

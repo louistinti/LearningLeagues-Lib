@@ -1,7 +1,8 @@
 # AGENTS.md — Operating contract
 
-For project-wide context read `process/PROJECT-CONTEXT.md` first.
-Use this file as the first rules source in every session before making changes.
+Read in the order of the documentation map below: `process/PROJECT-CONTEXT.md`
+first (context), then this file — the first RULES source in every session,
+before making changes.
 Every agent must also read `process/ORCHESTRATION.md` before opening, reviewing or
 merging any change — it indexes rules by TRIGGER EVENT and is meant to be
 re-consulted at each event, not read once.
@@ -17,14 +18,19 @@ everything else.
 
 ## Documentation map — reading order and roles
 
-| Order | File                                                      | Role (exactly one each)                                     |
-| ----- | --------------------------------------------------------- | ----------------------------------------------------------- |
-| 1     | `process/PROJECT-CONTEXT.md`                              | Mission, team, products, design source. Tool-agnostic.      |
-| 2     | `AGENTS.md` (this file)                                   | Rules, contracts, gates, conventions. Wins on conflict.     |
-| 3     | `process/LEARNINGS.md`                                    | Open lessons a human is still catching. Read before coding. |
-| 4     | `process/ORCHESTRATION.md`                                | Obligations indexed by trigger event. Re-consult per event. |
-| 5     | `process/PLAYBOOK.md`                                     | Task → command routing.                                     |
-| 6     | The touched component's own machine contract (`.meta.ts`) | Per-component truth.                                        |
+| Order | File                                                                                          | Role (exactly one each)                                     |
+| ----- | --------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| 1     | `process/PROJECT-CONTEXT.md`                                                                  | Mission, team, products, design source. Tool-agnostic.      |
+| 2     | `AGENTS.md` (this file)                                                                       | Rules, contracts, gates, conventions. Wins on conflict.     |
+| 3     | `process/LEARNINGS.md`                                                                        | Open lessons a human is still catching. Read before coding. |
+| 4     | `process/ORCHESTRATION.md`                                                                    | Obligations indexed by trigger event. Re-consult per event. |
+| 5     | `process/PLAYBOOK.md`                                                                         | Task → command routing.                                     |
+| 6     | `packages/ui/src/STATE-MANIFEST.md`                                                           | Current state: every component's status, owner, open work.  |
+| 7     | The touched component's own RFC and machine contract (`.rfc.md`, `contract.json`, `.meta.ts`) | Per-component truth.                                        |
+
+`README.md` is the entry point that routes here; its Status paragraph is a
+summary, never a source. The two prompts in `.github/prompts/` repeat this
+order — a divergence between them and this table is a defect.
 
 If two files appear to cover the same thing, one of them is wrong — that is a
 defect to flag, not a redundancy to tolerate.
@@ -52,8 +58,7 @@ merger — single-human team).
 ## Six non-negotiable axioms
 
 1. **Never hardcode a design value.** Not in a class, not in an inline style,
-   not "just this once". (Gate: `pnpm gate:lint-tokens`, in the conformity job
-   since Milestone 3.)
+   not "just this once". (Gate: `pnpm gate:lint-tokens`, in the conformity job.)
 2. **Never hand-edit a generated file.** Regenerate from the source; commit the
    artefact in the same commit as its source.
 3. **Accessibility conformance is a hard requirement.** A non-conformant
@@ -62,7 +67,9 @@ merger — single-human team).
    `pnpm gate:docs-a11y`.)
 4. **Never create a local approximation of a missing library component.**
    File the gap and stop.
-5. **One writing session per repository at a time.** Isolated worktrees; run
+5. **One writing session per repository at a time.** A session that works
+   beside the main checkout uses its own isolated worktree and removes it when
+   it ends (the hygiene audit expects the main worktree only); run
    `git branch --show-current` immediately before every commit.
 6. **A stale file is active misinformation.** Recurring hygiene audit
    (`process/HYGIENE-AUDIT.md`: inventory → plan → human approval → execute),
@@ -90,7 +97,7 @@ merger — single-human team).
     the measured product default).
 - The generated stylesheet is external input, like a vendored dependency: it has
   a provenance log, a CODEOWNERS rule, and a token-diff gate requiring a human
-  approval label (Milestone 2).
+  approval label (`token-approved`).
 
 ## Naming conventions
 
@@ -119,10 +126,10 @@ generated data.
 | `docs/assets/lib.css`                                           | `pnpm docs:build` (tokens.css + component css + docs-only derived rules)             |
 | `dist/ll-lib.css`, `dist/ll-lib.jsx`                            | `pnpm dist:build` (consumer artefacts; vendored at a pin via `vendor-dist.ts`)       |
 
-## State manifest — usage rules (active from Milestone 4)
+## State manifest — usage rules
 
 The state manifest is `packages/ui/src/STATE-MANIFEST.md` — hand-edited
-markdown, delivered in Milestone 4. Its component registry holds per-component:
+markdown. Its component registry holds per-component:
 status, owner, branch, PR, priority, RFC path, notes, `conflictsWith`.
 
 The blueprint (`process/archives/2026-08-12-system-blueprint.md` §2.4) named a
@@ -152,6 +159,13 @@ Four rules:
   manifest stays the install proxy for `packages/ui` for the day a building
   consumer arrives. Phase 2 is a registry; consumer import specifiers never
   change.
+- The dist ships **every implemented component, whatever its status** — only
+  an RFC-stage folder (no `*.meta.ts`) is left out. It has to: a product adopts
+  a `draft` component BEFORE its promotion (adoption is a promotion criterion).
+  `exported` is therefore a promise, not a filter: the component is `stable`,
+  its accessibility status is `pass`, and its RFC matches the implementation.
+  A product depends on a non-exported component only inside its adoption
+  mission.
 - The toolchain pin lives in `engines` (not `packageManager`), and every CI
   workflow sets the package-manager version explicitly. No gate catches drift
   between the two — grep by hand when bumping.
@@ -166,5 +180,9 @@ Four rules:
   not one to fill by improvising.
 - When a required external input (e.g. Figma export) is unavailable: **STOP and
   report.** Never improvise the value it would have given.
-- Every session ends with the three-block report: **To understand / To decide /
-  To paste**, including a **Decisions made autonomously** list.
+- Every session ends with the three-block report, including a **Decisions made
+  autonomously** list: **To understand** — what was found, changed and why, in
+  the reader's terms; **To decide** — the arbitrations only the human can make,
+  as closed questions with options and consequences (empty is valid); **To
+  paste** — the exact literal text the human must place where the agent cannot
+  reach (a PR body, a label, a comment).

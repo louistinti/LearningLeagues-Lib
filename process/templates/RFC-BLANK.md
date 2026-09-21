@@ -1,6 +1,6 @@
 # RFC: {ComponentName}
 
-> **Status:** draft | review | approved | implemented
+> **Status:** draft | approved
 > **Author:** {name}
 > **Date:** {YYYY-MM-DD}
 > **Design node:** `{nodeId}` — [link]({url})

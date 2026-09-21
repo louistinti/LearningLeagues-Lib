@@ -4,8 +4,8 @@
 `ORCHESTRATION.md`.)
 
 Rule: every gate script, generator and prompt added to this repository gets its
-row here **in the same commit**. (Enforced by the playbook anti-drift gate from
-Milestone 4.)
+row here **in the same commit**. (Enforced by the playbook anti-drift gate,
+`pnpm gate:playbook`.)
 
 | Task                                                 | Command / prompt                                                        | Exit check                                                                                                                         |
 | ---------------------------------------------------- | ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
@@ -47,9 +47,19 @@ Notes:
   the same commit. Adding a gate = add it to `GATES` in
   `scripts/check-conformity.ts`, a row here, and a red/green proof in
   `process/PROOF-OF-BLOCKING.md` — same commit.
-- Allowlists (`scripts/*-allowlist.json`) follow the blueprint §5.3 shape and
-  load through the validated loader (`scripts/lib/allowlist.ts`).
+- Allowlists (`scripts/*-allowlist.json`) load through the validated loader
+  (`scripts/lib/allowlist.ts`), which defines their shape: a `description` and
+  `entries[]` of `{ scope, reason, approvedBy, added, expires }`.
+- Gate numbers in script headers, CI comments and `PROOF-OF-BLOCKING.md`
+  ("gate 9", "gate 10", "gate 14", "gate 17") are the row numbers of the
+  archived blueprint's gate table (§5.1), kept as stable names — not a rank
+  among the 11 gates of `pnpm conformity`.
+- "Milestone 1–5" in commit history and archives are the blueprint's delivery
+  steps (foundations, tokens, gates, circuit, first component), all delivered
+  by 2026-08-26. There is no milestone plan after them: the next piece of work
+  is whatever the design lead ranks first (priority is a human lock).
 
-## Planned (do not invent ahead of the milestone)
+## Planned (do not invent ahead of the design lead's priority)
 
-- Nothing pending — next items are decided at the next milestone's start.
+- Nothing pending. Open work is read from the state manifest (a row "awaiting
+  promotion") and from `process/LEARNINGS.md` (Active entries).

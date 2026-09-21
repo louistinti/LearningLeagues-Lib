@@ -1,7 +1,7 @@
 # The single required CI job. Every blocking gate lives INSIDE this job —
 # a separate job is advisory until someone edits branch protection by hand.
-# The token-diff gate (label-driven) will be the one exception, in its own
-# workflow, per the blueprint.
+# The token-diff gate (label-driven) is the one exception, in its own
+# workflow (token-gate.yml), per the blueprint.
 name: CI
 
 on:

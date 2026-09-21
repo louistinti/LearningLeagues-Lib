@@ -29,11 +29,11 @@ approval label.
 
 ## Design source
 
-| Item  | Value                                |
-| ----- | ------------------------------------ |
-| Tool  | Figma (variables + REST API)         |
-| File  | `Lib` — key `6zp7CvEjdiFXzwh6ZGGwB8` |
-| Owner | Louis Tinthilier                     |
+| Item  | Value                                                                                                  |
+| ----- | ------------------------------------------------------------------------------------------------------ |
+| Tool  | Figma (variables, read through the MCP / plugin API — the Variables REST API needs an Enterprise plan) |
+| File  | `Lib` — key `6zp7CvEjdiFXzwh6ZGGwB8`                                                                   |
+| Owner | Louis Tinthilier                                                                                       |
 
 Component documentation pages (since 2026-09-11): one Figma page per
 component, named `Docs / <Component>`, in the 8-block skeleton — anatomy

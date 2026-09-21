@@ -64,7 +64,7 @@ writeFileSync(
   REPORT,
   `# Conformity — ${verdict}\n\n| Gate | Verdict |\n| --- | --- |\n` +
     results.map((r) => `| ${r.name} | ${r.ok ? "PASS" : "**FAIL**"} |`).join("\n") +
-    "\n\nPer-gate detail lives in the sibling reports (reports/*.md). Per-component breakdown arrives with the first component.\n" +
+    "\n\nPer-gate detail, per component where the gate has one, lives in the sibling reports (reports/*.md).\n" +
     (failed.length
       ? `\n## Failures\n\n${failed.map((r) => `### ${r.name}\n\n\`\`\`\n${r.output.slice(0, 4000)}\n\`\`\``).join("\n\n")}\n`
       : ""),

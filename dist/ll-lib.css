@@ -20,7 +20,7 @@
   --ll-neutral-fg-mute: #7d89a3;
   --ll-accent-ambre: #e39a3c;
   --ll-accent-bleu: #6fa8dc;
-  --ll-accent-rouge: #c96f6f;
+  --ll-accent-rouge: #d28585;
   --ll-accent-violet: #a884d0;
   --ll-accent-jade: #5fb38f;
   --ll-status-success: #9bb777;
@@ -123,13 +123,6 @@
   --ll-type-body-sm-line-height: 1.55;
   --ll-type-body-sm-tracking: 0em;
   --ll-type-body-sm-case: none;
-  --ll-type-meta-family: var(--ll-font-mono);
-  --ll-type-meta-size: 11px;
-  --ll-type-meta-weight: 400;
-  --ll-type-meta-style: normal;
-  --ll-type-meta-line-height: 1.4;
-  --ll-type-meta-tracking: 0.06em;
-  --ll-type-meta-case: none;
   --ll-type-button-family: var(--ll-font-mono);
   --ll-type-button-size: 12px;
   --ll-type-button-weight: 600;
@@ -137,6 +130,13 @@
   --ll-type-button-line-height: normal;
   --ll-type-button-tracking: 0.14em;
   --ll-type-button-case: uppercase;
+  --ll-type-meta-family: var(--ll-font-mono);
+  --ll-type-meta-size: 11px;
+  --ll-type-meta-weight: 400;
+  --ll-type-meta-style: normal;
+  --ll-type-meta-line-height: 1.4;
+  --ll-type-meta-tracking: 0.06em;
+  --ll-type-meta-case: none;
 }
 
 /* Accent axis — the host sets [data-accent] on the root element or any subtree. */

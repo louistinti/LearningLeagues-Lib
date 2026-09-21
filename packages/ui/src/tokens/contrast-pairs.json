@@ -1,5 +1,5 @@
 {
-  "$comment": "HAND-WRITTEN design commitments (not generated). Every Semantic colour token carrying the TEXT_FILL scope must appear as `fg` in at least one pair — the contrast gate enforces that coverage, because an undeclared pair is a contrast nobody ever measured. `base` is required when `bg` resolves to a semi-transparent colour: the ratio is computed against the composited result. Usage levels: normal-text (4.5), large-text (3.0), ui-component (3.0).",
+  "$comment": "HAND-WRITTEN design commitments (not generated). Every Semantic colour token carrying the TEXT_FILL scope must appear as `fg` in at least one pair — the contrast gate enforces that coverage, because an undeclared pair is a contrast nobody ever measured. `base` is required when `bg` resolves to a semi-transparent colour: the ratio is computed against the composited result. A pair that resolves through Semantic/accent/default (as fg, bg or base) is scored once per Primitives/accent/* value — declare it once, the gate expands the axis. Usage levels: normal-text (4.5), large-text (3.0), ui-component (3.0).",
   "pairs": [
     {
       "fg": "Semantic/fg/default",

@@ -40,10 +40,6 @@ stable across the move.
   - Rule: every "the engine catches X" claim is verified by injection under the gate's real configuration before being relied on; a rule id the gate relies on is locked by a detector test.
   - Gate: `pnpm gate:detectors` locks that every WCAG tag selects rules (since 2026-09-09); per-rule coverage claims remain proved by injection, so the lesson stays active.
 
-- **L12** — Two RFCs (Callout §4.3, Eyebrow §4.3) and their contracts state that contrast is "computed by the gate under the five accents"; the contrast gate resolves `Semantic/accent/default` once (its alias, `ambre`) and never loops the accent axis, so four of the five accents are unproved — the tightest pairs (`rouge` and `fg/mute` on `surface/default`) sit at 4.94:1, computed by hand at the Eyebrow review (2026-09-17).
-  - Rule: a gate claim in an RFC names the gate's real scan surface; "under every axis value" is a promise only a gate that iterates the axis can keep — until then the RFC says "the default accent" and the other four are a listed follow-up.
-  - Gate: none yet; candidate is `check-contrast.ts` expanding any `Semantic/accent/*` pair across `Primitives/accent/*` (the a11y engine already derives the five), or the ten explicit primitive pairs in `contrast-pairs.json`.
-
 ## Archive (closed, verbatim)
 
 <a id="l03"></a>
@@ -70,3 +66,9 @@ stable across the move.
 - **L11** (2026-09-11, retired the same day) — The Button pilot wired the vendored lib into the three pages that used the Button, but `Nav` (shared, loaded by every page) also started rendering `LL.Button`: seven pages shipped with a crashing Nav, green everywhere, found only by the next adoption run.
   - Rule: when a shared product component starts consuming the library, every page that loads that component loads the library — enumerate the pages, never the usages.
   - Gate: `node scripts/vendor-dist.ts --target <path>` lists every page that runs product JSX without loading `lib/ll-lib.{css,jsx}` on every run, and `--write` refuses while one exists (since 2026-09-11).
+
+<a id="l12"></a>
+
+- **L12** (2026-09-17, archived 2026-09-21) — Two RFCs (Callout §4.3, Eyebrow §4.3) and their contracts state that contrast is "computed by the gate under the five accents"; the contrast gate resolves `Semantic/accent/default` once (its alias, `ambre`) and never loops the accent axis, so four of the five accents are unproved — the tightest pairs (`rouge` and `fg/mute` on `surface/default`) sit at 4.94:1, computed by hand at the Eyebrow review (2026-09-17).
+  - Rule: a gate claim in an RFC names the gate's real scan surface; "under every axis value" is a promise only a gate that iterates the axis can keep — until then the RFC says "the default accent" and the other four are a listed follow-up.
+  - Gate: `pnpm gate:contrast` (since 2026-09-21) scores every declared pair that resolves through `Semantic/accent/default` once per `Primitives/accent/*` (`scripts/lib/contrast-axis.ts`, locked by `pnpm gate:detectors`); its first run found `rouge` on `accent/soft` at 3.99:1 — fixed in Figma (`#d28585`).

@@ -3,21 +3,23 @@
 // trusted. Coverage rule: every Semantic colour token carrying the TEXT_FILL
 // scope must appear as `fg` in at least one declared pair — a contrast gate
 // that only scores declared pairs proves nothing about a pair nobody declared.
+// Axis rule (L12): a pair that resolves through the accent-axis token is
+// scored once PER ACCENT (lib/contrast-axis.ts) — tokens.json only holds the
+// default alias, so a single score proves one accent out of five.
 // Escape hatch: time-boxed allowlist (scripts/contrast-allowlist.json).
 // Usage: node scripts/check-contrast.ts
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { resolveColor, contrastRatio, over, THRESHOLDS, type TokenMap } from "./lib/color.ts";
 import { loadAllowlist } from "./lib/allowlist.ts";
+import { expandPairs, withAccent, type ContrastPair } from "./lib/contrast-axis.ts";
 
 const TOKENS = "packages/ui/src/tokens/tokens.json";
 const PAIRS = "packages/ui/src/tokens/contrast-pairs.json";
 const ALLOWLIST = "scripts/contrast-allowlist.json";
 const REPORT = "reports/contrast.md";
 
-const tokens: TokenMap = JSON.parse(readFileSync(TOKENS, "utf8")).tokens;
-const pairsFile: { pairs: { fg: string; bg: string; base?: string; usage: string }[] } = JSON.parse(
-  readFileSync(PAIRS, "utf8"),
-);
+const baseTokens: TokenMap = JSON.parse(readFileSync(TOKENS, "utf8")).tokens;
+const pairsFile: { pairs: ContrastPair[] } = JSON.parse(readFileSync(PAIRS, "utf8"));
 
 const today = process.env.GATE_TODAY ?? new Date().toISOString().slice(0, 10);
 const allowlist = loadAllowlist(ALLOWLIST, today);
@@ -31,11 +33,13 @@ for (const e of allowlist.expiringSoon)
     `allowlist entry "${e.scope}" expires ${e.expires} (within 30 days) — plan the renewal`,
   );
 
-const scopeOf = (p: { fg: string; bg: string; base?: string }) =>
-  `${p.fg} on ${p.bg}` + (p.base ? ` over ${p.base}` : "");
+// The scope is also the allowlist key: an exception names its accent.
+const scopeOf = (p: ContrastPair, accent: string | null) =>
+  `${p.fg} on ${p.bg}` + (p.base ? ` over ${p.base}` : "") + (accent ? ` [accent=${accent}]` : "");
 
-for (const pair of pairsFile.pairs) {
-  const scope = scopeOf(pair);
+for (const { pair, accent } of expandPairs(baseTokens, pairsFile.pairs)) {
+  const scope = scopeOf(pair, accent);
+  const tokens = accent ? withAccent(baseTokens, accent) : baseTokens;
   const threshold = THRESHOLDS[pair.usage];
   if (threshold === undefined) {
     failures.push(
@@ -79,7 +83,7 @@ for (const pair of pairsFile.pairs) {
 
 // Coverage: every TEXT_FILL Semantic token is declared as fg at least once.
 const declaredFg = new Set(pairsFile.pairs.map((p) => p.fg));
-for (const [key, t] of Object.entries(tokens)) {
+for (const [key, t] of Object.entries(baseTokens)) {
   if (!key.startsWith("Semantic/") || t.type !== "color") continue;
   if (t.scopes.includes("TEXT_FILL") && !declaredFg.has(key))
     failures.push(

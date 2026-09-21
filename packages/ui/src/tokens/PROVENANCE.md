@@ -16,6 +16,22 @@ source — rather than restating it here.
 
 ## Entries
 
+- **2026-09-21** — Contrast arbitration on the accent axis: `Primitives/accent/rouge`
+  `#c96f6f` → `#d28585`, changed in Figma (variable 4:14) then re-extracted from
+  file `Lib` (`6zp7CvEjdiFXzwh6ZGGwB8`). Motivation: the contrast gate now scores
+  every pair through `Semantic/accent/default` once per accent (L12) and found
+  rouge on `accent/soft` over `surface/default` at 3.99:1 (needs 4.5); the new
+  value computes 4.95 there, 6.14 on `surface/default`, 5.63 on `surface/raised`.
+  Option chosen by the design lead over a time-boxed allowlist entry and over
+  dropping the pair; value chosen among three computed candidates (« Rouge :
+  #d28585 », in session). The committed raw export was verified equal to Figma's
+  full export by checksum before writing (item-by-item comparison first). Two
+  non-design differences ride the same export: the plugin API now returns
+  `fontName.variationSettings` on the 8 text styles, and Figma lists
+  `type/button` before `type/meta` — no token value changes from either.
+  Decided by: Louis Tinthilier. Delivered by: contrast-axis agent session (sup.
+  Louis Tinthilier).
+
 - **2026-08-30** — Density axis removed: every product page measured
   `data-density="compact"` (`aere` existed only as an unused definition in the
   historical `styles.css`), so the axis carried no information.

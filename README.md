@@ -25,10 +25,10 @@ The machine runs end to end: the token pipeline goes Figma → generated
 stylesheet (128 tokens — colours, spacing, layout, typography and the extracted
 `type/*` text styles), the conformity CI job blocks on 11 executable gates
 (including the accessibility engine, the docs-site structural audit and the
-real-browser smoke of every docs page), two components (Button, Callout) are
-`stable` and exported after the RFC circuit and the site's adoption, a third
-(Eyebrow) is implemented as `draft` and awaits the site's adoption and its
-promotion, and the documentation site is generated from the component
+real-browser smoke of every docs page), three components have gone through
+the RFC circuit and the site's adoption — Button and Callout are `stable` and
+exported, Eyebrow is `stable` (its export is the design lead's next call) —
+and the documentation site is generated from the component
 contracts. A component's rules are either authored first on a Figma page
 `Docs / <Component>` and imported once at RFC time, or arbitrated in session
 and recorded in the RFC's §7 (the page is optional since 2026-09-16; the Figma

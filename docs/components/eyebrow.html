@@ -94,9 +94,9 @@
 </div>
 </nav>
 <main id="main">
-<h1>Eyebrow <span class="badge badge--draft">draft</span></h1>
+<h1>Eyebrow <span class="badge badge--stable">stable</span></h1>
 <p>The library's one mono label: a short uppercase caption in JetBrains Mono, dimmed by default or in the live accent, set above a section title (eyebrow) or inside a card, a row or a sigil (tag). Text only — no chrome, no states, laid out by its parent.</p>
-<p class="facts">Variants: <code>dim</code> <code>accent</code> · A11y: <span class="badge badge--pending">pending</span></p>
+<p class="facts">Variants: <code>dim</code> <code>accent</code> · A11y: <span class="badge badge--pass">pass</span></p>
 <p class="notes">Dim and accent are tones, not states: no hover, no focus (RFC §3). The recipe lives in eyebrow.css and ships no layout (§3.4, §7 Q8). The Callout's own tag shares the recipe but stays inside the Callout — no dependency in v1 (RFC §2.3).</p>
 <p class="meta-links">RFC: <code>Eyebrow.rfc.md</code> · Figma node: <a href="https://www.figma.com/design/6zp7CvEjdiFXzwh6ZGGwB8/Lib?node-id=80-7"><code>80:7</code></a></p>
 <h2 id="examples">Examples</h2>
@@ -185,7 +185,7 @@
       </tr>
   </tbody>
 </table>
-<h2 id="accessibility">Accessibility <span class="badge badge--pending">pending</span></h2>
+<h2 id="accessibility">Accessibility <span class="badge badge--pass">pass</span></h2>
 <dl class="a11y">
     <div><dt>Semantic structure</dt><dd>Exactly one &lt;span class=&quot;ll-eyebrow ll-eyebrow--{tone}&quot;&gt; whose only content is children: no wrapper, no pseudo-element content, no ARIA role, no label, no live region (RFC §3.4, §4.1). Not a heading and carries no heading semantics — the serif title next to it stays the heading. The uppercase is CSS text-transform, so assistive tech reads the author's casing.</dd></div>
     <div><dt>Keyboard</dt><dd>Nothing to do: no interactive element, nothing focusable — no a, button, input or tabindex is rendered by the component (RFC §3.3, §4.2). Interactive children are not expected; if the product nests one it keeps its own semantics, product-side.</dd></div>

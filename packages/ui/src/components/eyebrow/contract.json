@@ -1,6 +1,6 @@
 {
   "status": "stable",
-  "exported": false,
+  "exported": true,
   "component": "Eyebrow",
   "rfc": "Eyebrow.rfc.md",
   "designNode": "80:7",

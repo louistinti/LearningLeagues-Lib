@@ -88,7 +88,9 @@ merger — single-human team).
     live (`ambre`, `bleu`, `rouge`, `violet`, `jade` — `or` removed 2026-08-30;
     gold survives only as `tier/challenger` and the `gold-soft` alpha), on the
     root element or any subtree element (element-scoped since 2026-08-29).
-    Every accent-dependent semantic token must resolve under every axis value.
+    Every accent-dependent semantic token must resolve under every axis value
+    (contrast included: `pnpm gate:contrast` scores every declared pair through
+    `Semantic/accent/default` once per accent, since 2026-09-21).
   - **Density axis — removed 2026-08-30.** Every product page measured
     `compact`, so the axis carried no information; the base spacing unit lives
     on as the plain token `--ll-s` (`Spacing/s` = 8, the ladder's arithmetic

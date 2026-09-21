@@ -12,10 +12,10 @@ import { mountComponent } from "../../../../../scripts/lib/a11y-mount.ts";
 
 const DIR = "packages/ui/src/components/eyebrow";
 
-test("renders one <span class='ll-eyebrow ll-eyebrow--mute'> by default — no role, no aria-*, no child element (§3.4, §7 Q3–Q4)", async () => {
+test("renders one <span class='ll-eyebrow ll-eyebrow--dim'> by default — no role, no aria-*, no child element (§3.4, §7 Q4, Q13)", async () => {
   const { root, unmount } = await mountComponent(DIR, "Eyebrow", {}, "Rift · Compass");
   assert.equal(root.tagName, "SPAN");
-  assert.equal(root.className, "ll-eyebrow ll-eyebrow--mute");
+  assert.equal(root.className, "ll-eyebrow ll-eyebrow--dim");
   assert.equal(root.textContent, "Rift · Compass");
   assert.equal(root.getAttribute("role"), null); // RFC §4.1: no ARIA role
   assert.deepEqual(root.getAttributeNames(), ["class"]); // no aria-*, nothing but the classes
@@ -23,16 +23,16 @@ test("renders one <span class='ll-eyebrow ll-eyebrow--mute'> by default — no r
   await unmount();
 });
 
-test("tone='accent' → ll-eyebrow--accent, and the mute class is absent (§3.1, §7 Q10)", async () => {
+test("tone='accent' → ll-eyebrow--accent, and the dim class is absent (§3.1, §7 Q10)", async () => {
   const { root, unmount } = await mountComponent(DIR, "Eyebrow", { tone: "accent" }, "Mech");
   assert.ok(root.classList.contains("ll-eyebrow"));
   assert.ok(root.classList.contains("ll-eyebrow--accent"));
-  assert.ok(!root.classList.contains("ll-eyebrow--mute"));
+  assert.ok(!root.classList.contains("ll-eyebrow--dim"));
   await unmount();
 });
 
 test("nothing interactive is rendered by the component itself (§3.3, §4.2)", async () => {
-  const { root, unmount } = await mountComponent(DIR, "Eyebrow", { tone: "mute" }, "Map");
+  const { root, unmount } = await mountComponent(DIR, "Eyebrow", { tone: "dim" }, "Map");
   assert.equal(root.querySelector("a, button, input, select, textarea, [tabindex]"), null);
   assert.equal(root.getAttribute("tabindex"), null);
   await unmount();

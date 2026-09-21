@@ -95,26 +95,26 @@
 </nav>
 <main id="main">
 <h1>Eyebrow <span class="badge badge--draft">draft</span></h1>
-<p>The library's one mono label: a short uppercase caption in JetBrains Mono, muted by default or in the live accent, set above a section title (eyebrow) or inside a card, a row or a sigil (tag). Text only — no chrome, no states, laid out by its parent.</p>
-<p class="facts">Variants: <code>mute</code> <code>accent</code> · A11y: <span class="badge badge--pending">pending</span></p>
-<p class="notes">Mute and accent are tones, not states: no hover, no focus (RFC §3). The recipe lives in eyebrow.css and ships no layout (§3.4, §7 Q8). The Callout's own tag shares the recipe but stays inside the Callout — no dependency in v1 (RFC §2.3).</p>
+<p>The library's one mono label: a short uppercase caption in JetBrains Mono, dimmed by default or in the live accent, set above a section title (eyebrow) or inside a card, a row or a sigil (tag). Text only — no chrome, no states, laid out by its parent.</p>
+<p class="facts">Variants: <code>dim</code> <code>accent</code> · A11y: <span class="badge badge--pending">pending</span></p>
+<p class="notes">Dim and accent are tones, not states: no hover, no focus (RFC §3). The recipe lives in eyebrow.css and ships no layout (§3.4, §7 Q8). The Callout's own tag shares the recipe but stays inside the Callout — no dependency in v1 (RFC §2.3).</p>
 <p class="meta-links">RFC: <code>Eyebrow.rfc.md</code> · Figma node: <a href="https://www.figma.com/design/6zp7CvEjdiFXzwh6ZGGwB8/Lib?node-id=80-7"><code>80:7</code></a></p>
 <h2 id="examples">Examples</h2>
 <p>Live renders — hover and keyboard states all work here.</p>
 <div class="stage">
   <span class="ll-eyebrow ll-eyebrow--accent">Mech</span>
-  <span class="ll-eyebrow ll-eyebrow--mute">Rift · Compass</span>
-  <span class="ll-eyebrow ll-eyebrow--mute">Map</span>
+  <span class="ll-eyebrow ll-eyebrow--dim">Rift · Compass</span>
+  <span class="ll-eyebrow ll-eyebrow--dim">Map</span>
 </div>
 <pre class="code"><code>&lt;Eyebrow tone=&quot;accent&quot;&gt;Mech&lt;/Eyebrow&gt;
-&lt;Eyebrow tone=&quot;mute&quot;&gt;Rift · Compass&lt;/Eyebrow&gt;
-&lt;Eyebrow tone=&quot;mute&quot;&gt;Map&lt;/Eyebrow&gt;</code></pre>
+&lt;Eyebrow tone=&quot;dim&quot;&gt;Rift · Compass&lt;/Eyebrow&gt;
+&lt;Eyebrow tone=&quot;dim&quot;&gt;Map&lt;/Eyebrow&gt;</code></pre>
 <h2 id="guidelines">Guidelines</h2>
 <div class="golden">
   <p class="golden-title">Golden rules</p>
   <ol>
     <li><strong>One recipe, uppercase by CSS.</strong> Every Eyebrow is the type/meta text style (11px / 400 / 0.06em) in capitals — no size, weight or tracking option (RFC §7 Q2, Q7). Write the label in its own casing: the uppercase is text-transform, so assistive tech reads the source (§4.1).</li>
-    <li><strong>A tone is a colour, nothing else.</strong> mute (the default) for a quiet caption; accent when the label should carry the live accent — it follows data-accent (RFC §3.1, §7 Q3, Q10). Neither is a state: no hover, no focus.</li>
+    <li><strong>A tone is a colour, nothing else.</strong> dim (the default) for a quiet caption; accent when the label should carry the live accent — it follows data-accent (RFC §3.1, §7 Q10, Q13). Neither is a state: no hover, no focus.</li>
     <li><strong>Text only — the parent lays it out.</strong> The stylesheet ships no margin, padding, border, background, position or display: a section head stacks it above the title, a card puts it in a row, a sigil positions it (RFC §3.4, §7 Q8).</li>
     <li><strong>Short: a category or a counter.</strong> Never a sentence, and at most one Eyebrow per title (RFC §3.4).</li>
   </ol>
@@ -125,7 +125,7 @@
     <ul>
       <li>Place it before the h2 / h3 it captions — a sibling of the heading, never a child (§7 Q9).</li>
       <li>Write the label as prose in the source (&quot;Rift compass&quot;, not &quot;RIFT COMPASS&quot;): the capitals are CSS (§4.1).</li>
-      <li>Use tone=&quot;accent&quot; when the label should follow the page accent; keep the default mute otherwise (§3.1).</li>
+      <li>Use tone=&quot;accent&quot; when the label should follow the page accent; keep the default dim otherwise (§3.1).</li>
       <li>Keep positioning product-side: the parent's stack, row or sigil places the Eyebrow (§7 Q8).</li>
     </ul>
   </div>
@@ -171,10 +171,10 @@
   <tbody>
       <tr>
         <th scope="row"><code>tone</code></th>
-        <td><code>&quot;mute&quot; | &quot;accent&quot;</code></td>
-        <td><code>mute</code></td>
+        <td><code>&quot;dim&quot; | &quot;accent&quot;</code></td>
+        <td><code>dim</code></td>
         <td>yes</td>
-        <td>a colour and nothing else (RFC §7 Q10): fg/mute by default (§7 Q3) or accent/default, which follows the accent axis; emits ll-eyebrow--{tone}. No other tone, no size, no as prop (§7 Q3, Q4, Q7)</td>
+        <td>a colour and nothing else (RFC §7 Q10): fg/dim by default (§7 Q13, replacing Q3's mute) or accent/default, which follows the accent axis; emits ll-eyebrow--{tone}. No other tone, no size, no as prop (§7 Q4, Q7, Q13)</td>
       </tr>
       <tr>
         <th scope="row"><code>children</code></th>
@@ -189,7 +189,7 @@
 <dl class="a11y">
     <div><dt>Semantic structure</dt><dd>Exactly one &lt;span class=&quot;ll-eyebrow ll-eyebrow--{tone}&quot;&gt; whose only content is children: no wrapper, no pseudo-element content, no ARIA role, no label, no live region (RFC §3.4, §4.1). Not a heading and carries no heading semantics — the serif title next to it stays the heading. The uppercase is CSS text-transform, so assistive tech reads the author's casing.</dd></div>
     <div><dt>Keyboard</dt><dd>Nothing to do: no interactive element, nothing focusable — no a, button, input or tabindex is rendered by the component (RFC §3.3, §4.2). Interactive children are not expected; if the product nests one it keeps its own semantics, product-side.</dd></div>
-    <div><dt>Decisions</dt><dd>Never inside a heading element: placed before the h2/h3, never inside, so the heading's accessible name stays the title alone (RFC §7 Q9 — a dont guideline; three site usages are restructured at adoption). Nothing is decorative, so nothing is aria-hidden: the label IS the meaning (unlike the Callout's glyph). Contrast is computed by the gate from resolved tokens, never declared here: fg/mute and accent/default on surface/default and on bg/default, under the five accents, at the normal-text threshold (11px is not large text, WCAG 1.4.3). The 0.06em tracking is the type/meta token (§7 Q2), a design arbitration already made — not an accessibility defect to reopen.</dd></div>
+    <div><dt>Decisions</dt><dd>Never inside a heading element: placed before the h2/h3, never inside, so the heading's accessible name stays the title alone (RFC §7 Q9 — a dont guideline; three site usages are restructured at adoption). Nothing is decorative, so nothing is aria-hidden: the label IS the meaning (unlike the Callout's glyph). Contrast is computed by the gate from resolved tokens, never declared here: fg/dim and accent/default on surface/default and on bg/default, under the five accents, at the normal-text threshold (11px is not large text, WCAG 1.4.3). The 0.06em tracking is the type/meta token (§7 Q2), a design arbitration already made — not an accessibility defect to reopen.</dd></div>
     <div><dt>Notes</dt><dd>Implemented per RFC §4; this status moves to pass only through the accessibility engine gate, never by assertion.</dd></div>
 </dl>
 </main>

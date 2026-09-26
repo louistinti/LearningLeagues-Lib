@@ -18,7 +18,7 @@ test("Layout/z/* is unitless", () => {
   assert.equal(emitFloat("Layout/z/base", 1), "1");
 });
 
-test("Type weight and line-height are unitless; size and tracking are not", () => {
+test("Type weight and line-height are unitless; size is not", () => {
   assert.equal(emitFloat("Type/body/weight", 400), "400");
   assert.equal(emitFloat("Type/body/line-height", 1.5), "1.5");
   assert.equal(emitFloat("Type/body/size", 16), "16px");
@@ -30,7 +30,15 @@ test("an opacity token is a percentage: value / 100, unitless", () => {
   assert.equal(emitFloat("Primitives/opacity/ornament", 12.5), "0.125");
 });
 
+test("the opacity rule matches any depth under opacity/", () => {
+  assert.equal(emitFloat("Primitives/opacity/ornament/strong", 25), "0.25");
+});
+
 test("the opacity rule keys on the family segment, not on a name prefix", () => {
   assert.equal(emitFloat("Primitives/opacityx/foo", 25), "25px");
   assert.equal(emitFloat("Spacing/opacity", 25), "25px");
+});
+
+test("the opacity rule is free on the collection name", () => {
+  assert.equal(emitFloat("Semantic/opacity/x", 25), "0.25");
 });

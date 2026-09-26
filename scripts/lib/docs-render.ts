@@ -5,13 +5,14 @@
 import { buildSync } from "esbuild";
 import { createRequire } from "node:module";
 import { resolve } from "node:path";
+import { childNode, type ExampleChildren } from "./example-children.ts";
 
 const requireFromRoot = createRequire(resolve("package.json"));
 
 export interface Example {
   label: string;
   props: Record<string, unknown>;
-  children?: string;
+  children?: ExampleChildren;
 }
 
 export function renderExamples(
@@ -41,5 +42,13 @@ module.exports = (examples, exportName) =>
     mod.exports,
     requireFromRoot,
   );
-  return (mod.exports as (e: Example[], n: string) => string[])(examples, exportName);
+  return (
+    mod.exports as (
+      e: { props: Record<string, unknown>; children?: unknown }[],
+      n: string,
+    ) => string[]
+  )(
+    examples.map((e) => ({ props: e.props, children: childNode(e.children) })),
+    exportName,
+  );
 }

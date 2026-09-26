@@ -7,6 +7,7 @@ import { buildSync } from "esbuild";
 import { createRequire } from "node:module";
 import { resolve } from "node:path";
 import { JSDOM, VirtualConsole } from "jsdom";
+import { childNode, type ExampleChildren } from "./example-children.ts";
 
 const requireFromRoot = createRequire(resolve("package.json"));
 
@@ -20,7 +21,7 @@ export async function mountComponent(
   componentDir: string,
   exportName: string,
   props: Record<string, unknown>,
-  children?: string,
+  children?: ExampleChildren,
 ): Promise<Mounted> {
   const dom = new JSDOM(
     `<!doctype html><html lang="en"><body><div id="root"></div></body></html>`,
@@ -78,9 +79,9 @@ module.exports = async (container, exportName, props, children) => {
       c: Element,
       n: string,
       p: Record<string, unknown>,
-      ch?: string,
+      ch?: unknown,
     ) => Promise<() => Promise<void>>
-  )(container, exportName, props, children);
+  )(container, exportName, props, childNode(children));
   const root = container.firstElementChild;
   if (!root) throw new Error(`mountComponent: ${exportName} rendered nothing`);
   return {

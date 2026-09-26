@@ -61,15 +61,19 @@ The accent follows the axis through `--ll-accent` (`[data-accent]` /
 
 ## 3. Token
 
-One new Figma variable: `Primitives/opacity/ornament` = `0.25` (float, scope
-OPACITY), CSS `--ll-opacity-ornament`. Created in the Lib file through the
-MCP after Louis's explicit go (Q4), then extracted by the stage-1 procedure
-(`extract-tokens.prompt.md`, checksum-verified patch of the raw export),
-normalised and transformed. The transform emits floats in px unless the key
-is unitless by name (`Layout/z/*`, type weight and line-height): the
-`opacity/*` family joins that list — one rule, locked by a detector test.
-Provenance entry in `PROVENANCE.md`; the token-diff gate stays expected-red
-until Louis applies `token-approved`.
+One new Figma variable: `Primitives/opacity/ornament` = `25` (float, scope
+OPACITY — Figma reads a float bound to a layer's opacity as a **percentage**,
+verified at creation on 2026-09-26: a value of 0.25 rendered the ring at
+0.25 %), CSS `--ll-opacity-ornament: 0.25`. Created in the Lib file through
+the MCP after Louis's explicit go (Q4, Q9) — `VariableID:89:2` — then
+extracted by the stage-1 procedure (`extract-tokens.prompt.md`,
+checksum-verified patch of the raw export), normalised and transformed. The
+transform emits floats in px unless the key is unitless by name (`Layout/z/*`,
+type weight and line-height): the `opacity/*` family joins that list as a
+mechanical percent conversion (`value / 100`, the same arithmetic the
+normalise stage applies to a PERCENT line-height) — one rule, locked by a
+detector test. Provenance entry in `PROVENANCE.md`; the token-diff gate stays
+expected-red until Louis applies `token-approved`.
 
 Every other value already has its token: `--ll-border`, `--ll-border-soft`,
 `--ll-surface`, `--ll-accent`, `--ll-s-15` (12px ring inset and label left),

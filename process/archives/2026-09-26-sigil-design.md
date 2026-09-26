@@ -108,13 +108,27 @@ nothing to vary):
   `Primitives/opacity/ornament`;
 - an instance of `Eyebrow / Tone=Dim` (80:3) at bottom 10 (`Spacing/s-125`),
   left 12 (`Spacing/s-15`), text `SIGIL · TOP`;
-- a placeholder art: a hexagon vector, stroke `Semantic/accent/default`,
-  centred, as the slot's stand-in.
+- the art slot: an INSTANCE_SWAP property `Art` on the Sigil, its instance
+  filling the frame (320 × 320) between the two rings — the site's paint
+  order (`::before` under the art, `::after` above). Default swap: the
+  component `Sigil art / Hex frame`, the motif the Glossary and landing
+  sigils share (outer hexagon at 90 % of the square, inner hexagon, six
+  spokes — the site's `viewBox 200` coordinates × 1.6), strokes bound to
+  `Semantic/accent/default`. A designer drops the page's glyph in the
+  centre; in code the art stays the page's `children` (RFC §7 Q10, after
+  Louis's checkpoint: the first placeholder was a lone hexagon at 56 % of
+  the frame, and no property was exposed);
+- the Eyebrow instance is an exposed nested instance, so its `Label` shows
+  on the Sigil — the file's convention (`Label` on the Button, `Title` on
+  the Callout); a TEXT property of the Sigil's own cannot drive a nested
+  instance's text through the API.
 
 Built through `use_figma` (guard first, mutate once, return ids; clear the
 white default fill on every auto-layout helper). Louis validates the
 rendering (visual checkpoint — his lock); the node id goes into the RFC
-header and `contract.json` (`designNode`).
+header and `contract.json` (`designNode`). Built 2026-09-26: `Sigil` 89:4
+(rings 89:5 / 89:6, art instance 92:7, label 89:8), art component 92:3
+(vectors 93:6–93:8), variable `VariableID:89:2`.
 
 ## 6. Tooling extensions carried by this component
 

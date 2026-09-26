@@ -17,6 +17,7 @@ const SUITES = [
   "scripts/lib/docs-a11y-checks.test.ts", // docs a11y — structural checks
   "scripts/lib/docs-smoke.test.ts", // docs smoke — pure judgement over browser facts
   "scripts/lib/contrast-axis.test.ts", // contrast — accent-axis expansion of the declared pairs (L12)
+  "scripts/lib/token-units.test.ts", // transform — FLOAT unit rule (px / unitless / opacity percent)
   "scripts/lib/test-output.test.ts", // gate 10 itself — failing-test names out of node --test output
 ];
 const REPORT = "reports/detectors.md";

@@ -3,6 +3,7 @@
 // This is the only pipeline stage containing judgement; every judgement is a
 // documented override below, keyed on token identity.
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
+import { emitFloat } from "../lib/token-units.ts";
 
 const IN = "packages/ui/src/tokens/tokens.json";
 const OUT = "packages/ui/src/tokens/tokens.css";
@@ -43,8 +44,6 @@ const ROLE_ACCENT: Record<string, string> = {
   mid: "violet",
   jungle: "jade",
 };
-// Unit rule per collection for FLOAT tokens; z/* is unitless by name.
-const px = (n: number) => `${n}px`;
 
 const cssName = (key: string): string => {
   const t = tokens[key];
@@ -68,11 +67,9 @@ const resolveValue = (key: string, t: Token): string => {
     }
     return String(v);
   }
-  // number — z/*, type weight and type line-height are unitless by nature.
+  // number — unit rule in scripts/lib/token-units.ts (gate 10 locks it).
   const n = WEIGHT_OVERRIDES[key] ?? Number(v);
-  if (key.startsWith("Layout/z/")) return String(n);
-  if (/^Type\/[a-z0-9-]+\/(weight|line-height)$/.test(key)) return String(n);
-  return px(n);
+  return emitFloat(key, n);
 };
 
 const entries = Object.entries(tokens);

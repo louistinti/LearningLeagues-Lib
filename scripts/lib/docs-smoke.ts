@@ -7,7 +7,11 @@
 //     lengths, the two things a simulated DOM can never give (spike
 //     2026-09-15: an emptied demo stage keeps a padded box but no text, so
 //     the stage and tile rules look at visible descendants AND rendered
-//     text; inactive tab panels are 0×0 by design).
+//     content; inactive tab panels are 0×0 by design). Rendered content is
+//     text OR a drawn graphic — a visible mark inside an <svg> (2026-09-26:
+//     the Sigil is decorative, renders no text by contract, and its content
+//     is the art; an emptied art slot keeps the padded frame but draws
+//     nothing, so it stays red).
 //   - judgePage() is pure over those facts plus the browser events the gate
 //     collected, so gate 10 locks every rule. A component page (kind passed
 //     by the gate) must also carry at least one stage and one tile — a
@@ -24,8 +28,8 @@ export interface Facts {
   bodyPainted: boolean; // computed background-color of <body> is not fully transparent
   main: { box: Box; text: number } | null;
   h1: { box: Box; text: number } | null;
-  stages: { visibleDescendants: number; text: number }[]; // every .stage — descendants with a non-zero box, rendered text length
-  tiles: { name: string; visibleDescendants: number; text: number }[]; // every .accent-tile — descendants with a non-zero box outside the .accent-name subtree, rendered text length beyond the name
+  stages: { visibleDescendants: number; text: number; graphics: number }[]; // every .stage — descendants with a non-zero box, rendered text length, drawn SVG marks
+  tiles: { name: string; visibleDescendants: number; text: number; graphics: number }[]; // every .accent-tile — descendants with a non-zero box outside the .accent-name subtree, rendered text length beyond the name, drawn SVG marks
   hasPanels: boolean; // the page carries [role=tabpanel] elements
   activePanel: { id: string; box: Box; tables: number } | null; // the one not hidden
 }
@@ -58,6 +62,10 @@ export function collectFacts(): Facts {
       (el) => !(skip && el.closest(skip)) && visible(el),
     ).length;
   const text = (el: Element): number => ((el as HTMLElement).innerText || "").trim().length;
+  // Drawn marks: elements with a non-zero box inside an <svg> (a shape, a
+  // path, a group of them) — an <svg> with nothing drawn in it counts 0.
+  const graphics = (root: Element): number =>
+    Array.from(root.querySelectorAll("svg *")).filter(visible).length;
   const main = document.querySelector("main");
   const h1 = document.querySelector("main h1");
   const panels = Array.from(document.querySelectorAll<HTMLElement>("[role=tabpanel]"));
@@ -70,6 +78,7 @@ export function collectFacts(): Facts {
     stages: Array.from(document.querySelectorAll(".stage")).map((s) => ({
       visibleDescendants: visibleDescendants(s),
       text: text(s),
+      graphics: graphics(s),
     })),
     tiles: Array.from(document.querySelectorAll(".accent-tile")).map((t) => {
       // A tile with no .accent-name subtracts nothing — never the whole tile.
@@ -79,6 +88,7 @@ export function collectFacts(): Facts {
         name: (label?.textContent ?? "").trim(),
         visibleDescendants: visibleDescendants(t, ".accent-name"),
         text: Math.max(0, tileText),
+        graphics: graphics(t),
       };
     }),
     hasPanels: panels.length > 0,
@@ -112,10 +122,10 @@ export function judgePage(facts: Facts, events: string[], kind: PageKind): Findi
         rule: "demo-stage",
         message: `demo stage #${i + 1} renders nothing visible — the blank-demo incident (blueprint §5.2.10)`,
       });
-    else if (s.text === 0)
+    else if (s.text === 0 && s.graphics === 0)
       out.push({
         rule: "demo-stage",
-        message: `demo stage #${i + 1} renders no text — a visible box with nothing in it (blueprint §5.2.10)`,
+        message: `demo stage #${i + 1} renders no text and no graphic — a visible box with nothing in it (blueprint §5.2.10)`,
       });
   });
   if (kind === "component" && facts.stages.length === 0)
@@ -130,10 +140,10 @@ export function judgePage(facts: Facts, events: string[], kind: PageKind): Findi
         rule: "accent-tile",
         message: `accent tile "${t.name}" renders nothing beyond its name`,
       });
-    else if (t.text === 0)
+    else if (t.text === 0 && t.graphics === 0)
       out.push({
         rule: "accent-tile",
-        message: `accent tile "${t.name}" renders no text beyond its name`,
+        message: `accent tile "${t.name}" renders no text and no graphic beyond its name`,
       });
   if (kind === "component" && facts.tiles.length === 0)
     out.push({

@@ -74,3 +74,20 @@ test("no text of its own: the frame carries no label (§7 Q11)", async () => {
   assert.equal(root.textContent, "");
   await unmount();
 });
+
+test("any product element is accepted as the art — a positioned span passes through with its attributes (§3.1)", async () => {
+  const icon = React.createElement("span", { className: "role-icon", "data-role-icon": "top" });
+  const { root, unmount } = await mountComponent(
+    DIR,
+    "Sigil",
+    {},
+    { snippet: "<span />", node: icon },
+  );
+  const slot = root.children[0];
+  assert.equal(slot.children.length, 1);
+  assert.equal(slot.children[0].tagName, "SPAN");
+  assert.equal(slot.children[0].className, "role-icon");
+  assert.equal(slot.children[0].getAttribute("data-role-icon"), "top");
+  assert.equal(root.textContent, "");
+  await unmount();
+});

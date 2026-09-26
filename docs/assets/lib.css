@@ -404,9 +404,13 @@
    paints above ::before and below ::after — the Figma layer order. No
    layout ships beyond width: 100% and aspect-ratio: 1 — the parent grid
    sizes and places the square (§3.4). Every value is a token (axiom 1); the
-   1px rules are the design language's fixed line weight, as in the Callout. */
+   1px rules are the design language's fixed line weight, as in the Callout.
+   box-sizing: border-box is structural, not a design value: the library
+   ships no reset (distribution contract), and a 1px border on a width: 100%
+   square must not overflow its column by 2px on a host without one. */
 
 .ll-sigil {
+  box-sizing: border-box;
   position: relative;
   aspect-ratio: 1;
   width: 100%;

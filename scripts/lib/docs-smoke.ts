@@ -8,7 +8,11 @@
 //     2026-09-15: an emptied demo stage keeps a padded box but no text, so
 //     the stage and tile rules look at visible descendants AND rendered
 //     content; inactive tab panels are 0×0 by design). Rendered content is
-//     text OR a drawn graphic — a visible mark inside an <svg> (2026-09-26:
+//     text OR a drawn graphic — an element with a non-zero box inside an
+//     <svg> (a bounding-box test: it does not see opacity, visibility or
+//     paint — an invisible mark still counts; a perfectly straight
+//     horizontal or vertical line has a zero-height box and does not)
+//     (2026-09-26:
 //     the Sigil is decorative, renders no text by contract, and its content
 //     is the art; an emptied art slot keeps the padded frame but draws
 //     nothing, so it stays red).
@@ -29,7 +33,7 @@ export interface Facts {
   main: { box: Box; text: number } | null;
   h1: { box: Box; text: number } | null;
   stages: { visibleDescendants: number; text: number; graphics: number }[]; // every .stage — descendants with a non-zero box, rendered text length, drawn SVG marks
-  tiles: { name: string; visibleDescendants: number; text: number; graphics: number }[]; // every .accent-tile — descendants with a non-zero box outside the .accent-name subtree, rendered text length beyond the name, drawn SVG marks
+  tiles: { name: string; visibleDescendants: number; text: number; graphics: number }[]; // every .accent-tile — descendants with a non-zero box outside the .accent-name subtree, rendered text length beyond the name, drawn SVG marks, except the graphics count, which covers the whole tile
   hasPanels: boolean; // the page carries [role=tabpanel] elements
   activePanel: { id: string; box: Box; tables: number } | null; // the one not hidden
 }

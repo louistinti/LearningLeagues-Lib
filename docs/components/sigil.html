@@ -118,8 +118,8 @@
   <div class="ll-sigil" aria-hidden="true"><div class="ll-sigil-art"><svg viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="0.8"><polygon points="100,10 180,55 180,145 100,190 20,145 20,55" stroke-width="1" opacity="0.55"></polygon><polygon points="100,40 155,72 155,128 100,160 45,128 45,72" opacity="0.4"></polygon><path d="M100 10 L100 40 M180 55 L155 72 M180 145 L155 128 M100 190 L100 160 M20 145 L45 128 M20 55 L45 72" opacity="0.5"></path></svg></div></div>
   <div class="ll-sigil" aria-hidden="true"><div class="ll-sigil-art"><svg viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="0.8"><circle cx="100" cy="100" r="36" stroke-width="1" opacity="0.7"></circle><path d="M100 64 L106 100 L100 136 L94 100 Z" fill="currentColor" opacity="0.85" stroke="none"></path><path d="M64 100 L100 94 L136 100 L100 106 Z" fill="currentColor" opacity="0.4" stroke="none"></path><circle cx="100" cy="100" r="3" fill="currentColor" stroke="none"></circle></svg></div></div>
 </div>
-<pre class="code"><code>&lt;Sigil&gt;&lt;svg viewBox=&quot;0 0 200 200&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot;&gt;…&lt;/svg&gt;&lt;/Sigil&gt;
-&lt;Sigil&gt;&lt;svg viewBox=&quot;0 0 200 200&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot;&gt;…&lt;/svg&gt;&lt;/Sigil&gt;</code></pre>
+<pre class="code"><code>&lt;Sigil&gt;&lt;svg viewBox=&quot;0 0 200 200&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot;&gt;{/* hex frame */}…&lt;/svg&gt;&lt;/Sigil&gt;
+&lt;Sigil&gt;&lt;svg viewBox=&quot;0 0 200 200&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot;&gt;{/* compass */}…&lt;/svg&gt;&lt;/Sigil&gt;</code></pre>
 <h2 id="guidelines">Guidelines</h2>
 <div class="golden">
   <p class="golden-title">Golden rules</p>
@@ -136,7 +136,7 @@
     <ul>
       <li>Draw the art with stroke=&quot;currentColor&quot; / fill=&quot;currentColor&quot; so it follows data-accent (§3.1).</li>
       <li>Give the Sigil a sized grid column or wrapper; it fills the width it is given (§3.4).</li>
-      <li>Set data-accent / data-role on an ancestor to change the accent: the frame, the accent ring and the art follow (§3.4).</li>
+      <li>Set data-accent / data-role on an ancestor to change the accent: the accent ring and the art follow; the frame's border and fill stay neutral (§3.4).</li>
     </ul>
   </div>
   <div class="donts">
@@ -191,7 +191,7 @@
 <dl class="a11y">
     <div><dt>Semantic structure</dt><dd>Exactly one &lt;div class=&quot;ll-sigil&quot; aria-hidden=&quot;true&quot;&gt; holding one &lt;div class=&quot;ll-sigil-art&quot;&gt; whose only content is children (RFC §3.4, §4.1). No ARIA role, no accessible name, no live region, no text of its own: decorative by construction, hidden from assistive technology unconditionally — the six site mounts already ship aria-hidden.</dd></div>
     <div><dt>Keyboard</dt><dd>Nothing to do: no interactive element, nothing focusable — no a, button, input or tabindex is rendered by the component (RFC §3.3, §4.2). Interactive children are not expected: an aria-hidden subtree must not contain focusable content (WCAG 4.1.2, axe aria-hidden-focus) — a dont guideline; the local suite asserts the component itself renders nothing focusable.</dd></div>
-    <div><dt>Decisions</dt><dd>No contrast pair is declared — the first component with an empty pair set: pure decoration is exempt from WCAG 1.4.3 and the component renders no text; the contrast gate scores the token-level pairs in contrast-pairs.json, which this component adds nothing to (RFC §4.3). aria-hidden is unconditional: a product that needs a meaningful image uses an &lt;img alt&gt; or a figure, not a Sigil. The accent ring's opacity is the opacity/ornament token (25 % in Figma, 0.25 in CSS — §7 Q4, Q9).</dd></div>
+    <div><dt>Decisions</dt><dd>No contrast pair is declared: pure decoration is exempt from WCAG 1.4.3 and the component renders no text; the contrast gate scores the token-level pairs in contrast-pairs.json, which this component adds nothing to (RFC §4.3). aria-hidden is unconditional: a product that needs a meaningful image uses an &lt;img alt&gt; or a figure, not a Sigil. The accent ring's opacity is the opacity/ornament token (25 % in Figma, 0.25 in CSS — §7 Q4, Q9).</dd></div>
     <div><dt>Notes</dt><dd>Implemented per RFC §4; this status moves to pass only through the accessibility engine gate, never by assertion.</dd></div>
 </dl>
 </main>

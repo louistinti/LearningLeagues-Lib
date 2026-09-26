@@ -50,7 +50,8 @@ export const meta = {
       label: "Hex frame",
       props: {},
       children: {
-        snippet: '<svg viewBox="0 0 200 200" fill="none" stroke="currentColor">…</svg>',
+        snippet:
+          '<svg viewBox="0 0 200 200" fill="none" stroke="currentColor">{/* hex frame */}…</svg>',
         node: hexFrame(),
       },
     },
@@ -58,7 +59,8 @@ export const meta = {
       label: "Compass",
       props: {},
       children: {
-        snippet: '<svg viewBox="0 0 200 200" fill="none" stroke="currentColor">…</svg>',
+        snippet:
+          '<svg viewBox="0 0 200 200" fill="none" stroke="currentColor">{/* compass */}…</svg>',
         node: compass(),
       },
     },
@@ -89,7 +91,7 @@ export const meta = {
     do: [
       'Draw the art with stroke="currentColor" / fill="currentColor" so it follows data-accent (§3.1).',
       "Give the Sigil a sized grid column or wrapper; it fills the width it is given (§3.4).",
-      "Set data-accent / data-role on an ancestor to change the accent: the frame, the accent ring and the art follow (§3.4).",
+      "Set data-accent / data-role on an ancestor to change the accent: the accent ring and the art follow; the frame's border and fill stay neutral (§3.4).",
     ],
     dont: [
       "Don't put anything focusable inside — an aria-hidden subtree must not hold interactive content (§4.2).",

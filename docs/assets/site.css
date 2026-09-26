@@ -353,6 +353,12 @@ a {
   border: 1px solid var(--ll-border-soft);
   padding-top: var(--ll-s-6);
 }
+/* The Sigil fills the width it is given (its contract): the demo stage and
+   the accent tiles give it a fixed slot. Docs shell, not library CSS. */
+.stage > .ll-sigil,
+.accent-tile > .ll-sigil {
+  width: 160px;
+}
 .accent-name {
   position: absolute;
   top: var(--ll-s-1);

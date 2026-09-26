@@ -13,8 +13,8 @@ const good = (): Facts => ({
   bodyPainted: true,
   main: { box: { w: 1040, h: 3401 }, text: 3755 },
   h1: { box: { w: 976, h: 54 }, text: 13 },
-  stages: [{ visibleDescendants: 3, text: 44 }],
-  tiles: [{ name: "ambre", visibleDescendants: 1, text: 20 }],
+  stages: [{ visibleDescendants: 3, text: 44, graphics: 0 }],
+  tiles: [{ name: "ambre", visibleDescendants: 1, text: 20, graphics: 0 }],
   hasPanels: false,
   activePanel: null,
 });
@@ -62,8 +62,8 @@ test("demo-stage: a stage with nothing visible is red, and names its position", 
     {
       ...good(),
       stages: [
-        { visibleDescendants: 2, text: 30 },
-        { visibleDescendants: 0, text: 0 },
+        { visibleDescendants: 2, text: 30, graphics: 0 },
+        { visibleDescendants: 0, text: 0, graphics: 0 },
       ],
     },
     [],
@@ -76,13 +76,28 @@ test("demo-stage: a stage with nothing visible is red, and names its position", 
   assert.ok(out[0].message.includes("#2"));
 });
 
-test("demo-stage: visible descendants but no rendered text is red (an empty padded block)", () => {
-  const out = judgePage({ ...good(), stages: [{ visibleDescendants: 1, text: 0 }] }, [], "other");
+test("demo-stage: visible descendants but no rendered text and no graphic is red (an empty padded block)", () => {
+  const out = judgePage(
+    { ...good(), stages: [{ visibleDescendants: 1, text: 0, graphics: 0 }] },
+    [],
+    "other",
+  );
   assert.deepEqual(
     out.map((f) => f.rule),
     ["demo-stage"],
   );
-  assert.ok(out[0].message.includes("renders no text"));
+  assert.ok(out[0].message.includes("renders no text and no graphic"));
+});
+
+test("demo-stage: a drawn graphic with no text is content — a decorative component passes", () => {
+  assert.deepEqual(
+    judgePage(
+      { ...good(), stages: [{ visibleDescendants: 5, text: 0, graphics: 3 }] },
+      [],
+      "component",
+    ),
+    [],
+  );
 });
 
 test("demo-stage: a page without stages (registry, tokens — kind other) is not red", () => {
@@ -100,7 +115,7 @@ test("demo-stage: a component page with no stage at all is red", () => {
 
 test("accent-tile: a tile with nothing beyond its name is red, naming the accent", () => {
   const out = judgePage(
-    { ...good(), tiles: [{ name: "jade", visibleDescendants: 0, text: 0 }] },
+    { ...good(), tiles: [{ name: "jade", visibleDescendants: 0, text: 0, graphics: 0 }] },
     [],
     "other",
   );
@@ -111,9 +126,9 @@ test("accent-tile: a tile with nothing beyond its name is red, naming the accent
   assert.ok(out[0].message.includes("jade"));
 });
 
-test("accent-tile: visible descendants but no text beyond the name is red", () => {
+test("accent-tile: visible descendants but no text and no graphic beyond the name is red", () => {
   const out = judgePage(
-    { ...good(), tiles: [{ name: "bleu", visibleDescendants: 1, text: 0 }] },
+    { ...good(), tiles: [{ name: "bleu", visibleDescendants: 1, text: 0, graphics: 0 }] },
     [],
     "other",
   );
@@ -121,7 +136,18 @@ test("accent-tile: visible descendants but no text beyond the name is red", () =
     out.map((f) => f.rule),
     ["accent-tile"],
   );
-  assert.ok(out[0].message.includes("no text beyond its name"));
+  assert.ok(out[0].message.includes("no text and no graphic beyond its name"));
+});
+
+test("accent-tile: a drawn graphic with no text beyond the name is content — not red", () => {
+  assert.deepEqual(
+    judgePage(
+      { ...good(), tiles: [{ name: "violet", visibleDescendants: 5, text: 0, graphics: 3 }] },
+      [],
+      "component",
+    ),
+    [],
+  );
 });
 
 test("accent-tile: a component page with no tile at all is red; kind other is not", () => {
@@ -195,7 +221,12 @@ test("page-title: an empty or blank title is red", () => {
 
 test("never short-circuits: several symptoms are all listed", () => {
   const out = rules(
-    { ...good(), bodyPainted: false, h1: null, stages: [{ visibleDescendants: 0, text: 0 }] },
+    {
+      ...good(),
+      bodyPainted: false,
+      h1: null,
+      stages: [{ visibleDescendants: 0, text: 0, graphics: 0 }],
+    },
     ["page error: x"],
   );
   assert.deepEqual(out, ["page-events", "stylesheet", "heading", "demo-stage"]);

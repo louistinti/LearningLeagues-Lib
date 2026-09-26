@@ -9,6 +9,7 @@ import { readFileSync, writeFileSync, mkdirSync, readdirSync, statSync, existsSy
 import { join, resolve, dirname } from "node:path";
 import { pathToFileURL } from "node:url";
 import { renderExamples, type Example } from "./lib/docs-render.ts";
+import { validateExampleChildren } from "./lib/example-children.ts";
 import {
   indexPage,
   componentPage,
@@ -65,6 +66,10 @@ for (const slug of slugs) {
   if (!Array.isArray(meta?.variants)) fail(`${slug}: meta.variants missing`);
   if (!Array.isArray(meta?.examples) || meta.examples.length === 0)
     fail(`${slug}: meta.examples must hold at least one example (blueprint §9.1)`);
+  for (const e of Array.isArray(meta?.examples) ? meta.examples : []) {
+    const defect = validateExampleChildren(e?.children);
+    if (defect) fail(`${slug}: example "${e?.label}": ${defect}`);
+  }
   if (meta?.states !== undefined) {
     if (!Array.isArray(meta.states)) fail(`${slug}: meta.states must be an array`);
     else

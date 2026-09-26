@@ -5,7 +5,7 @@
     "fileKey": "6zp7CvEjdiFXzwh6ZGGwB8",
     "fileName": "Lib"
   },
-  "exportedAt": "2026-09-21",
+  "exportedAt": "2026-09-26",
   "collections": [
     {
       "id": "VariableCollectionId:3:2",
@@ -620,6 +620,21 @@
           "b": 0.40784314274787903,
           "a": 1
         }
+      }
+    },
+    {
+      "id": "VariableID:89:2",
+      "name": "opacity/ornament",
+      "variableCollectionId": "VariableCollectionId:3:2",
+      "resolvedType": "FLOAT",
+      "scopes": [
+        "OPACITY"
+      ],
+      "codeSyntax": {
+        "WEB": "var(--ll-opacity-ornament)"
+      },
+      "valuesByMode": {
+        "3:0": 25
       }
     },
     {

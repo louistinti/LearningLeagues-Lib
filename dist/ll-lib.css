@@ -40,6 +40,7 @@
   --ll-tier-master: #a868d4;
   --ll-tier-grandmaster: #c9484a;
   --ll-tier-challenger: #d4b468;
+  --ll-opacity-ornament: 0.25;
   --ll-bg: var(--ll-neutral-bg);
   --ll-bg-soft: var(--ll-neutral-bg-soft);
   --ll-surface: var(--ll-neutral-surface);
@@ -392,4 +393,54 @@
 }
 .ll-eyebrow--accent {
   color: var(--ll-accent);
+}
+
+/* Sigil — Sigil.rfc.md §3–§4, design node 89:4 (component `Sigil`, page
+   `Sigil` 89:3: rings 89:5 / 89:6, art slot 92:7 inside the accent ring).
+   The framed decorative square: 1px border, surface fill, colour = the live
+   accent so the art inherits it (currentColor). Two rings as
+   pseudo-elements (§7 Q2): the soft ring at s-15, the accent ring at s-3 at
+   opacity/ornament (§7 Q4, Q9 — Figma stores 25 %, the transform emits 0.25).
+   The art slot is the square inside the accent ring (§7 Q11): a child, so it
+   paints above ::before and below ::after — the Figma layer order. No
+   layout ships beyond width: 100% and aspect-ratio: 1 — the parent grid
+   sizes and places the square (§3.4). Every value is a token (axiom 1); the
+   1px rules are the design language's fixed line weight, as in the Callout.
+   box-sizing: border-box is structural, not a design value: the library
+   ships no reset (distribution contract), and a 1px border on a width: 100%
+   square must not overflow its column by 2px on a host without one. */
+
+.ll-sigil {
+  box-sizing: border-box;
+  position: relative;
+  aspect-ratio: 1;
+  width: 100%;
+  border: 1px solid var(--ll-border);
+  background: var(--ll-surface);
+  color: var(--ll-accent);
+}
+
+.ll-sigil::before,
+.ll-sigil::after {
+  content: "";
+  position: absolute;
+  inset: var(--ll-s-15);
+  border: 1px solid var(--ll-border-soft);
+  pointer-events: none;
+}
+.ll-sigil::after {
+  inset: var(--ll-s-3);
+  border-color: var(--ll-accent);
+  opacity: var(--ll-opacity-ornament);
+}
+
+/* The art slot — the square inside the accent ring (§3.2). */
+.ll-sigil-art {
+  position: absolute;
+  inset: var(--ll-s-3);
+}
+.ll-sigil-art > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
 }

@@ -46,4 +46,11 @@ function Eyebrow({ tone = "dim", children }) {
   return <span className={`ll-eyebrow ll-eyebrow--${tone}`}>{children}</span>;
 }
 
-window.LL = Object.assign(window.LL || {}, { Button, Callout, Eyebrow });
+// ── Sigil (sigil) ──
+function Sigil({ children }) {
+  return <div className="ll-sigil" aria-hidden="true">
+      <div className="ll-sigil-art">{children}</div>
+    </div>;
+}
+
+window.LL = Object.assign(window.LL || {}, { Button, Callout, Eyebrow, Sigil });

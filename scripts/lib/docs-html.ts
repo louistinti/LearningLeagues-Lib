@@ -407,6 +407,29 @@ ${rows}
 </table>`;
 }
 
+// No swatch column — for groups that hold no colour (e.g. a FLOAT primitive
+// like opacity/*). Shared by the Layout section and any non-colour Primitives
+// group.
+function valueTable(entries: TokenEntry[]): string {
+  const rows = entries
+    .map(
+      (e) => `      <tr>
+        <th scope="row"><code>${esc(e.path)}</code></th>
+        <td><code>${esc(e.css)}</code></td>
+        <td><code>${esc(e.emitted)}</code></td>
+      </tr>`,
+    )
+    .join("\n");
+  return `<table>
+  <thead>
+    <tr><th scope="col">Token</th><th scope="col">CSS property</th><th scope="col">Value</th></tr>
+  </thead>
+  <tbody>
+${rows}
+  </tbody>
+</table>`;
+}
+
 export function tokensPage(
   model: TokenModel,
   components: ComponentDoc[],
@@ -420,21 +443,23 @@ export function tokensPage(
 
   const sectionBodies: Record<string, string> = {};
 
-  // Primitives: raw values, one table per group.
+  // Primitives: raw values, one table per group — swatches for colour
+  // groups, plain values otherwise.
   const primitives = byCollection("Primitives");
   const groups = [...new Set(primitives.map((e) => e.group))];
   sectionBodies.Primitives =
     `<p>Raw values as extracted from Figma. Components never reference a primitive directly — they consume the semantic aliases below.</p>\n` +
     groups
-      .map(
-        (g) =>
+      .map((g) => {
+        const groupEntries = primitives.filter((e) => e.group === g);
+        const isColor = groupEntries.every((e) => e.type === "color");
+        return (
           `<h3 id="primitives-${esc(g)}"><code>${esc(g)}</code></h3>\n` +
-          colorTable(
-            primitives.filter((e) => e.group === g),
-            "Value",
-            (e) => `<code>${esc(e.emitted)}</code>`,
-          ),
-      )
+          (isColor
+            ? colorTable(groupEntries, "Value", (e) => `<code>${esc(e.emitted)}</code>`)
+            : valueTable(groupEntries))
+        );
+      })
       .join("\n");
 
   // Semantic: aliases only — the column shows what each token points at.
@@ -472,22 +497,7 @@ ${spacing
   // Layout: plain values (z/* is unitless by name).
   sectionBodies.Layout =
     `<p>Structural constants: chrome dimensions and the z-index scale.</p>\n` +
-    `<table>
-  <thead>
-    <tr><th scope="col">Token</th><th scope="col">CSS property</th><th scope="col">Value</th></tr>
-  </thead>
-  <tbody>
-${byCollection("Layout")
-  .map(
-    (e) => `      <tr>
-        <th scope="row"><code>${esc(e.path)}</code></th>
-        <td><code>${esc(e.css)}</code></td>
-        <td><code>${esc(e.emitted)}</code></td>
-      </tr>`,
-  )
-  .join("\n")}
-  </tbody>
-</table>`;
+    valueTable(byCollection("Layout"));
 
   // Typography: a specimen per family, with the emitted stack.
   sectionBodies.Typography =

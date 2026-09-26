@@ -40,6 +40,7 @@
   --ll-tier-master: #a868d4;
   --ll-tier-grandmaster: #c9484a;
   --ll-tier-challenger: #d4b468;
+  --ll-opacity-ornament: 0.25;
   --ll-bg: var(--ll-neutral-bg);
   --ll-bg-soft: var(--ll-neutral-bg-soft);
   --ll-surface: var(--ll-neutral-surface);

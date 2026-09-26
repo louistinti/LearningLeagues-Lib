@@ -16,6 +16,18 @@ source — rather than restating it here.
 
 ## Entries
 
+- **2026-09-26** — Sigil RFC arbitration (§7 Q4, Q9): one Primitives variable
+  added in Figma through the MCP then re-extracted — `opacity/ornament` = 25
+  (`--ll-opacity-ornament` = `0.25`, the accent ring's opacity inside the
+  Sigil frame). Stored as a percentage because Figma reads a float bound to a
+  layer's opacity as % (a first write of 0.25 rendered the ring at 0.25 %);
+  the transform's unit rule (`scripts/lib/token-units.ts`) divides `opacity/*`
+  by 100 — so `tokens.json` carries 25 and `tokens.css` carries 0.25, by
+  design, not drift (the token diff reports the `tokens.json` value). Raw
+  export patched by script and checksum-verified against the live export
+  (djb2 over the full export, `680dd01f`). Decided by: Louis Tinthilier.
+  Delivered by: Sigil implementation session (sup. Louis Tinthilier).
+
 - **2026-09-21** — Contrast arbitration on the accent axis: `Primitives/accent/rouge`
   `#c96f6f` → `#d28585`, changed in Figma (variable 4:14) then re-extracted from
   file `Lib` (`6zp7CvEjdiFXzwh6ZGGwB8`). Motivation: the contrast gate now scores

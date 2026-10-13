@@ -77,7 +77,7 @@ Arbitration (Louis, 2026-08-12): the seeded `type/eyebrow` text style was
 deleted in Figma — one mono utility style is enough; the eyebrow treatment
 (uppercase, wide tracking) is a usage of `type/meta`-family typography, not a
 separate style. The site's `.eyebrow` pattern is therefore a candidate design
-gap to list in the first RFC that needs it, not a token.
+gap to list in the first RFC that needs it, not a token. (Resolved: the Eyebrow component, RFC 2026-09-16, exported 2026-09-21.)
 
 ## Design language ("Hextech editorial")
 

@@ -22,11 +22,11 @@ pnpm conformity                         # every blocking gate; expect PASS (11 g
 ## Status
 
 The machine runs end to end: the token pipeline goes Figma → generated
-stylesheet (128 tokens — colours, spacing, layout, typography and the extracted
+stylesheet (129 tokens — colours, spacing, layout, typography, one opacity primitive and the extracted
 `type/*` text styles), the conformity CI job blocks on 11 executable gates
 (including the accessibility engine, the docs-site structural audit and the
-real-browser smoke of every docs page), three components (Button, Callout,
-Eyebrow) are `stable` and exported after the RFC circuit and the site's
+real-browser smoke of every docs page), four components (Button, Callout,
+Eyebrow, Sigil) are `stable` and exported after the RFC circuit and the site's
 adoption, and the documentation site is generated from the component
 contracts. A component's rules are either authored first on a Figma page
 `Docs / <Component>` and imported once at RFC time, or arbitrated in session

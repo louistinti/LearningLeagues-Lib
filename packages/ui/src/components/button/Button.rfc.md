@@ -4,6 +4,7 @@
 > **Author:** M5 agent session (sup. Louis Tinthilier)
 > **Date:** 2026-08-14
 > **Design node:** `16:18` — [link](https://www.figma.com/design/6zp7CvEjdiFXzwh6ZGGwB8/Lib?node-id=16-18)
+> **Docs page:** `54:3` — [link](https://www.figma.com/design/6zp7CvEjdiFXzwh6ZGGwB8/Lib?node-id=54-3) (generated from the contract, 2026-09-11)
 > **Base primitive:** none
 > **Category:** action
 > **Manifest entry:** button

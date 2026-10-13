@@ -29,7 +29,7 @@ everything else.
 | 7     | The touched component's own RFC and machine contract (`.rfc.md`, `contract.json`, `.meta.ts`) | Per-component truth.                                        |
 
 `README.md` is the entry point that routes here; its Status paragraph is a
-summary, never a source. The two prompts in `.github/prompts/` repeat this
+summary, never a source. The two generation prompts in `.github/prompts/` repeat this
 order — a divergence between them and this table is a defect.
 
 If two files appear to cover the same thing, one of them is wrong — that is a

@@ -4,6 +4,7 @@
 > **Author:** {name}
 > **Date:** {YYYY-MM-DD}
 > **Design node:** `{nodeId}` — [link]({url})
+> **Docs page:** `{nodeId}` — [link]({url}) | no docs page — reported {YYYY-MM-DD}
 > **Base primitive:** `{package}` | none
 > **Category:** action | navigation | feedback | input | layout | data-display
 > **Manifest entry:** {name in the state manifest}
@@ -19,7 +20,7 @@
 
 ## 2. Product usage analysis
 
-<!-- AGENT PRE-FILL → HUMAN VALIDATION. Sources: usage inventory, crosswalk table, grep
+<!-- AGENT PRE-FILL → HUMAN VALIDATION. Sources: the usage analysis (`process/archives/<date>-<name>-usage-analysis.md`), grep
      in the consuming repositories. -->
 
 ### 2.1 Matching identifiers (legacy libraries)

@@ -19,7 +19,7 @@ approval is a human lock (`AGENTS.md`, human locks).
   lead's written documentation of the component, in the 8-block skeleton:
   anatomy, states, golden rules, contents, how to use, API & behaviours,
   accessibility, out of scope; see `process/PROJECT-CONTEXT.md`, "Design
-  source"). Absent → write `no docs page — reported <YYYY-MM-DD>` in §1;
+  source"). Absent → write `no docs page — reported <YYYY-MM-DD>` in the header's `Docs page` line;
   the rules are then arbitrated in session and recorded in §7 (convention
   addendum 2026-09-16, `process/PROJECT-CONTEXT.md`).
 

@@ -372,7 +372,7 @@
    reads the author's casing (§4.1). No layout ships here — no margin,
    padding, border, background, position, alignment or display override
    (§3.4, §7 Q8): the component is inline text, and the parent stacks it
-   above a title, puts it in a row or positions it inside a sigil. Every
+   above a title or puts it in a row. Every
    value is a token (axiom 1); the "no layout" rule has no detector — the
    reviewer reads this file. */
 

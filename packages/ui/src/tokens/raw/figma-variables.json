@@ -5,7 +5,7 @@
     "fileKey": "6zp7CvEjdiFXzwh6ZGGwB8",
     "fileName": "Lib"
   },
-  "exportedAt": "2026-09-26",
+  "exportedAt": "2026-10-13",
   "collections": [
     {
       "id": "VariableCollectionId:3:2",
@@ -1279,6 +1279,19 @@
       },
       "valuesByMode": {
         "3:3": 100
+      }
+    },
+    {
+      "id": "VariableID:108:2",
+      "name": "breakpoint/md",
+      "variableCollectionId": "VariableCollectionId:3:5",
+      "resolvedType": "FLOAT",
+      "scopes": [],
+      "codeSyntax": {
+        "WEB": "var(--ll-breakpoint-md)"
+      },
+      "valuesByMode": {
+        "3:3": 768
       }
     },
     {

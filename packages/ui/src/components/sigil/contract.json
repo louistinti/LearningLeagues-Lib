@@ -1,6 +1,6 @@
 {
   "status": "stable",
-  "exported": false,
+  "exported": true,
   "component": "Sigil",
   "rfc": "Sigil.rfc.md",
   "designNode": "89:4",

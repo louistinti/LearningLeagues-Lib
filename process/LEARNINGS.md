@@ -22,7 +22,7 @@ stable across the move.
 
 - **L05** — "RFC approved" is enforced at prompt level only: `component-generation.prompt.md` reads the `Status:` line, but nothing mechanical blocks code landing without an approved RFC.
   - Rule: the human reviewer checks the RFC status on every component PR until then.
-  - Gate: partial since 2026-08-31 — `scripts/promote.ts` refuses any promotion without RFC `approved` + a fully ticked §6; code landing pre-approval is still only caught by the human reviewer, so the lesson stays active.
+  - Gate: partial since 2026-08-31 — `scripts/promote.ts` refuses any promotion without RFC `approved` + a fully ticked §6; code landing pre-approval is still only caught by the human reviewer, so the lesson stays active. §6 ticks are verified, not their author — an agent ticking on a quoted attestation passes.
 
 - **L07** — Stacked PRs (#10 on #9's branch, #11 on #10's) were merged into their stacked bases; only #9 reached main, and the work sat invisible on intermediate branches until noticed.
   - Rule: a stacked PR is retargeted to `main` the moment its base merges — before pressing its own merge; "merged" means merged-to-main, verified on `main`'s log, not on the PR badge.
@@ -39,6 +39,26 @@ stable across the move.
 - **L10** — The design record assumed axe's `tabindex` rule would red a positive tabindex; under the gate's WCAG tag set it never runs (best-practice tag only), and only the injection proof revealed the gap.
   - Rule: every "the engine catches X" claim is verified by injection under the gate's real configuration before being relied on; a rule id the gate relies on is locked by a detector test.
   - Gate: `pnpm gate:detectors` locks that every WCAG tag selects rules (since 2026-09-09); per-rule coverage claims remain proved by injection, so the lesson stays active.
+
+- **L13** — A subagent twice signed commits on the session's branch with another model's trailer; caught only by reading the log before push, and the commits were rewritten.
+  - Rule: before any push, every commit since the merge base is read for author, trailer and branch — delegated commits included; a foreign trailer is rewritten before push, never after.
+  - Gate: none; candidate is a commit-msg hook or a CI step rejecting trailers not on an allowed list.
+
+- **L14** — A commit landed on local `main` instead of the session branch despite the `git branch --show-current` rule; only the branch protection rejected the push.
+  - Rule: the branch check runs in the same command as the commit, as a guard (`[ "$(git branch --show-current)" = <branch> ] || exit 1`), and a commit found on local `main` is moved to its branch and `main` reset to `origin/main` before anything else.
+  - Gate: none locally; candidate is a pre-commit hook refusing commits on `main` — branch protection catches the push, not the commit.
+
+- **L15** — The design lead said three times that the site branch was pushed while `git ls-remote` showed it was not; acting on the report would have recorded an adoption against a commit absent from the remote.
+  - Rule: a push reported by anyone is verified with `git ls-remote <remote> <branch>` and the SHA is quoted before it is relied on (adoption, ratification, pin).
+  - Gate: none; candidate is the adoption step quoting the `ls-remote` SHA and refusing on mismatch.
+
+- **L16** — Figma reads a float variable bound to opacity as a percentage: `opacity/ornament` was first created as 0.25 (rendered 0.25 %) and had to be stored as 25.
+  - Rule: an `opacity/*` variable is written in Figma as a percent (0–100); the transform divides by 100 (`scripts/lib/token-units.ts`).
+  - Gate: partial — `pnpm gate:detectors` locks the `/100` conversion, but a raw value below 1 still emits silently (0.25 → 0.0025); candidate is the transform refusing `opacity/*` outside `[1, 100]`.
+
+- **L17** — Docs smoke went red on the Sigil (decorative, no text by contract); the rule was loosened inside the implementation PR #48 that needed it.
+  - Rule: a gate rule changed because a component trips it lands in its own commit with red/green proofs and is listed under "Flags for review"; the false-positive verdict is reported, never assumed.
+  - Gate: none; the proofs exist, but nothing separates a gate relaxation from the component that needed it.
 
 ## Archive (closed, verbatim)
 

@@ -6,8 +6,9 @@ verification). Injections are verified to have landed before their verdict is
 trusted — two broken injections in this repository's history produced a false
 red and a false green respectively (L03, L04).
 
-Last full run: 2026-08-12, locally, Node 24.16.0. Re-prove after any change to
-a detector or a gate's scan surface.
+Last full run: 2026-08-12 (the gates of that day only), locally, Node 24.16.0;
+every gate added or re-proved since is dated in the notes below. Re-prove after
+any change to a detector or a gate's scan surface.
 
 Schema-gate re-proof: 2026-08-29 (axis selectors became element-scoped —
 `[data-accent]` instead of `:root[data-accent]`), locally, Node 24. The three
@@ -34,12 +35,12 @@ exception was retired), locally, Node 25.9. New injection row below.
 A11y-engine proofs: 2026-09-09 (gate 9 landed), locally, Node 24.16.0 —
 axe-core 4.13.0 / jsdom 30.0.1.
 
+Docs-a11y proofs: 2026-09-10 (docs gate landed), locally, Node 24.16.0 —
+axe-core 4.13.0 / jsdom 30.0.1.
+
 Vendoring page-wiring proofs: 2026-09-11 (L11 closed), locally, against the LearningLeagues checkout at 12ac249.
 
 RFC-stage proofs: 2026-09-11 (second component — the arbitration deferred on 2026-08-29), locally, Node 24.16.0.
-
-Docs-a11y proofs: 2026-09-10 (docs gate landed), locally, Node 24.16.0 —
-axe-core 4.13.0 / jsdom 30.0.1.
 
 Docs-smoke proofs: 2026-09-15 (gate 17 landed), locally, Node 24.16.0 —
 Playwright 1.63.0 / Chromium 153.0.8010.12 (build 1243), Windows 11.
@@ -71,14 +72,18 @@ count a drawn SVG mark as content — the Sigil, the first decorative
 component, renders no text by contract: its first docs run was red with six
 findings, `renders no text` on the demo stage and the five accent tiles, a
 false positive fixed in the detector, never allowlisted), locally, Node
-24.16.0 — Playwright 1.63.0 / Chromium 153.0.8010.12, Windows 11. Two rows at
-the end of the table; the page injection was restored by regeneration
-(`pnpm docs:build` — the page is generated), not `git checkout`. The stage
-row stands for the accent-tile branch too: same pure judge (`judgePage`), the
-tile branch has its own unit test.
+24.16.0 — Playwright 1.63.0 / Chromium 153.0.8010.12, Windows 11. Two rows
+near the end of the table (before the two Sigil a11y-engine rows); the page
+injection was restored by regeneration (`pnpm docs:build` — the page is
+generated), not `git checkout`. The stage row stands for the accent-tile
+branch too: same pure judge (`judgePage`), the tile branch has its own unit
+test. Rows dated before 2026-09-26 quote the demo-stage message as it read
+then ("renders no text —"); since then it reads "renders no text and no
+graphic —".
 
 Sigil a11y-engine proofs: 2026-09-26 (the decorative component's own
-surface), locally, Node 24.16.0.
+surface), locally, Node 24.16.0 — axe-core 4.13.0 / jsdom 30.0.1. Two rows
+at the end of the table.
 
 | Gate                                         | Injection                                                                                                                                                                                                                                                           | Red observed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | Restored green                                                                                                                                                                                                                                                                                                                                          |
 | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

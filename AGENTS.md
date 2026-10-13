@@ -97,6 +97,11 @@ merger — single-human team).
     base). The host application owns setting the accent attribute; the bare
     root defaults to `data-accent="ambre"` semantics (ambre since 2026-08-14 —
     the measured product default).
+- Breakpoints (`Layout/breakpoint/*`, since 2026-10-13): a custom property
+  cannot appear in a media condition, so a component restates the token's
+  emitted value and names the token in a comment inside the prelude —
+  `@media (width < 768px) /* --ll-breakpoint-md */ {`. The token lint reds any
+  other length in an `@media` / `@container` condition under `packages/`.
 - The generated stylesheet is external input, like a vendored dependency: it has
   a provenance log, a CODEOWNERS rule, and a token-diff gate requiring a human
   approval label (`token-approved`).

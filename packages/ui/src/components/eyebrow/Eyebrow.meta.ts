@@ -1,7 +1,7 @@
 export const meta = {
   name: "Eyebrow",
   description:
-    "The library's one mono label: a short uppercase caption in JetBrains Mono, dimmed by default or in the live accent, set above a section title (eyebrow) or inside a card, a row or a sigil (tag). Text only — no chrome, no states, laid out by its parent.",
+    "The library's one mono label: a short uppercase caption in JetBrains Mono, dimmed by default or in the live accent, set above a section title (eyebrow) or inside a card or a row (tag). Text only — no chrome, no states, laid out by its parent.",
   // The docs' generic "variant" column carries the tone (RFC §7 Q10: the
   // prop is `tone` — a colour and nothing else; `variant` stays reserved for
   // visual styles with chrome, `type` for editorial kinds).
@@ -31,7 +31,7 @@ export const meta = {
       {
         rule: "Text only — the parent lays it out",
         detail:
-          "The stylesheet ships no margin, padding, border, background, position or display: a section head stacks it above the title, a card puts it in a row, a sigil positions it (RFC §3.4, §7 Q8).",
+          "The stylesheet ships no margin, padding, border, background, position or display: a section head stacks it above the title, a card or a table row puts it in a row (RFC §3.4, §7 Q8).",
       },
       {
         rule: "Short: a category or a counter",
@@ -42,7 +42,7 @@ export const meta = {
       "Place it before the h2 / h3 it captions — a sibling of the heading, never a child (§7 Q9).",
       'Write the label as prose in the source ("Rift compass", not "RIFT COMPASS"): the capitals are CSS (§4.1).',
       'Use tone="accent" when the label should follow the page accent; keep the default dim otherwise (§3.1).',
-      "Keep positioning product-side: the parent's stack, row or sigil places the Eyebrow (§7 Q8).",
+      "Keep positioning product-side: the parent's stack or row places the Eyebrow (§7 Q8).",
     ],
     dont: [
       "Don't put an Eyebrow inside a heading element — place it before the h2/h3, never inside, so the heading's accessible name stays the title alone (§7 Q9).",

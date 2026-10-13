@@ -107,9 +107,9 @@
 </div>
 </nav>
 <main id="main">
-<h1>Sigil <span class="badge badge--draft">draft</span></h1>
+<h1>Sigil <span class="badge badge--stable">stable</span></h1>
 <p>The framed decorative square beside a hero title: a bordered surface square, two inset rings, and the page's art inside the accent ring, drawn in the live accent. Decorative (aria-hidden), no label, no states — the parent grid sizes it.</p>
-<p class="facts">Variants: — · A11y: <span class="badge badge--pending">pending</span></p>
+<p class="facts">Variants: — · A11y: <span class="badge badge--pass">pass</span></p>
 <p class="notes">No states: nothing hovers, nothing focuses (RFC §3.3). The stylesheet ships no layout beyond width: 100% and aspect-ratio: 1 (§3.4). The site's role icon (a masked PNG span with inset: 0) renders inside the art slot, product-side.</p>
 <p class="meta-links">RFC: <code>Sigil.rfc.md</code> · Figma node: <a href="https://www.figma.com/design/6zp7CvEjdiFXzwh6ZGGwB8/Lib?node-id=89-4"><code>89:4</code></a></p>
 <h2 id="examples">Examples</h2>
@@ -187,7 +187,7 @@
       </tr>
   </tbody>
 </table>
-<h2 id="accessibility">Accessibility <span class="badge badge--pending">pending</span></h2>
+<h2 id="accessibility">Accessibility <span class="badge badge--pass">pass</span></h2>
 <dl class="a11y">
     <div><dt>Semantic structure</dt><dd>Exactly one &lt;div class=&quot;ll-sigil&quot; aria-hidden=&quot;true&quot;&gt; holding one &lt;div class=&quot;ll-sigil-art&quot;&gt; whose only content is children (RFC §3.4, §4.1). No ARIA role, no accessible name, no live region, no text of its own: decorative by construction, hidden from assistive technology unconditionally — the six site mounts already ship aria-hidden.</dd></div>
     <div><dt>Keyboard</dt><dd>Nothing to do: no interactive element, nothing focusable — no a, button, input or tabindex is rendered by the component (RFC §3.3, §4.2). Interactive children are not expected: an aria-hidden subtree must not contain focusable content (WCAG 4.1.2, axe aria-hidden-focus) — a dont guideline; the local suite asserts the component itself renders nothing focusable.</dd></div>

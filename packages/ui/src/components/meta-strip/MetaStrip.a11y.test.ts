@@ -2,9 +2,11 @@
 // Q5, Q6, Q8). Discovered and run by scripts/check-a11y-engine.ts. Proves
 // what the generic checks cannot: the one <ul role="list"> shape with one
 // <li> per fact and no wrapper, that every key is a real Eyebrow carrying the
-// strip's tone, the literal space between key and value (and its absence for
-// a key alone), that empty items renders nothing, and that nothing
-// interactive or ARIA beyond role="list" is rendered.
+// strip's tone, that the values stay mute by default and take the accent
+// only under valueTone="accent", independently of the keys' tone (§7
+// adoption-checkpoint rows, 2026-10-14), the literal space between key and
+// value (and its absence for a key alone), that empty items renders nothing,
+// and that nothing interactive or ARIA beyond role="list" is rendered.
 // Run: node --test packages/ui/src/components/meta-strip/MetaStrip.a11y.test.ts
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -63,6 +65,38 @@ test("tone='accent' → every key ll-eyebrow--accent, none dim (§3.1, §7 Q4)",
   await unmount();
 });
 
+test("valueTone omitted → every value span is the bare ll-meta-strip-value, inheriting fg/mute (§3.1, §7 checkpoint 2026-10-14)", async () => {
+  const { root, unmount } = await mountComponent(DIR, "MetaStrip", { items: facts });
+  const values = Array.from(root.querySelectorAll(".ll-meta-strip-value"));
+  assert.equal(values.length, 2);
+  for (const value of values) assert.equal(value.className, "ll-meta-strip-value");
+  await unmount();
+});
+
+test("valueTone='accent' → every value ll-meta-strip-value--accent; keys keep their own tone (§3.1, §7 checkpoint 2026-10-14)", async () => {
+  const accentValues = await mountComponent(DIR, "MetaStrip", {
+    items: facts,
+    valueTone: "accent",
+  });
+  const values = Array.from(accentValues.root.querySelectorAll(".ll-meta-strip-value"));
+  assert.equal(values.length, 2); // a key alone still has no value span
+  for (const value of values)
+    assert.equal(value.className, "ll-meta-strip-value ll-meta-strip-value--accent");
+  for (const key of Array.from(accentValues.root.querySelectorAll(".ll-eyebrow")))
+    assert.equal(key.className, "ll-eyebrow ll-eyebrow--dim"); // tone untouched
+  assert.equal(accentValues.root.className, "ll-meta-strip"); // the modifier is on the value, not the strip
+  assert.deepEqual(
+    Array.from(accentValues.root.children).map((li) => li.textContent),
+    ["Read time ~15 min", "Patch 26.12", "Patch-stable"],
+  );
+  await accentValues.unmount();
+  // independent axes: accent keys with the default values
+  const accentKeys = await mountComponent(DIR, "MetaStrip", { items: facts, tone: "accent" });
+  for (const value of Array.from(accentKeys.root.querySelectorAll(".ll-meta-strip-value")))
+    assert.equal(value.className, "ll-meta-strip-value");
+  await accentKeys.unmount();
+});
+
 test("a value follows one literal space; a key alone has no space and no value span (§3.4, §4.1)", async () => {
   const { root, unmount } = await mountComponent(DIR, "MetaStrip", { items: facts });
   const [withValue, , keyAlone] = Array.from(root.children);
@@ -117,6 +151,7 @@ test("nothing interactive and no ARIA beyond role='list' (§3.4, §4.2)", async 
   const { root, unmount } = await mountComponent(DIR, "MetaStrip", {
     items: facts,
     tone: "accent",
+    valueTone: "accent",
   });
   assert.equal(root.querySelector("a, button, input, select, textarea, [tabindex]"), null);
   for (const el of [root, ...Array.from(root.querySelectorAll("*"))])

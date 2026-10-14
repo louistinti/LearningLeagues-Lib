@@ -47,8 +47,9 @@ function Eyebrow({ tone = "dim", children }) {
 }
 
 // ── MetaStrip (meta-strip) ──
-function MetaStrip({ items, tone = "dim" }) {
+function MetaStrip({ items, tone = "dim", valueTone = "mute" }) {
   if (items.length === 0) return null;
+  const valueClass = valueTone === "accent" ? "ll-meta-strip-value ll-meta-strip-value--accent" : "ll-meta-strip-value";
   return <ul className="ll-meta-strip" role="list">
       {items.map((item, i) => {
     const hasValue = item.value !== void 0 && item.value !== null;
@@ -58,7 +59,7 @@ function MetaStrip({ items, tone = "dim" }) {
       <li className="ll-meta-strip-item" key={i}>
             <Eyebrow tone={tone}>{item.label}</Eyebrow>
             {hasValue ? " " : null}
-            {hasValue ? <span className="ll-meta-strip-value">{item.value}</span> : null}
+            {hasValue ? <span className={valueClass}>{item.value}</span> : null}
           </li>
     );
   })}

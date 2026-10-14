@@ -396,10 +396,12 @@
 }
 
 /* MetaStrip — MetaStrip.rfc.md §3–§4, design node 106:29 (component set
-   `MetaStrip`, variants Tone=Dim 106:3 / Tone=Accent 106:16). A wrapping
+   `MetaStrip`, variants Tone × Values: Dim/Mute 106:3, Accent/Mute 106:16,
+   Dim/Accent 112:8, Accent/Accent 112:21 — Values added 2026-10-14). A wrapping
    row of facts under a dashed top rule. Text in the type/meta text style
    (11px / 400 / 0.06em / 1.4 — §7 Q2) in fg/mute, which the value
-   inherits; the key is the Eyebrow and its rule lives in eyebrow.css — this
+   inherits unless valueTone="accent" sets it to the accent (§7, checkpoint
+   rows 2026-10-14; Figma variant property Values=Accent); the key is the Eyebrow and its rule lives in eyebrow.css — this
    file holds no rule for the key's typography or colour (§7 Q3, Q4). One
    gap, s-3, for both directions: between facts and between wrapped rows
    (§7 Q7 and the checkpoint row « MS ecart lignes: 24 px (meme gap) »);
@@ -436,6 +438,13 @@
   column-gap: var(--ll-s-1);
   margin: 0;
   padding: 0;
+}
+
+/* valueTone="accent" — the value in the accent, and nothing else changes
+   (§7, adoption-checkpoint rows 2026-10-14). Follows the accent axis
+   ([data-accent] / [data-role]), like the Eyebrow's accent tone. */
+.ll-meta-strip-value--accent {
+  color: var(--ll-accent);
 }
 
 /* ProgressBar — ProgressBar.rfc.md §3.4–§4, design node 106:31 (component

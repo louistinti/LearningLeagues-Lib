@@ -1,0 +1,42 @@
+/* MetaStrip — MetaStrip.rfc.md §3–§4, design node 106:29 (component set
+   `MetaStrip`, variants Tone=Dim 106:3 / Tone=Accent 106:16). A wrapping
+   row of facts under a dashed top rule. Text in the type/meta text style
+   (11px / 400 / 0.06em / 1.4 — §7 Q2) in fg/mute, which the value
+   inherits; the key is the Eyebrow and its rule lives in eyebrow.css — this
+   file holds no rule for the key's typography or colour (§7 Q3, Q4). One
+   gap, s-3, for both directions: between facts and between wrapped rows
+   (§7 Q7 and the checkpoint row « MS ecart lignes: 24 px (meme gap) »);
+   s-1 from key to value (§7 Q7); s-3 above the text (all five site
+   recipes). The 1px rule is the design language's fixed line weight (the
+   sigil.css / callout.css precedent) and `dashed` the browser's own dash
+   pattern — Figma's [3, 3] is a stand-in for it (§3.4). The ul / li
+   margin, padding and list-style zeroes are structural, not design values:
+   the library ships no reset (distribution contract). No layout ships
+   beyond the strip itself — no outer margin, width, alignment, height or
+   overflow (§3.4): the parent places it. Every value is a token (axiom 1). */
+
+.ll-meta-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ll-s-3);
+  margin: 0;
+  padding: var(--ll-s-3) 0 0;
+  list-style: none;
+  border-top: 1px dashed var(--ll-rule);
+  font-family: var(--ll-type-meta-family);
+  font-size: var(--ll-type-meta-size);
+  font-weight: var(--ll-type-meta-weight);
+  font-style: var(--ll-type-meta-style);
+  letter-spacing: var(--ll-type-meta-tracking);
+  line-height: var(--ll-type-meta-line-height);
+  color: var(--ll-fg-mute);
+}
+
+/* One fact: the key's Eyebrow, then the optional value, on one baseline. */
+.ll-meta-strip-item {
+  display: flex;
+  align-items: baseline;
+  column-gap: var(--ll-s-1);
+  margin: 0;
+  padding: 0;
+}

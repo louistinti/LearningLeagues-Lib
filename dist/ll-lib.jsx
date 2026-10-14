@@ -46,6 +46,25 @@ function Eyebrow({ tone = "dim", children }) {
   return <span className={`ll-eyebrow ll-eyebrow--${tone}`}>{children}</span>;
 }
 
+// ── MetaStrip (meta-strip) ──
+function MetaStrip({ items, tone = "dim" }) {
+  if (items.length === 0) return null;
+  return <ul className="ll-meta-strip" role="list">
+      {items.map((item, i) => {
+    const hasValue = item.value !== void 0 && item.value !== null;
+    return (
+      // The facts are static content in reading order, never reordered:
+      // the index is a stable key.
+      <li className="ll-meta-strip-item" key={i}>
+            <Eyebrow tone={tone}>{item.label}</Eyebrow>
+            {hasValue ? " " : null}
+            {hasValue ? <span className="ll-meta-strip-value">{item.value}</span> : null}
+          </li>
+    );
+  })}
+    </ul>;
+}
+
 // ── SectionHead (section-head) ──
 function SectionHead({ num, title, lede, id }) {
   return <div className="ll-section-head">
@@ -68,4 +87,4 @@ function Sigil({ children }) {
     </div>;
 }
 
-window.LL = Object.assign(window.LL || {}, { Button, Callout, Eyebrow, SectionHead, Sigil });
+window.LL = Object.assign(window.LL || {}, { Button, Callout, Eyebrow, MetaStrip, SectionHead, Sigil });

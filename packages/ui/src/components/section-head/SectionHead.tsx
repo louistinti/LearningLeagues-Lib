@@ -2,8 +2,10 @@ import React from "react";
 
 // API is RFC §3 exactly (SectionHead.rfc.md, approved 2026-10-13). One
 // layout, no variant, no state (§7 Q1): the number in its own column beside
-// an h2 title and an optional lede, stacked under --ll-breakpoint-md (§7
-// checkpoint row — CSS only). `num` is required and rendered verbatim,
+// an h2 title and an optional lede, the title on the number's baseline; under
+// --ll-breakpoint-md the number and title share one row and the lede runs
+// full width below (§7 adoption-checkpoint row, 2B / 5B — CSS only; the body
+// div stays bare: it is display: contents there). `num` is required and rendered verbatim,
 // hidden from assistive technology unconditionally (§7 Q2, Q9) — it sits
 // outside the heading, so the h2's accessible name is the title alone. The
 // heading is always an h2 (§7 Q10); `id` goes on the h2, never on the root

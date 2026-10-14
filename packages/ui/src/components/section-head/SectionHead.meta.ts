@@ -1,7 +1,7 @@
 export const meta = {
   name: "SectionHead",
   description:
-    "The numbered head that opens a section: a serif italic number in the live accent with a short accent underline, alone in its own column beside an h2 title and an optional lede; the number stacks above the title on narrow viewports. One layout, no variant, no states — the page places it.",
+    "The numbered head that opens a section: a serif italic number in the live accent with a short accent underline, alone in its own column beside an h2 title and an optional lede, the title's first line on the number's baseline; on narrow viewports the number and the title share one row and the lede runs full width below. One layout, no variant, no states — the page places it.",
   // One layout, no variant (RFC §7 Q1): the grid is empty on purpose.
   variants: [],
   // The first example is tiled under the five accents: it carries a lede so
@@ -27,7 +27,7 @@ export const meta = {
       {
         rule: "One layout, always an h2",
         detail:
-          "The number in its own column beside the title, stacked above it at 768px and below (--ll-breakpoint-md). The heading level is always 2 — no level, layout or size option (RFC §7 Q1, Q10, checkpoint row).",
+          "The number in its own column beside the title, the title's first line on the number's baseline; at 768px and below (--ll-breakpoint-md) the number and the title stay on one baseline row, s-2 apart, and the lede runs full width below. The heading level is always 2 — no level, layout or size option (RFC §7 Q1, Q10, checkpoint rows, adoption checkpoint 2B / 5B).",
       },
       {
         rule: "The number is order, not meaning",
@@ -60,5 +60,5 @@ export const meta = {
     ],
   },
   notes:
-    "No states: nothing hovers, nothing focuses (RFC §3.3). Stacked at a viewport width of 768px and below — the one media query, in section-head.css, restating --ll-breakpoint-md (§3.4). The <em> rendering of the title (§7 Q8) is proven by the local suite, not shown as a docs example: an element-valued prop has no JSX snippet form in the docs generator yet. The stacked heads of Fundamentals and the landing stay product compositions (LL.Eyebrow + title + text, §7 Q1).",
+    "No states: nothing hovers, nothing focuses (RFC §3.3). The title's first baseline sits on the number's at every width (adoption checkpoint 2B / 5B); at a viewport width of 768px and below the number and the title share one row and the lede runs full width below — the one media query, in section-head.css, restating --ll-breakpoint-md (§3.4). The <em> rendering of the title (§7 Q8) is proven by the local suite, not shown as a docs example: an element-valued prop has no JSX snippet form in the docs generator yet. The stacked heads of Fundamentals and the landing stay product compositions (LL.Eyebrow + title + text, §7 Q1).",
 };

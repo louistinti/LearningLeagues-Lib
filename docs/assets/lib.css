@@ -473,25 +473,30 @@
 /* SectionHead — SectionHead.rfc.md §3–§4, design node 109:9 (component set
    `SectionHead`: Viewport=Desktop 106:34, Viewport=Mobile 109:2). A two-
    column grid: the number column s-8 wide (§7 Q6), the columns s-4 apart
-   (§7 checkpoint row, the site's 32px). The number is the type/h1-italic
-   text style in the live accent (§7 Q5); its underline is a ::after in the
-   number's flow, as the Figma number-col stacks number then underline s-15
-   below: 1px (the design language's fixed line weight, as in the Callout
-   and the Sigil), s-7 wide, accent at opacity/ornament (§7 Q3, validated
-   at the checkpoint). The title is type/h2 in fg (§7 Q4) and wraps (§7 Q7:
-   no white-space rule); its <em> is italic in the accent (§7 Q8). The lede
-   is type/body in fg/dim, s-15 below the title (§7 Q12). Self-defensive:
-   the library ships no reset, so the h2, p and em take their margins,
-   weight and style from these rules, never from the host's. No layout
-   ships beyond the grid itself — no margin, padding or width: the page
-   places the head (§3.4). Every value is a token (axiom 1); the "no
-   layout" rule has no detector — the reviewer reads this file. */
+   (§7 checkpoint row, the site's 32px), the title's first baseline on the
+   number's baseline (§7 adoption-checkpoint row, 2B). The number is the
+   type/h1-italic text style in the live accent (§7 Q5); its underline is a
+   ::after in the number's flow, as the Figma number-col stacks number then
+   underline s-15 below: 1px (the design language's fixed line weight, as
+   in the Callout and the Sigil), s-7 wide, accent at opacity/ornament (§7
+   Q3, validated at the checkpoint). The title is type/h2 in fg (§7 Q4) and
+   wraps (§7 Q7: no white-space rule); its <em> is italic in the accent
+   (§7 Q8). The lede is type/body in fg/dim, s-15 below the title (§7 Q12).
+   Self-defensive: the library ships no reset, so the h2, p and em take
+   their margins, weight and style from these rules, never from the
+   host's. No layout ships beyond the grid itself — no margin, padding or
+   width: the page places the head (§3.4). Every value is a token (axiom
+   1); the "no layout" rule has no detector — the reviewer reads this
+   file. */
 
+/* Baseline alignment: the number's first baseline is its text line (the
+   underline comes after it in its flow), the body's is the title's first
+   line — so a wrapped title keeps its first line on the number. */
 .ll-section-head {
   display: grid;
   grid-template-columns: var(--ll-s-8) minmax(0, 1fr);
   column-gap: var(--ll-s-4);
-  align-items: start;
+  align-items: baseline;
 }
 
 .ll-section-head-num {
@@ -516,7 +521,8 @@
 }
 
 /* The body column: a long word breaks inside it instead of widening the
-   grid (WCAG 1.4.10 reflow, RFC §4.3). */
+   grid (WCAG 1.4.10 reflow, RFC §4.3). Inherited, so it still reaches the
+   title and the lede when the body box is removed under the breakpoint. */
 .ll-section-head-body {
   overflow-wrap: break-word;
 }
@@ -547,15 +553,27 @@
   color: var(--ll-fg-dim);
 }
 
-/* Stacked under the breakpoint (§3.4, §7 checkpoint row; Figma 109:2): one
-   column, the number block above the body, s-2 apart (the site's 768
-   rule). Inclusive, as the site's `max-width: 768px`. A custom property
-   cannot be read in a media condition: the length restates
-   --ll-breakpoint-md, named in the prelude (AGENTS.md, Token rules). */
+/* Under the breakpoint (§3.4, §7 adoption-checkpoint row, 5B; Figma
+   109:2): the number and the title on one baseline-aligned row, s-2 apart
+   — the number column hugs the number block, so it is as wide as the
+   wider of the number and its s-7 underline — and the lede on the full
+   width below, s-15 under the row (its own margin). The body box is
+   removed (display: contents — a generic div with no role or attribute
+   but its class, nothing to lose) so the title and the lede become grid
+   items; the DOM order is unchanged. Inclusive, as the site's `max-width:
+   768px`. A custom property cannot be read in a media condition: the
+   length restates --ll-breakpoint-md, named in the prelude (AGENTS.md,
+   Token rules). */
 @media (width <= 768px) /* --ll-breakpoint-md */ {
   .ll-section-head {
-    grid-template-columns: minmax(0, 1fr);
-    row-gap: var(--ll-s-2);
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: var(--ll-s-2);
+  }
+  .ll-section-head-body {
+    display: contents;
+  }
+  .ll-section-head-lede {
+    grid-column: 1 / -1;
   }
 }
 

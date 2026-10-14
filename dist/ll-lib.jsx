@@ -65,6 +65,27 @@ function MetaStrip({ items, tone = "dim" }) {
     </ul>;
 }
 
+// ── ProgressBar (progress-bar) ──
+function ProgressBar({ value, max, valueText, label, labelledBy }) {
+  const total = Number.isFinite(max) && max > 0 ? max : 0;
+  const now = total > 0 && Number.isFinite(value) ? Math.min(Math.max(value, 0), total) : 0;
+  const percent = total > 0 ? now * 100 / total : 0;
+  return <div
+    className="ll-progress-bar"
+    role="progressbar"
+    aria-label={label}
+    aria-labelledby={labelledBy}
+    aria-valuemin={0}
+    aria-valuemax={total}
+    aria-valuenow={now}
+    aria-valuetext={valueText}
+  >
+      <svg aria-hidden="true">
+        <rect className="ll-progress-bar-fill" width={`${percent}%`} height="100%" />
+      </svg>
+    </div>;
+}
+
 // ── SectionHead (section-head) ──
 function SectionHead({ num, title, lede, id }) {
   return <div className="ll-section-head">
@@ -87,4 +108,4 @@ function Sigil({ children }) {
     </div>;
 }
 
-window.LL = Object.assign(window.LL || {}, { Button, Callout, Eyebrow, MetaStrip, SectionHead, Sigil });
+window.LL = Object.assign(window.LL || {}, { Button, Callout, Eyebrow, MetaStrip, ProgressBar, SectionHead, Sigil });

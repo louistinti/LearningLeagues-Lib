@@ -4,8 +4,8 @@ reports/
 pnpm-lock.yaml
 # Dated snapshots are history, never rewritten (blueprint §2.6 exemption).
 process/archives/
-# Parallel agent worktrees are other sessions' checkouts, never this one's
-# to format (axiom 5: one writing session per checkout).
+# Parallel agent worktrees are other checkouts, never this one's to format
+# (axiom 5: one worktree per delegated component).
 .claude/
 # Generated token artefacts: their bytes are owned by the generator, and a
 # formatter rewriting them is drift by construction (drift gate proved it).

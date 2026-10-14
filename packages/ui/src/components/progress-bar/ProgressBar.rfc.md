@@ -138,7 +138,9 @@ focusable (§4.2). A value change is a re-render with a new `value`.
   aria-valuenow="8"
   aria-valuetext="8 of 10 validated"
 >
-  <div class="ll-progress-bar-fill" aria-hidden="true" style="…"></div>
+  <svg aria-hidden="true">
+    <rect class="ll-progress-bar-fill" width="80%" height="100%"></rect>
+  </svg>
 </div>
 ```
 
@@ -149,44 +151,44 @@ GATE (a conformity gate), HUMAN (the reviewer or the visual checkpoint):
 - Exactly one of `aria-label` / `aria-labelledby`, from `label` / `labelledBy`; never both, never neither — TEST (the type and the suite), GATE (accessibility engine: axe `aria-progressbar-name`, §4.3).
 - `valueText` is required (§7 checkpoint, « PB texte lu: Obligatoire »): the type refuses a bar without it, and `aria-valuetext` is emitted on every render — TEST (the type and the suite).
 - `value` below 0 renders 0, above `max` renders `max`, for the fill and for `aria-valuenow` alike — TEST.
-- Exactly one child `.ll-progress-bar-fill`, `aria-hidden="true"`, empty, whose extent is `value / max` of the track, set by an inline dynamic style — never a static one (proposal: `width` as a percentage, the site's technique; open point 1, §3.5) — TEST, GATE (token lint on the source).
-- `.ll-progress-bar`: `display: block; position: relative; overflow: hidden; height: var(--ll-s-05); background: var(--ll-border-soft)` — its own `display` (the site's ranking bar was a `span` that only worked as a grid item; distribution contract, self-defensive base) — GATE (token lint), HUMAN (rendering).
-- `.ll-progress-bar-fill`: `position: absolute; top: 0; bottom: 0; left: 0; background: var(--ll-accent)` — the accent follows the axis (`[data-accent]` / `[data-role]` on any ancestor) — GATE (token lint, contrast: one `ui-component` pair, §4.3), HUMAN.
+- Exactly one child, an empty `<svg aria-hidden="true">` holding exactly one `<rect class="ll-progress-bar-fill" height="100%">` whose `width` **attribute** is `value / max` of the track as a percentage — never a `style` attribute (implementation detail, see below) — TEST, GATE (token lint on the source and on the generated docs page; docs smoke).
+- `.ll-progress-bar`: `display: block; width: 100%; height: var(--ll-s-05); overflow: hidden; background: var(--ll-border-soft)` — its own `display` (the site's ranking bar was a `span` that only worked as a grid item; distribution contract, self-defensive base); `width: 100%` is its container's width and nothing more, so the bar also fills a flex row it is placed in (a block in a flex row otherwise shrinks to its content, which is nothing) — GATE (token lint), HUMAN (rendering).
+- `.ll-progress-bar > svg`: `display: block; width: 100%; height: 100%` — without it an inline `<svg>` sits on a text baseline at its 300 × 150 default (no reset ships) — HUMAN.
+- `.ll-progress-bar-fill`: `fill: var(--ll-accent)` — the accent follows the axis (`[data-accent]` / `[data-role]` on any ancestor) — GATE (token lint, contrast: one `ui-component` pair, §4.3), HUMAN.
 - Square ends: no `border-radius` (the design language's square corners) — HUMAN.
 - No `transition`, no `animation`, no keyframes: the fill takes its new length at once (§7 Q4). Nothing moves, so no `prefers-reduced-motion` guard is owed — HUMAN (the stylesheet is read).
 - No margin, no width other than its container's, no alignment: the parent places the bar — HUMAN.
 - A visible text counter sits beside every bar (§7 checkpoint, « PB fond: Accepte, compteur texte obligatoire en guideline »): the track keeps `border/soft`, whose end is not a 3:1 boundary (§4.3), so the proportion is always also printed as text. Product copy, product-side; a golden rule of the component's guidelines — HUMAN.
 
+**Implementation detail — the fill is an SVG rect, not a styled div**
+(implementation session, 2026-10-14; no API change, resolves open points 1
+and 2). The docs generator renders every example as static markup, where
+the draft's `style="width: …"` fill becomes a static inline style that the
+token lint refuses (`inline-style-static`), and a stage holding only boxes
+renders neither text nor a drawn mark, which the docs smoke gate refuses.
+A `<rect>` whose length is its `width` attribute answers both: an SVG
+attribute is not a style, and the rect is a drawn mark the smoke gate
+counts. No gate was changed. Verified by the gates themselves: token lint
+PASS on the generated page (no `style=` in it), docs smoke PASS; and by
+injection, a fill forced to `0%` reds docs smoke on the demo stage and the
+five accent tiles (restored, PASS again). The site's own technique (a
+`%` width in an inline style) stays valid product-side; it is only the
+library's static docs that rule it out.
+
 ### 3.5 Open points — for the orchestrator, not arbitrated
 
 Found while drafting, after the batch answer (§7 Q1). Points 3 (value
 text) and 4 (the track's end) were resolved at the checkpoint (§7) and
-are folded into §3.1, §3.4 and §4; the original numbers are kept, because
-§7 cites them.
+are folded into §3.1, §3.4 and §4; points 1 (the docs page and the token
+lint) and 2 (the docs smoke gate) were solved by the implementation
+without touching a gate (§3.4, implementation detail). The original
+numbers are kept, because §7 cites them.
 
-- **Point 1 — The docs page will red the token lint.** `gate:lint-tokens` scans
-  `docs/` (`scripts/check-token-lint.ts`, `ROOTS`), and its
-  `inline-style-static` detector flags any non-empty HTML
-  `style="…"` (`scripts/lib/detectors.ts`, `detectStaticInlineStyle`). The
-  JSX source is exempt (an interpolating template is dynamic), but the
-  generated `docs/components/progress-bar.html` holds the examples as
-  static markup (`renderToStaticMarkup`, `scripts/lib/docs-render.ts`), so
-  the fill's `style="width:80%"` becomes a static style there. Proved by
-  running the gate's own `lintLines` on the expected markup from a
-  scratch script — not by the gate: the rendered line → `inline-style-static`,
-  the JSX line → clean. No docs page carries a `style="` today. Options to
-  put to the human: a fill drawn without a `style` attribute; a scoped
-  detector change (own commit, red/green proofs, Flags for review — L17);
-  a time-boxed allowlist entry (named approver).
-- **Point 2 — The docs smoke gate will likely red the demo stages.** A stage and an
-  accent tile must render text or a drawn SVG mark
-  (`scripts/lib/docs-smoke.ts`, `judgePage`); a ProgressBar renders
-  neither — the Sigil case of L17 again. To report as a suspected false
-  positive (ORCHESTRATION, "A gate reds on a component by design"), not
-  to loosen inside the implementation PR.
 - **Point 5 — `max` ≤ 0 or a non-finite `value`.** Not covered by any answer.
   Proposal: the fill renders empty and `aria-valuenow` is `0`; or the
-  component throws in development.
+  component throws in development. The implementation follows the first
+  proposal (`aria-valuemax` then reads `0`), locked by the local suite,
+  until a ruling says otherwise.
 - **Point 6 — Figma scope of the track colour.** `Semantic/border/soft` carries the
   `STROKE_COLOR` scope only (`tokens.json`), while the track is a fill.
   Whether the Figma component binds it to a fill as built, or the
@@ -223,7 +225,7 @@ component. The keyboard suite asserts it.
 
 - **First `ui-component` pair.** The fill against the track is a non-text
   contrast (WCAG 1.4.11, 3:1): `Semantic/accent/default` on
-  `Semantic/border/soft`, usage `ui-component`, to be declared in
+  `Semantic/border/soft`, usage `ui-component`, declared in
   `contrast-pairs.json` — the first pair at that level. Read in the code:
   the gate already has the 3:1 kind (`THRESHOLDS["ui-component"] = 3.0`,
   `scripts/lib/color.ts`; listed in the file's `$comment`),
@@ -234,7 +236,12 @@ component. The keyboard suite asserts it.
   bleu 6.01, jade 6.03, rouge 5.38, violet 4.97 — pass under all five. No
   unit test exercises the `ui-component` threshold today (the
   `contrast-axis` fixtures are all `normal-text`): the implementation
-  proves the pair red by injection before relying on it (L10).
+  proves the pair red by injection before relying on it (L10). Declared
+  and proved 2026-10-14 by the implementation session: the gate scores the
+  pair 6.48 / 6.01 / 5.38 / 4.97 / 6.03 (ambre, bleu, rouge, violet, jade);
+  injected `Primitives/tier/iron` (2.18) → FAIL "needs 3 (ui-component)";
+  injected `Semantic/fg/mute` (4.32) → PASS at `ui-component`, FAIL at
+  `normal-text` (4.5) — the 3.0 threshold is the one applied.
 - **The track against the page is not scored** (1.14:1 on
   `surface/default`, 1.30:1 on `bg/default`, computed the same way): the
   fill's length is legible, the total length is not. Accepted at the

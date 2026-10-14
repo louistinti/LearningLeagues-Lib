@@ -46,6 +46,27 @@ function Eyebrow({ tone = "dim", children }) {
   return <span className={`ll-eyebrow ll-eyebrow--${tone}`}>{children}</span>;
 }
 
+// ── ProgressBar (progress-bar) ──
+function ProgressBar({ value, max, valueText, label, labelledBy }) {
+  const total = Number.isFinite(max) && max > 0 ? max : 0;
+  const now = total > 0 && Number.isFinite(value) ? Math.min(Math.max(value, 0), total) : 0;
+  const percent = total > 0 ? now * 100 / total : 0;
+  return <div
+    className="ll-progress-bar"
+    role="progressbar"
+    aria-label={label}
+    aria-labelledby={labelledBy}
+    aria-valuemin={0}
+    aria-valuemax={total}
+    aria-valuenow={now}
+    aria-valuetext={valueText}
+  >
+      <svg aria-hidden="true">
+        <rect className="ll-progress-bar-fill" width={`${percent}%`} height="100%" />
+      </svg>
+    </div>;
+}
+
 // ── Sigil (sigil) ──
 function Sigil({ children }) {
   return <div className="ll-sigil" aria-hidden="true">
@@ -53,4 +74,4 @@ function Sigil({ children }) {
     </div>;
 }
 
-window.LL = Object.assign(window.LL || {}, { Button, Callout, Eyebrow, Sigil });
+window.LL = Object.assign(window.LL || {}, { Button, Callout, Eyebrow, ProgressBar, Sigil });

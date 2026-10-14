@@ -54,6 +54,9 @@ scaffold never touches, not a violation to fix afterwards.
   hardcoded design value, not "just this once" (axiom 1).
 - A needed library component that does not exist is a gap to file, not a
   local approximation to write (axiom 4).
+- A library component that does exist is rendered, never copied: import it
+  in the one form `import { Eyebrow } from "../eyebrow/Eyebrow.tsx";` (its
+  meta.name, unaliased; rules in `scripts/lib/component-deps.ts`).
 
 ## Step 5 — Machine contract
 

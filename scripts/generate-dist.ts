@@ -4,13 +4,17 @@
 //   (no docs-only rules; the library still ships no global reset).
 // - dist/ll-lib.jsx   — every component's real .tsx, types stripped and JSX
 //   PRESERVED (esbuild), exported as window.LL globals for a host that loads
-//   React UMD + Babel standalone. Never a hand-port (axiom 4).
+//   React UMD + Babel standalone. Never a hand-port (axiom 4). A component
+//   that renders another library component imports it in the one form of
+//   scripts/lib/component-deps.ts; that line is validated, then dropped —
+//   the sibling is already in this script's scope.
 // The host vendors these files at a pinned commit via scripts/vendor-dist.ts.
 // Usage: node scripts/generate-dist.ts [--check]
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, statSync, existsSync } from "node:fs";
 import { join, resolve, dirname } from "node:path";
 import { pathToFileURL } from "node:url";
 import { transformSync } from "esbuild";
+import { libraryGraph, dropLibraryImports } from "./lib/component-deps.ts";
 
 const COMPONENTS_DIR = "packages/ui/src/components";
 const TOKENS_CSS = "packages/ui/src/tokens/tokens.css";
@@ -38,6 +42,16 @@ const cssParts: string[] = [];
 const jsxParts: string[] = [];
 const exportNames: string[] = [];
 
+// Pass 1 — collect: every implemented component's meta.name and source, so
+// pass 2 can validate library-internal imports against the whole set
+// (scripts/lib/component-deps.ts).
+interface Unit {
+  slug: string;
+  name: string;
+  dir: string;
+  source: string;
+}
+const units: Unit[] = [];
 for (const slug of slugs) {
   const dir = join(COMPONENTS_DIR, slug);
   const metaFile = readdirSync(dir).find((n) => n.endsWith(".meta.ts"));
@@ -53,28 +67,43 @@ for (const slug of slugs) {
     errors.push(`${slug}: meta.name missing`);
     continue;
   }
-  for (const n of readdirSync(dir)
-    .filter((f) => f.endsWith(".css"))
-    .sort())
-    cssParts.push(readFileSync(join(dir, n), "utf8"));
   const tsxFile = readdirSync(dir).find((n) => n === `${meta.name}.tsx`);
   if (!tsxFile) {
     errors.push(`${slug}: no ${meta.name}.tsx source`);
     continue;
   }
-  const source = readFileSync(join(dir, tsxFile), "utf8");
+  units.push({ slug, name: meta.name, dir, source: readFileSync(join(dir, tsxFile), "utf8") });
+}
+const graph = libraryGraph(
+  Object.fromEntries(units.map((u) => [u.slug, u.name])),
+  Object.fromEntries(units.map((u) => [u.slug, u.source])),
+);
+const nameOf = new Map(units.map((u) => [u.slug, u.name]));
+
+// Pass 2 — transform, in slug order (unchanged output for components that
+// import only React).
+for (const { slug, name, dir, source } of units) {
+  for (const e of graph.errors[slug] ?? []) errors.push(`${slug}: ${e}`);
+  if (graph.errors[slug]) continue;
+  for (const n of readdirSync(dir)
+    .filter((f) => f.endsWith(".css"))
+    .sort())
+    cssParts.push(readFileSync(join(dir, n), "utf8"));
   const out = transformSync(source, { loader: "tsx", jsx: "preserve" }).code;
   // The host provides React as a global (UMD) and loads this file as a
-  // classic script: drop the module import, unwrap the export keyword.
-  const stripped = out
-    .replace(/^import React from "react";\n/m, "")
-    .replace(/^export (function|const) /gm, "$1 ");
+  // classic script: drop the module import, drop each validated library
+  // import (every component shares this one script scope, exposed as
+  // window.LL), unwrap the export keyword.
+  const stripped = dropLibraryImports(
+    out.replace(/^import React from "react";\n/m, ""),
+    graph.deps[slug].map((d) => ({ slug: d, name: nameOf.get(d) as string })),
+  ).replace(/^export (function|const) /gm, "$1 ");
   if (/^(import|export) /m.test(stripped)) {
     errors.push(`${slug}: residual import/export after stripping — teach generate-dist the shape`);
     continue;
   }
-  jsxParts.push(`// ── ${meta.name} (${slug}) ──\n${stripped.trimEnd()}\n`);
-  exportNames.push(meta.name);
+  jsxParts.push(`// ── ${name} (${slug}) ──\n${stripped.trimEnd()}\n`);
+  exportNames.push(name);
 }
 if (errors.length === 0 && exportNames.length === 0) errors.push("no components discovered");
 if (errors.length) {

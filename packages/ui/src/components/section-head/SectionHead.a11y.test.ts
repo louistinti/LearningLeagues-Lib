@@ -1,7 +1,9 @@
 // SectionHead — local behaviour suite (RFC §3.4 / §4, arbitrations §7 Q2,
-// Q8–Q11). Discovered and run by scripts/check-a11y-engine.ts. Proves what
-// the generic checks cannot: the one-root shape (hidden number, then a body
-// holding one h2 and an optional p), the number rendered verbatim and
+// Q8–Q11, adoption checkpoint 2B / 5B). Discovered and run by
+// scripts/check-a11y-engine.ts. Proves what the generic checks cannot: the
+// one-root shape (hidden number, then a body holding one h2 and an optional
+// p), the number–title–lede document order both layouts read, the body
+// wrapper bare enough for display: contents, the number rendered verbatim and
 // aria-hidden outside the heading, the lede left out entirely when omitted,
 // the id forwarded to the h2 only, an <em> in the title reaching the DOM
 // untouched, and that nothing interactive is rendered.
@@ -31,6 +33,30 @@ test("renders one <div class='ll-section-head'>: the hidden number, then a body 
     ["H2.ll-section-head-title", "P.ll-section-head-lede"],
   );
   assert.equal(body.children[1].textContent, full.lede);
+  await unmount();
+});
+
+test("number, title, lede in document order; the body wrapper is a bare div (§3.4, §7 adoption checkpoint 2B / 5B)", async () => {
+  // Both layouts read the DOM order: the number and the title share one
+  // baseline row, the lede comes after them (beside the number on desktop,
+  // full width below the row under --ll-breakpoint-md). Under the breakpoint
+  // the body box is removed (display: contents) so the title and the lede
+  // become grid items — safe only on a generic div with no role and no
+  // attribute other than its class: nothing exposed can be lost.
+  const { root, window, unmount } = await mountComponent(DIR, "SectionHead", full);
+  const order = Array.from(root.querySelectorAll(".ll-section-head-num, h2, p")).map(
+    (el) => el.className,
+  );
+  assert.deepEqual(order, ["ll-section-head-num", "ll-section-head-title", "ll-section-head-lede"]);
+  const num = root.querySelector(".ll-section-head-num") as Element;
+  const h2 = root.querySelector("h2") as Element;
+  const p = root.querySelector("p") as Element;
+  const { DOCUMENT_POSITION_FOLLOWING } = window.Node;
+  assert.ok(num.compareDocumentPosition(h2) & DOCUMENT_POSITION_FOLLOWING);
+  assert.ok(h2.compareDocumentPosition(p) & DOCUMENT_POSITION_FOLLOWING);
+  const body = root.querySelector(".ll-section-head-body") as Element;
+  assert.equal(body.tagName, "DIV");
+  assert.deepEqual(body.getAttributeNames(), ["class"]); // no role, no aria-*, no id, no tabindex
   await unmount();
 });
 

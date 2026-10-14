@@ -12,7 +12,7 @@ const facts = [
 export const meta = {
   name: "MetaStrip",
   description:
-    "The row of small mono facts at the foot of a hero: a dashed top rule, then a wrapping list of facts — each a key rendered by the library's Eyebrow, followed by an optional value in fg/mute. Text only, no states; the parent places it.",
+    "The row of small mono facts at the foot of a hero: a dashed top rule, then a wrapping list of facts — each a key rendered by the library's Eyebrow, followed by an optional value in fg/mute — or in the accent, with valueTone. Text only, no states; the parent places it.",
   // The docs' generic "variant" column carries the tone, as for the Eyebrow
   // whose tone it forwards (RFC §3.1, §7 Q4).
   variants: [{ variant: "dim" }, { variant: "accent" }],
@@ -21,6 +21,9 @@ export const meta = {
   examples: [
     { label: "Accent keys", props: { tone: "accent", items: facts } },
     { label: "Dim keys (default)", props: { items: facts } },
+    // valueTone is independent of tone (RFC §3.1, §7 checkpoint rows
+    // 2026-10-14): dim keys, accent values — the role guides' highlights.
+    { label: "Accent values", props: { valueTone: "accent", items: facts } },
     {
       label: "Key alone",
       props: { items: [{ label: "Patch-stable" }, { label: "Read time", value: "~15 min" }] },
@@ -56,7 +59,7 @@ export const meta = {
       {
         rule: "One tone per strip",
         detail:
-          "dim (the default) or accent, which follows data-accent — forwarded to every key (RFC §3.1, §7 Q4). The value is always fg/mute.",
+          "dim (the default) or accent, which follows data-accent — forwarded to every key (RFC §3.1, §7 Q4). The values have their own tone, valueTone: fg/mute by default, or accent (RFC §3.1, §7 checkpoint rows 2026-10-14). Both apply to the whole strip.",
       },
       {
         rule: "Text only — the parent places it",
@@ -68,6 +71,7 @@ export const meta = {
       'Pass the facts as data: items={[{ label: "Read time", value: "~15 min" }]} (RFC §3.1).',
       'Omit value for a key alone ({ label: "Patch-stable" }) — no empty value, no placeholder (RFC §3.4).',
       'Use tone="accent" when the keys should follow the page accent; keep the default dim otherwise (RFC §7 Q4).',
+      'Use valueTone="accent" where the values are the highlights (the role guides: level, read time, patch); keep the default mute elsewhere (RFC §7 checkpoint rows 2026-10-14).',
       "Place it as the last child of the hero's text column and let the column set its width (RFC §2.3).",
     ],
     dont: [

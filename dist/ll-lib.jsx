@@ -86,6 +86,21 @@ function ProgressBar({ value, max, valueText, label, labelledBy }) {
     </div>;
 }
 
+// ── SectionHead (section-head) ──
+function SectionHead({ num, title, lede, id }) {
+  return <div className="ll-section-head">
+      <span className="ll-section-head-num" aria-hidden="true">
+        {num}
+      </span>
+      <div className="ll-section-head-body">
+        <h2 className="ll-section-head-title" id={id}>
+          {title}
+        </h2>
+        {lede !== void 0 && lede !== null && lede !== false && lede !== "" ? <p className="ll-section-head-lede">{lede}</p> : null}
+      </div>
+    </div>;
+}
+
 // ── Sigil (sigil) ──
 function Sigil({ children }) {
   return <div className="ll-sigil" aria-hidden="true">
@@ -93,4 +108,4 @@ function Sigil({ children }) {
     </div>;
 }
 
-window.LL = Object.assign(window.LL || {}, { Button, Callout, Eyebrow, MetaStrip, ProgressBar, Sigil });
+window.LL = Object.assign(window.LL || {}, { Button, Callout, Eyebrow, MetaStrip, ProgressBar, SectionHead, Sigil });

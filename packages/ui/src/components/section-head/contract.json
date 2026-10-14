@@ -1,0 +1,35 @@
+{
+  "status": "draft",
+  "exported": false,
+  "component": "SectionHead",
+  "rfc": "SectionHead.rfc.md",
+  "designNode": "109:9",
+  "variants": [],
+  "props": {
+    "num": {
+      "type": "string",
+      "note": "required: the section's number, rendered verbatim in its own column and hidden from assistive technology (RFC §3.1, §7 Q2, Q9). Two digits by product convention; the product computes it, the component never formats it"
+    },
+    "title": {
+      "type": "ReactNode",
+      "note": "required: the heading text, rendered inside the one h2; may hold an <em>, rendered italic in the live accent (§7 Q8); wraps freely (§7 Q7). Never an Eyebrow, the number or any label inside it (Eyebrow §7 Q9)"
+    },
+    "lede": {
+      "type": "ReactNode",
+      "optional": true,
+      "note": "the introductory paragraph under the title, type/body in fg/dim (§7 Q11, Q12); omitted (or empty) → no <p> is rendered at all"
+    },
+    "id": {
+      "type": "string",
+      "optional": true,
+      "note": "forwarded to the h2, never to the root, so the product can name its <section> with aria-labelledby; omitted → no id attribute anywhere in the component (§3.1). The section's own anchor id stays on the product's <section>"
+    }
+  },
+  "a11y": {
+    "status": "pending",
+    "semanticStructure": "Exactly one root <div class=\"ll-section-head\"> (no role) holding, in DOM order, one <span class=\"ll-section-head-num\" aria-hidden=\"true\"> whose text is num verbatim, then one <div class=\"ll-section-head-body\"> holding exactly one h2 and, only when lede is given, one p (RFC §3.4, §4.1). The heading is always an h2 (§7 Q10) whose accessible name is the title alone: the number sits outside it and is hidden unconditionally (§7 Q9). id, when given, lands on the h2 only. The root is a div, not a header: inside a <section> a header maps to no landmark.",
+    "keyboard": "Nothing to do: no interactive element, nothing focusable — no a, button, input or tabindex is rendered by the component (RFC §3.3, §4.2). The aria-hidden number holds text only, so aria-hidden-focus has nothing to find. Interactive content in title or lede is not expected; if the product nests a link it keeps its own semantics, product-side.",
+    "decisions": "Contrast is computed by the gate from resolved tokens, never declared here: the title fg/default, the lede fg/dim, the number and the title's <em> accent/default, each on bg/default — pairs already declared in contrast-pairs.json at normal-text (stricter than the large text the 44px number and 32px title need), the accent pair scored once per accent (RFC §4.3). The aria-hidden number is still visible text: WCAG 1.4.3 applies and the declared pair covers it. The underline is decoration (no text), exempt, no pair. The title wraps — no nowrap — and the body column is minmax(0, 1fr) with overflow-wrap: break-word, and the head stacks at a viewport width of 768px and below (--ll-breakpoint-md), so nothing overflows horizontally (WCAG 1.4.10).",
+    "notes": "Implemented per RFC §4; this status moves to pass only through the accessibility engine gate, never by assertion."
+  }
+}

@@ -67,9 +67,16 @@ merger — single-human team).
    `pnpm gate:docs-a11y`.)
 4. **Never create a local approximation of a missing library component.**
    File the gap and stop.
-5. **One writing session per repository at a time.** A session that works
-   beside the main checkout uses its own isolated worktree and removes it when
-   it ends (the hygiene audit expects the main worktree only); run
+5. **One orchestrating session per repository at a time; one writer per
+   component.** The orchestrating session may delegate components to
+   parallel subagents (arbitrated 2026-10-13): one component, one isolated
+   worktree under `.claude/worktrees/`, one branch, one PR. A subagent writes
+   only its own component folder, its own manifest row and its own archives;
+   a shared source (tokens, scripts, gates, shared docs) changes in its own PR,
+   landed first. Merges stay one at a time: after each one, every open
+   component branch syncs with `main` and regenerates its generated artefacts.
+   Every worktree is removed when its PR merges or the session ends (the
+   hygiene audit expects the main worktree only); run
    `git branch --show-current` immediately before every commit.
 6. **A stale file is active misinformation.** Recurring hygiene audit
    (`process/HYGIENE-AUDIT.md`: inventory → plan → human approval → execute),

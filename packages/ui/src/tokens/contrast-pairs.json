@@ -108,6 +108,11 @@
       "fg": "Semantic/bg/default",
       "bg": "Semantic/accent/default",
       "usage": "normal-text"
+    },
+    {
+      "fg": "Semantic/accent/default",
+      "bg": "Semantic/border/soft",
+      "usage": "ui-component"
     }
   ]
 }

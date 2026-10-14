@@ -1,0 +1,39 @@
+{
+  "status": "draft",
+  "exported": false,
+  "component": "ProgressBar",
+  "rfc": "ProgressBar.rfc.md",
+  "designNode": "106:31",
+  "variants": [],
+  "props": {
+    "value": {
+      "type": "number",
+      "note": "how far the task has got, in the unit of max; clamped to [0, max] for the fill and aria-valuenow alike; a non-finite value draws an empty fill and announces 0 (RFC §3.1, §3.4, §3.5 point 5)"
+    },
+    "max": {
+      "type": "number",
+      "note": "the total, no default (RFC §3.1); aria-valuemin is always 0. A max ≤ 0 or non-finite draws an empty fill and announces 0 of 0 (§3.5 point 5)"
+    },
+    "valueText": {
+      "type": "string",
+      "note": "the value as a person says it → aria-valuetext, on every render: '8 of 10 validated', 'Question 1 of 8'. Required (RFC §3.1, §7 checkpoint « PB texte lu: Obligatoire »)"
+    },
+    "label": {
+      "type": "string",
+      "optional": true,
+      "note": "accessible name as text → aria-label. Exactly one of label / labelledBy: the props type is a union that refuses both and neither (RFC §3.1, §7 Q5)"
+    },
+    "labelledBy": {
+      "type": "string",
+      "optional": true,
+      "note": "id of visible text that names the bar → aria-labelledby; preferred when the heading or caption is already on screen. Exactly one of label / labelledBy (RFC §3.1)"
+    }
+  },
+  "a11y": {
+    "status": "pending",
+    "semanticStructure": "Exactly one <div class=\"ll-progress-bar\" role=\"progressbar\"> carrying an accessible name (aria-label from label, or aria-labelledby from labelledBy — exactly one), aria-valuemin=\"0\", aria-valuemax, aria-valuenow (the clamped value) and aria-valuetext (valueText, required) on every render (RFC §3.4, §4.1). Its only child is an aria-hidden <svg> holding one <rect class=\"ll-progress-bar-fill\"> whose width attribute is value / max; no text of its own. Always announced — no decorative mode (§7 Q5). No live region: a value changes as the result of the user's own action and is read on request.",
+    "keyboard": "Nothing to do: a progressbar is not interactive and nothing is focusable — no a, button, input or tabindex is rendered by the component (RFC §3.3, §4.2); the local suite asserts it.",
+    "decisions": "Name enforced twice: by the props type, and by axe's aria-progressbar-name (wcag2a), which the local suite locks under the gate's own configuration (a nameless bar is red, a named one passes — RFC §4.3, L10). Contrast pair declared in contrast-pairs.json: Semantic/accent/default on Semantic/border/soft at ui-component (3:1, WCAG 1.4.11), scored once per accent by the contrast gate. The track's end against the page (border/soft, 1.14:1 on surface/default) is not a 3:1 boundary: accepted at the checkpoint with the guideline that a visible text counter sits beside every bar, so the bar is never the only carrier of the value (§4.3, §7 checkpoint). No motion, so no reduced-motion guard is owed (§7 Q4). A div with role rather than a native <progress>, whose engine-specific pseudo-elements the no-reset distribution contract would have to neutralise (§4.1).",
+    "notes": "Implemented per RFC §4; this status moves to pass only through the accessibility engine gate, never by assertion."
+  }
+}

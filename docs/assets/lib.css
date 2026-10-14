@@ -438,6 +438,38 @@
   padding: 0;
 }
 
+/* ProgressBar — ProgressBar.rfc.md §3.4–§4, design node 106:31 (component
+   `ProgressBar`, page `ProgressBar` 106:30: track 320 × 4 bound to s-05 and
+   border/soft, fill rectangle 106:32 bound to accent/default, no radius).
+   The track is the root: s-05 high (4px, §7 Q2), border/soft (kept at the
+   checkpoint, with the text-counter guideline). The fill is an <svg> rect
+   whose length is its width attribute (§3.4, §3.5 point 1), painted in the
+   live accent — it follows data-accent / data-role on any ancestor. Square
+   ends (no radius), no transition, no animation (§7 Q4). The bar fills the
+   width it is given — width: 100% is its container's width, nothing more;
+   no margin, no alignment: the parent places it (manifest, "Placement and
+   sizing"). Every value is a token (axiom 1). display is set on both
+   elements: the library ships no reset (distribution contract), and an
+   <svg> left inline would sit on a text baseline and default to 300 × 150. */
+
+.ll-progress-bar {
+  display: block;
+  width: 100%;
+  height: var(--ll-s-05);
+  overflow: hidden;
+  background: var(--ll-border-soft);
+}
+
+.ll-progress-bar > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.ll-progress-bar-fill {
+  fill: var(--ll-accent);
+}
+
 /* Sigil — Sigil.rfc.md §3–§4, design node 89:4 (component `Sigil`, page
    `Sigil` 89:3: rings 89:5 / 89:6, art slot 92:7 inside the accent ring).
    The framed decorative square: 1px border, surface fill, colour = the live

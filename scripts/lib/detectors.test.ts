@@ -12,6 +12,7 @@ import {
   detectArbitraryPx,
   detectInvalidVar,
   detectStaticInlineStyle,
+  detectMediaLength,
   lintLines,
 } from "./detectors.ts";
 
@@ -107,4 +108,94 @@ test("lintLines: allow() on the NEXT line also covers the violation", () => {
 test("lintLines: line numbers are 1-indexed", () => {
   const hits = lintLines(["clean line", "var(ll-x)"]);
   assert.equal(hits[0].line, 2);
+});
+
+// ── Media-condition rule (2026-10-13, SectionHead breakpoint) ──────────────
+const BP = { "--ll-breakpoint-md": "768px" };
+
+test("media-length: the convention passes — token value + token named in a prelude comment", () => {
+  assert.equal(detectMediaLength("@media (width < 768px) /* --ll-breakpoint-md */ {", BP), null);
+  assert.equal(detectMediaLength("@media (max-width: 768px) /* --ll-breakpoint-md */ {", BP), null);
+  assert.equal(
+    detectMediaLength("@container (min-width: 768px) /* --ll-breakpoint-md */ {", BP),
+    null,
+  );
+});
+
+test("media-length: a raw length with no comment is a violation", () => {
+  const hit = detectMediaLength("@media (max-width: 900px) {", BP);
+  assert.equal(hit?.rule, "media-length");
+  assert.match(hit?.excerpt ?? "", /^900px — no/);
+  assert.equal(detectMediaLength("@media (width < 768px) {", BP)?.rule, "media-length");
+});
+
+test("media-length: the token's own value without the comment is still a violation", () => {
+  assert.equal(
+    detectMediaLength("@media (width < 768px) { /* moved by hand */", BP)?.rule,
+    "media-length",
+  );
+});
+
+test("media-length: a value that differs from the named token is a violation", () => {
+  const hit = detectMediaLength("@media (width < 767px) /* --ll-breakpoint-md */ {", BP);
+  assert.equal(hit?.rule, "media-length");
+  assert.match(hit?.excerpt ?? "", /--ll-breakpoint-md is 768px/);
+  // same number, other unit
+  assert.equal(
+    detectMediaLength("@media (width < 48em) /* --ll-breakpoint-md */ {", BP)?.rule,
+    "media-length",
+  );
+});
+
+test("media-length: an unknown breakpoint token is a violation", () => {
+  const hit = detectMediaLength("@media (width < 768px) /* --ll-breakpoint-xl */ {", BP);
+  assert.equal(hit?.rule, "media-length");
+  assert.match(hit?.excerpt ?? "", /unknown token --ll-breakpoint-xl/);
+});
+
+test("media-length: every length in the condition must be covered", () => {
+  assert.equal(
+    detectMediaLength(
+      "@media (768px <= width < 1024px) /* --ll-breakpoint-md */ {",
+      BP,
+    )?.excerpt.startsWith("1024px"),
+    true,
+  );
+});
+
+test("media-length: a comment outside the prelude does not count", () => {
+  assert.equal(
+    detectMediaLength("@media (width < 768px) { .a { b: c } } /* --ll-breakpoint-md */", BP)?.rule,
+    "media-length",
+  );
+});
+
+test("media-length: conditions without lengths, and non-media lines, pass", () => {
+  assert.equal(detectMediaLength("@media (prefers-reduced-motion: reduce) {", BP), null);
+  assert.equal(detectMediaLength("@media print {", BP), null);
+  assert.equal(detectMediaLength("  max-width: 768px;", BP), null);
+});
+
+test("media-length: DOCUMENTED LIMITATION — a condition continued on the next line is not read", () => {
+  // prettier keeps a prelude on one line; a hand-wrapped condition escapes.
+  const hits = lintLines(["@media (min-width: 1px) and", "  (max-width: 900px) {"], BP);
+  assert.deepEqual(
+    hits.map((v) => v.line),
+    [1],
+  );
+});
+
+test("lintLines: the media rule runs only when the walker passes breakpoints", () => {
+  assert.equal(lintLines(["@media (max-width: 900px) {"]).length, 0);
+  assert.equal(lintLines(["@media (max-width: 900px) {"], BP)[0]?.rule, "media-length");
+  // an empty token set reds every length — the rule never passes by absence
+  assert.equal(
+    lintLines(["@media (width < 768px) /* --ll-breakpoint-md */ {"], {})[0]?.rule,
+    "media-length",
+  );
+});
+
+test("lintLines: allow() covers a media-length violation visibly", () => {
+  const hits = lintLines(["@media (max-width: 900px) { /* allow(arbitrated) */"], BP);
+  assert.equal(hits[0].allowed, "arbitrated");
 });

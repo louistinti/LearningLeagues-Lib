@@ -58,13 +58,58 @@ export function detectStaticInlineStyle(line: string): { rule: string; excerpt: 
   return null;
 }
 
+/** Breakpoint tokens as emitted by tokens.css, e.g. { "--ll-breakpoint-md": "768px" }. */
+export type Breakpoints = Record<string, string>;
+
+/**
+ * Lengths inside an `@media` / `@container` condition. A custom property
+ * cannot appear in a media condition, so the breakpoint token is restated
+ * as its emitted value — legal ONLY when the same line names the token in a
+ * comment inside the prelude and the token emits exactly that length:
+ *   @media (width < 768px) /* --ll-breakpoint-md *\/ {
+ * Any other length there (no comment, unknown token, value that differs
+ * from the token) is a violation. One line only: a condition continued on
+ * the next line is not read (prettier keeps a prelude on one line).
+ */
+export function detectMediaLength(
+  line: string,
+  breakpoints: Breakpoints,
+): { rule: string; excerpt: string } | null {
+  const at = line.match(/@(?:media|container)\b([^{]*)/);
+  if (!at) return null;
+  const prelude = at[1];
+  const named = [...prelude.matchAll(/\/\*([\s\S]*?)\*\//g)].flatMap((c) =>
+    [...c[1].matchAll(/--ll-breakpoint-[a-z0-9-]+/g)].map((m) => m[0]),
+  );
+  const condition = prelude.replace(/\/\*[\s\S]*?\*\//g, " ");
+  for (const m of condition.matchAll(/(?<![\w.-])-?(?:\d+\.?\d*|\.\d+)(?:px|rem|em)\b/g)) {
+    const length = m[0];
+    if (named.some((n) => breakpoints[n] === length)) continue;
+    const unknown = named.filter((n) => !(n in breakpoints));
+    const why = !named.length
+      ? "no /* --ll-breakpoint-* */ comment on the line"
+      : unknown.length
+        ? `unknown token ${unknown.join(", ")}`
+        : named.map((n) => `${n} is ${breakpoints[n]}`).join(", ");
+    return { rule: "media-length", excerpt: `${length} — ${why}` };
+  }
+  return null;
+}
+
 const DETECTORS = [detectRawColor, detectArbitraryPx, detectInvalidVar, detectStaticInlineStyle];
 
-/** Run every detector over every line, applying the allow(<reason>) escape. */
-export function lintLines(lines: string[]): Violation[] {
+/**
+ * Run every detector over every line, applying the allow(<reason>) escape.
+ * `breakpoints` turns on the media-condition rule (detectMediaLength) for
+ * this file; null leaves it off — the walker decides the rule's scope.
+ */
+export function lintLines(lines: string[], breakpoints: Breakpoints | null = null): Violation[] {
+  const detectors = breakpoints
+    ? [...DETECTORS, (line: string) => detectMediaLength(line, breakpoints)]
+    : DETECTORS;
   const out: Violation[] = [];
   lines.forEach((line, i) => {
-    for (const detect of DETECTORS) {
+    for (const detect of detectors) {
       const hit = detect(line);
       if (!hit) continue;
       const allowHere = line.match(ALLOW);

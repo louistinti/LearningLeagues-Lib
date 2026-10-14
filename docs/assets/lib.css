@@ -395,6 +395,95 @@
   color: var(--ll-accent);
 }
 
+/* SectionHead — SectionHead.rfc.md §3–§4, design node 109:9 (component set
+   `SectionHead`: Viewport=Desktop 106:34, Viewport=Mobile 109:2). A two-
+   column grid: the number column s-8 wide (§7 Q6), the columns s-4 apart
+   (§7 checkpoint row, the site's 32px). The number is the type/h1-italic
+   text style in the live accent (§7 Q5); its underline is a ::after in the
+   number's flow, as the Figma number-col stacks number then underline s-15
+   below: 1px (the design language's fixed line weight, as in the Callout
+   and the Sigil), s-7 wide, accent at opacity/ornament (§7 Q3, validated
+   at the checkpoint). The title is type/h2 in fg (§7 Q4) and wraps (§7 Q7:
+   no white-space rule); its <em> is italic in the accent (§7 Q8). The lede
+   is type/body in fg/dim, s-15 below the title (§7 Q12). Self-defensive:
+   the library ships no reset, so the h2, p and em take their margins,
+   weight and style from these rules, never from the host's. No layout
+   ships beyond the grid itself — no margin, padding or width: the page
+   places the head (§3.4). Every value is a token (axiom 1); the "no
+   layout" rule has no detector — the reviewer reads this file. */
+
+.ll-section-head {
+  display: grid;
+  grid-template-columns: var(--ll-s-8) minmax(0, 1fr);
+  column-gap: var(--ll-s-4);
+  align-items: start;
+}
+
+.ll-section-head-num {
+  display: block;
+  font-family: var(--ll-type-h1-italic-family);
+  font-size: var(--ll-type-h1-italic-size);
+  font-weight: var(--ll-type-h1-italic-weight);
+  font-style: var(--ll-type-h1-italic-style);
+  letter-spacing: var(--ll-type-h1-italic-tracking);
+  line-height: var(--ll-type-h1-italic-line-height);
+  color: var(--ll-accent);
+}
+.ll-section-head-num::after {
+  content: "";
+  display: block;
+  width: var(--ll-s-7);
+  height: 1px;
+  margin-top: var(--ll-s-15);
+  background: var(--ll-accent);
+  opacity: var(--ll-opacity-ornament);
+  pointer-events: none;
+}
+
+/* The body column: a long word breaks inside it instead of widening the
+   grid (WCAG 1.4.10 reflow, RFC §4.3). */
+.ll-section-head-body {
+  overflow-wrap: break-word;
+}
+
+.ll-section-head-title {
+  margin: 0;
+  font-family: var(--ll-type-h2-family);
+  font-size: var(--ll-type-h2-size);
+  font-weight: var(--ll-type-h2-weight);
+  font-style: var(--ll-type-h2-style);
+  letter-spacing: var(--ll-type-h2-tracking);
+  line-height: var(--ll-type-h2-line-height);
+  color: var(--ll-fg);
+}
+.ll-section-head-title em {
+  font-style: italic;
+  color: var(--ll-accent);
+}
+
+.ll-section-head-lede {
+  margin: var(--ll-s-15) 0 0;
+  font-family: var(--ll-type-body-family);
+  font-size: var(--ll-type-body-size);
+  font-weight: var(--ll-type-body-weight);
+  font-style: var(--ll-type-body-style);
+  letter-spacing: var(--ll-type-body-tracking);
+  line-height: var(--ll-type-body-line-height);
+  color: var(--ll-fg-dim);
+}
+
+/* Stacked under the breakpoint (§3.4, §7 checkpoint row; Figma 109:2): one
+   column, the number block above the body, s-2 apart (the site's 768
+   rule). Inclusive, as the site's `max-width: 768px`. A custom property
+   cannot be read in a media condition: the length restates
+   --ll-breakpoint-md, named in the prelude (AGENTS.md, Token rules). */
+@media (width <= 768px) /* --ll-breakpoint-md */ {
+  .ll-section-head {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--ll-s-2);
+  }
+}
+
 /* Sigil — Sigil.rfc.md §3–§4, design node 89:4 (component `Sigil`, page
    `Sigil` 89:3: rings 89:5 / 89:6, art slot 92:7 inside the accent ring).
    The framed decorative square: 1px border, surface fill, colour = the live

@@ -108,7 +108,7 @@
 </nav>
 <main id="main">
 <h1>Tokens</h1>
-<p>129 tokens in the <code>--ll-*</code> namespace. They flow one way only: Figma variables → extraction pipeline → one generated stylesheet. No agent and no developer ever writes a token by hand; this page is generated from the same artefacts the library ships (<code>tokens.json</code> + <code>tokens.css</code>).</p>
+<p>130 tokens in the <code>--ll-*</code> namespace. They flow one way only: Figma variables → extraction pipeline → one generated stylesheet. No agent and no developer ever writes a token by hand; this page is generated from the same artefacts the library ships (<code>tokens.json</code> + <code>tokens.css</code>).</p>
 <div class="tabs" role="tablist" aria-label="Token sections">
   <button type="button" class="tab" role="tab" id="tab-primitives" aria-controls="primitives" aria-selected="true">Primitives</button>
   <button type="button" class="tab" role="tab" id="tab-semantic" aria-controls="semantic" aria-selected="false">Semantic</button>
@@ -571,7 +571,7 @@
 </section>
 <section class="tok-panel" id="layout" role="tabpanel" aria-labelledby="tab-layout">
 <h2>Layout</h2>
-<p>Structural constants: chrome dimensions and the z-index scale.</p>
+<p>Structural constants: chrome dimensions, the z-index scale and the viewport breakpoints. A custom property cannot appear in a media condition, so a component restates a breakpoint's value and names the token in a comment on the same line — <code>@media (width &lt; 768px) /* --ll-breakpoint-md */ {</code> — and the token lint checks that value against the table below.</p>
 <table>
   <thead>
     <tr><th scope="col">Token</th><th scope="col">CSS property</th><th scope="col">Value</th></tr>
@@ -611,6 +611,11 @@
         <th scope="row"><code>z/overlay</code></th>
         <td><code>--ll-z-overlay</code></td>
         <td><code>100</code></td>
+      </tr>
+      <tr>
+        <th scope="row"><code>breakpoint/md</code></th>
+        <td><code>--ll-breakpoint-md</code></td>
+        <td><code>768px</code></td>
       </tr>
   </tbody>
 </table>

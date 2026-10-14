@@ -495,9 +495,9 @@ ${spacing
   </tbody>
 </table>`;
 
-  // Layout: plain values (z/* is unitless by name).
+  // Layout: plain values (z/* is unitless by name; breakpoint/* in px).
   sectionBodies.Layout =
-    `<p>Structural constants: chrome dimensions and the z-index scale.</p>\n` +
+    `<p>Structural constants: chrome dimensions, the z-index scale and the viewport breakpoints. A custom property cannot appear in a media condition, so a component restates a breakpoint's value and names the token in a comment on the same line — <code>@media (width &lt; 768px) /* --ll-breakpoint-md */ {</code> — and the token lint checks that value against the table below.</p>\n` +
     valueTable(byCollection("Layout"));
 
   // Typography: a specimen per family, with the emitted stack.

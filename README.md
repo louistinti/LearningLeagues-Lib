@@ -22,7 +22,7 @@ pnpm conformity                         # every blocking gate; expect PASS (11 g
 ## Status
 
 The machine runs end to end: the token pipeline goes Figma → generated
-stylesheet (129 tokens — colours, spacing, layout, typography, one opacity primitive and the extracted
+stylesheet (130 tokens — colours, spacing, layout (one viewport breakpoint included), typography, one opacity primitive and the extracted
 `type/*` text styles), the conformity CI job blocks on 11 executable gates
 (including the accessibility engine, the docs-site structural audit and the
 real-browser smoke of every docs page), four components (Button, Callout,

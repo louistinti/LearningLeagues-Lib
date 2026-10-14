@@ -3,7 +3,9 @@
 //   - HTML: the SSR render of every contract example (docs-render.ts) —
 //     the real component, never an approximation (axiom 4)
 //   - engine: axe-core inside a jsdom window carrying tokens.css + the
-//     component's own CSS and <html data-accent> (lib/a11y-dom.ts)
+//     component's own CSS + the CSS of every library component it renders,
+//     transitively (lib/component-deps.ts), and <html data-accent>
+//     (lib/a11y-dom.ts)
 //   - keyboard: the generic checks (lib/a11y-checks.ts)
 //   - behaviour: an optional <Name>.a11y.test.ts next to the component, run
 //     with `node --test`
@@ -24,6 +26,7 @@ import {
   type AxeOutcome,
 } from "./lib/a11y-dom.ts";
 import { checkFragment, type Finding } from "./lib/a11y-checks.ts";
+import { libraryGraph, dependencyClosure } from "./lib/component-deps.ts";
 
 const COMPONENTS = "packages/ui/src/components";
 const TOKENS_JSON = "packages/ui/src/tokens/tokens.json";
@@ -58,6 +61,35 @@ const dirs = existsSync(COMPONENTS)
       .filter((d) => statSync(join(COMPONENTS, d)).isDirectory())
       .sort()
   : [];
+
+// Library dependencies (lib/component-deps.ts): a component that renders
+// another library component is audited with that component's CSS too, so a
+// nested element is judged styled as it ships. Pre-pass over the
+// implemented components (contract.json + *.meta.ts); a meta that fails to
+// import is left out here and reported red by the main loop below.
+const cssOf = (slug: string): string =>
+  readdirSync(join(COMPONENTS, slug))
+    .filter((n) => n.endsWith(".css"))
+    .sort()
+    .map((n) => readFileSync(join(COMPONENTS, slug, n), "utf8"))
+    .join("\n");
+const libNames: Record<string, string> = {};
+const libSources: Record<string, string> = {};
+for (const slug of dirs) {
+  const dir = join(COMPONENTS, slug);
+  const metaFile = readdirSync(dir).find((n) => n.endsWith(".meta.ts"));
+  if (!metaFile || !existsSync(join(dir, "contract.json"))) continue;
+  try {
+    const { meta } = await import(pathToFileURL(resolve(dir, metaFile)).href);
+    if (typeof meta?.name !== "string" || !meta.name) continue;
+    libNames[slug] = meta.name;
+    const tsx = join(dir, `${meta.name}.tsx`);
+    libSources[slug] = existsSync(tsx) ? readFileSync(tsx, "utf8") : "";
+  } catch {
+    // reported by the main loop ("meta import failed")
+  }
+}
+const libGraph = libraryGraph(libNames, libSources);
 
 for (const slug of dirs) {
   const dir = join(COMPONENTS, slug);
@@ -99,15 +131,19 @@ for (const slug of dirs) {
       problems.push(`meta import failed: ${(e as Error).message}`);
     }
     if (meta) {
+      // An invalid library import is red on its own (lib/component-deps.ts).
+      for (const e of libGraph.errors[slug] ?? []) problems.push(`library dependency: ${e}`);
       const examples = (Array.isArray(meta.examples) ? meta.examples : []) as Example[];
       const emptyReported = new Set<string>();
       if (examples.length === 0) {
         problems.push("no contract examples — nothing rendered, so nothing is verified");
       } else {
-        const componentCss = readdirSync(dir)
-          .filter((n) => n.endsWith(".css"))
+        // The component's own CSS plus its library dependencies', in slug
+        // order — the order dist/ll-lib.css concatenates them in. A
+        // component with no dependency gets exactly its own CSS.
+        const componentCss = [slug, ...dependencyClosure(slug, libGraph.deps)]
           .sort()
-          .map((n) => readFileSync(join(dir, n), "utf8"))
+          .map(cssOf)
           .join("\n");
         // One broken component must not abort the report for the others
         // (never short-circuit): a render/engine failure is this

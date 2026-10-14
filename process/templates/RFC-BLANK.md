@@ -52,7 +52,8 @@
 
 ### 3.2 Slots / Children
 
-<!-- If applicable. -->
+<!-- If applicable. Name every library component this one renders inside
+     itself (e.g. an Eyebrow) — it is imported, never re-implemented. -->
 
 ### 3.3 Events / Callbacks
 

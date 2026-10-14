@@ -1,4 +1,5 @@
-// Unit suite for the FLOAT unit rule (gate 10). Locks: px by default,
+// Unit suite for the FLOAT unit rule (gate 10). Locks: px by default
+// (breakpoint/* included — the token lint's media rule compares to it),
 // unitless by name (z/*, type weight and line-height), and the opacity
 // family emitted as a percentage divided by 100 (Figma reads a float bound
 // to a layer's opacity as %, verified 2026-09-26 — Sigil design record §3).
@@ -12,6 +13,10 @@ test("a Spacing float is emitted in px", () => {
 
 test("a Layout float other than z/* is emitted in px", () => {
   assert.equal(emitFloat("Layout/nav-h", 64), "64px");
+});
+
+test("a Layout breakpoint is emitted in px (the token lint compares @media lengths to it)", () => {
+  assert.equal(emitFloat("Layout/breakpoint/md", 768), "768px");
 });
 
 test("Layout/z/* is unitless", () => {

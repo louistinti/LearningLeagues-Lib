@@ -16,6 +16,19 @@ source — rather than restating it here.
 
 ## Entries
 
+- **2026-10-13** — SectionHead checkpoint (« SH mobile: Creer un point de
+  rupture Figma »): one Layout variable created in Figma file `Lib`
+  (`6zp7CvEjdiFXzwh6ZGGwB8`) then extracted — `breakpoint/md` = 768
+  (VariableID:108:2, collection `Layout`, scopes `[]`, `--ll-breakpoint-md` =
+  `768px`; Figma description: "Viewport width under which multi-column
+  components stack (site measured 768px, design lead 2026-10-13)"). The stage-1
+  script ran read-only; the raw export was patched by script and written only
+  after checksum verification against the live export (djb2 over the full
+  export: committed file before the patch = Figma export minus the new
+  variable, `c6cf55e9`; patched file = full Figma export, `5065df6c`). No
+  other difference in the export. Decided by: Louis Tinthilier. Delivered by:
+  breakpoint-token agent session (sup. Louis Tinthilier).
+
 - **2026-09-26** — Sigil RFC arbitration (§7 Q4, Q9): one Primitives variable
   added in Figma through the MCP then re-extracted — `opacity/ornament` = 25
   (`--ll-opacity-ornament` = `0.25`, the accent ring's opacity inside the

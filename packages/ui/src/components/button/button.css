@@ -1,4 +1,4 @@
-/* Button chrome — Button.rfc.md §3-§4, design node 16:18.
+/* Button chrome: Button.rfc.md §3-§4, design node 16:18.
    Every colour, spacing and type value is a token, or derived live from one
    (the hover color-mix and glow follow --ll-accent across the accent axis;
    the label typography is the extracted type/button text style). Bracket and
@@ -15,7 +15,7 @@
   font-weight: var(--ll-type-button-weight);
   font-style: var(--ll-type-button-style);
   letter-spacing: var(--ll-type-button-tracking);
-  /* type/button line-height is `normal` — which is also the self-defensive
+  /* type/button line-height is `normal`, which is also the self-defensive
      browser default the <a> rendering needs for button/link format parity
      (distribution contract §3.7; RFC §7, 2026-08-29). */
   line-height: var(--ll-type-button-line-height);
@@ -37,7 +37,7 @@
   border: 1px solid var(--ll-accent);
 }
 
-/* Corner brackets — primary's decorative signature (invisible to AT). */
+/* Corner brackets: primary's decorative signature (invisible to AT). */
 .ll-button--primary::before,
 .ll-button--primary::after {
   content: "";
@@ -77,7 +77,7 @@
   color: var(--ll-accent);
 }
 
-/* Current — "you are here" (RFC §3.1 / §4.1, §7 2026-09-16): the site's
+/* Current: "you are here" (RFC §3.1 / §4.1, §7 2026-09-16): the site's
    measured filled state, keyed on the semantic attribute so the visual never
    exists without it. Hover is inert on a current secondary: the state is
    stable, not an invitation. Primary + current: attribute only (RFC §5). */

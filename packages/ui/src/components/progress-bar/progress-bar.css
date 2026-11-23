@@ -1,12 +1,12 @@
-/* ProgressBar — ProgressBar.rfc.md §3.4–§4, design node 106:31 (component
+/* ProgressBar: ProgressBar.rfc.md §3.4–§4, design node 106:31 (component
    `ProgressBar`, page `ProgressBar` 106:30: track 320 × 4 bound to s-05 and
    border/soft, fill rectangle 106:32 bound to accent/default, no radius).
    The track is the root: s-05 high (4px, §7 Q2), border/soft (kept at the
    checkpoint, with the text-counter guideline). The fill is an <svg> rect
    whose length is its width attribute (§3.4, §3.5 point 1), painted in the
-   live accent — it follows data-accent / data-role on any ancestor. Square
+   live accent: it follows data-accent / data-role on any ancestor. Square
    ends (no radius), no transition, no animation (§7 Q4). The bar fills the
-   width it is given — width: 100% is its container's width, nothing more;
+   width it is given: width: 100% is its container's width, nothing more;
    no margin, no alignment: the parent places it (manifest, "Placement and
    sizing"). Every value is a token (axiom 1). display is set on both
    elements: the library ships no reset (distribution contract), and an

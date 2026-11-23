@@ -1,4 +1,4 @@
-/* SectionHead — SectionHead.rfc.md §3–§4, design node 109:9 (component set
+/* SectionHead: SectionHead.rfc.md §3–§4, design node 109:9 (component set
    `SectionHead`: Viewport=Desktop 106:34, Viewport=Mobile 109:2). A two-
    column grid: the number column s-8 wide (§7 Q6), the columns s-4 apart
    (§7 checkpoint row, the site's 32px). The number is the type/h1-italic
@@ -11,9 +11,9 @@
    is type/body in fg/dim, s-15 below the title (§7 Q12). Self-defensive:
    the library ships no reset, so the h2, p and em take their margins,
    weight and style from these rules, never from the host's. No layout
-   ships beyond the grid itself — no margin, padding or width: the page
+   ships beyond the grid itself: no margin, padding or width: the page
    places the head (§3.4). Every value is a token (axiom 1); the "no
-   layout" rule has no detector — the reviewer reads this file. */
+   layout" rule has no detector: the reviewer reads this file. */
 
 .ll-section-head {
   display: grid;

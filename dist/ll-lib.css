@@ -141,7 +141,7 @@
   --ll-type-meta-case: none;
 }
 
-/* Accent axis — the host sets [data-accent] on the root element or any subtree. */
+/* Accent axis: the host sets [data-accent] on the root element or any subtree. */
 [data-accent="ambre"] {
   --ll-accent: var(--ll-accent-ambre);
 }
@@ -158,7 +158,7 @@
   --ll-accent: var(--ll-accent-jade);
 }
 
-/* Role axis — placed AFTER [data-accent] so a role accent wins the cascade. */
+/* Role axis: placed AFTER [data-accent] so a role accent wins the cascade. */
 [data-role="support"] {
   --ll-accent: var(--ll-accent-ambre);
 }
@@ -175,9 +175,9 @@
   --ll-accent: var(--ll-accent-jade);
 }
 
-/* utilities (agent-extensible zone) — none yet */
+/* utilities (agent-extensible zone): none yet */
 
-/* Button chrome — Button.rfc.md §3-§4, design node 16:18.
+/* Button chrome: Button.rfc.md §3-§4, design node 16:18.
    Every colour, spacing and type value is a token, or derived live from one
    (the hover color-mix and glow follow --ll-accent across the accent axis;
    the label typography is the extracted type/button text style). Bracket and
@@ -194,7 +194,7 @@
   font-weight: var(--ll-type-button-weight);
   font-style: var(--ll-type-button-style);
   letter-spacing: var(--ll-type-button-tracking);
-  /* type/button line-height is `normal` — which is also the self-defensive
+  /* type/button line-height is `normal`, which is also the self-defensive
      browser default the <a> rendering needs for button/link format parity
      (distribution contract §3.7; RFC §7, 2026-08-29). */
   line-height: var(--ll-type-button-line-height);
@@ -216,7 +216,7 @@
   border: 1px solid var(--ll-accent);
 }
 
-/* Corner brackets — primary's decorative signature (invisible to AT). */
+/* Corner brackets: primary's decorative signature (invisible to AT). */
 .ll-button--primary::before,
 .ll-button--primary::after {
   content: "";
@@ -256,7 +256,7 @@
   color: var(--ll-accent);
 }
 
-/* Current — "you are here" (RFC §3.1 / §4.1, §7 2026-09-16): the site's
+/* Current: "you are here" (RFC §3.1 / §4.1, §7 2026-09-16): the site's
    measured filled state, keyed on the semantic attribute so the visual never
    exists without it. Hover is inert on a current secondary: the state is
    stable, not an invitation. Primary + current: attribute only (RFC §5). */
@@ -273,10 +273,10 @@
   outline-offset: 3px;
 }
 
-/* Callout chrome — Callout.rfc.md §3–§4, design node 61:26.
+/* Callout chrome: Callout.rfc.md §3–§4, design node 61:26.
    Every colour, spacing and type value is a token (the tag follows
    --ll-accent across the accent axis; the label is the type/meta text
-   style, the title type/h3, the body type/body — arbitrated 2026-09-11,
+   style, the title type/h3, the body type/body: arbitrated 2026-09-11,
    RFC §7 Q1–Q2). Glyph geometry (10px box, 7px diamond, 1px ring, 5/9px
    triangle) is fixed ornament geometry, like the Button's brackets. */
 
@@ -290,7 +290,7 @@
   border: 1px solid var(--ll-border);
 }
 
-/* Tag — the type's label, uppercase by CSS (AT reads the author's casing). */
+/* Tag: the type's label, uppercase by CSS (AT reads the author's casing). */
 .ll-callout-tag {
   display: inline-flex;
   align-items: center;
@@ -308,7 +308,7 @@
   text-transform: uppercase;
 }
 
-/* Glyph — decorative (aria-hidden), one shape per type. */
+/* Glyph: decorative (aria-hidden), one shape per type. */
 .ll-callout-glyph {
   display: inline-block;
   flex: none;
@@ -334,7 +334,7 @@
   border-bottom: 9px solid var(--ll-accent);
 }
 
-/* Title — a fixed <h3>; margin reset is the self-defensive browser default
+/* Title: a fixed <h3>; margin reset is the self-defensive browser default
    the distribution contract requires (no global reset ships). */
 .ll-callout-title {
   margin: 0;
@@ -348,7 +348,7 @@
   text-transform: var(--ll-type-h3-case);
 }
 
-/* Body — rich inline content; emphasis lifts to the default foreground. */
+/* Body: rich inline content; emphasis lifts to the default foreground. */
 .ll-callout-body {
   color: var(--ll-fg-dim);
   font-family: var(--ll-type-body-family);
@@ -363,18 +363,18 @@
   color: var(--ll-fg);
 }
 
-/* Eyebrow — Eyebrow.rfc.md §3–§4, design node 80:7 (component set `Eyebrow`,
+/* Eyebrow: Eyebrow.rfc.md §3–§4, design node 80:7 (component set `Eyebrow`,
    variants Tone=Dim 80:3 / Tone=Accent 80:5). One recipe: the type/meta
-   text style (11px / 400 / 0.06em — RFC §7 Q2, 2026-09-16, and Q7,
+   text style (11px / 400 / 0.06em, RFC §7 Q2, 2026-09-16, and Q7,
    2026-09-17) plus text-transform: uppercase, the treatment the Callout's
    tag already uses. The uppercase is the literal keyword, not
    var(--ll-type-meta-case) (which is `none`): the capitals are the Q2
    arbitration, not the text style. The uppercase is CSS so assistive tech
-   reads the author's casing (§4.1). No layout ships here — no margin,
+   reads the author's casing (§4.1). No layout ships here: no margin,
    padding, border, background, position, alignment or display override
    (§3.4, §7 Q8): the component is inline text, and the parent stacks it
    above a title or puts it in a row. Every
-   value is a token (axiom 1); the "no layout" rule has no detector — the
+   value is a token (axiom 1); the "no layout" rule has no detector: the
    reviewer reads this file. */
 
 .ll-eyebrow {
@@ -387,7 +387,7 @@
   text-transform: uppercase;
 }
 
-/* Tones — a colour and nothing else (§7 Q10); neither is a state (§3).
+/* Tones: a colour and nothing else (§7 Q10); neither is a state (§3).
    Accent follows the accent axis ([data-accent] / [data-role]). */
 .ll-eyebrow--dim {
   color: var(--ll-fg-dim);
@@ -396,21 +396,21 @@
   color: var(--ll-accent);
 }
 
-/* MetaStrip — MetaStrip.rfc.md §3–§4, design node 106:29 (component set
+/* MetaStrip: MetaStrip.rfc.md §3–§4, design node 106:29 (component set
    `MetaStrip`, variants Tone=Dim 106:3 / Tone=Accent 106:16). A wrapping
    row of facts under a dashed top rule. Text in the type/meta text style
-   (11px / 400 / 0.06em / 1.4 — §7 Q2) in fg/mute, which the value
-   inherits; the key is the Eyebrow and its rule lives in eyebrow.css — this
+   (11px / 400 / 0.06em / 1.4, §7 Q2) in fg/mute, which the value
+   inherits; the key is the Eyebrow and its rule lives in eyebrow.css: this
    file holds no rule for the key's typography or colour (§7 Q3, Q4). One
    gap, s-3, for both directions: between facts and between wrapped rows
    (§7 Q7 and the checkpoint row « MS ecart lignes: 24 px (meme gap) »);
    s-1 from key to value (§7 Q7); s-3 above the text (all five site
    recipes). The 1px rule is the design language's fixed line weight (the
    sigil.css / callout.css precedent) and `dashed` the browser's own dash
-   pattern — Figma's [3, 3] is a stand-in for it (§3.4). The ul / li
+   pattern: Figma's [3, 3] is a stand-in for it (§3.4). The ul / li
    margin, padding and list-style zeroes are structural, not design values:
    the library ships no reset (distribution contract). No layout ships
-   beyond the strip itself — no outer margin, width, alignment, height or
+   beyond the strip itself: no outer margin, width, alignment, height or
    overflow (§3.4): the parent places it. Every value is a token (axiom 1). */
 
 .ll-meta-strip {
@@ -439,15 +439,15 @@
   padding: 0;
 }
 
-/* ProgressBar — ProgressBar.rfc.md §3.4–§4, design node 106:31 (component
+/* ProgressBar: ProgressBar.rfc.md §3.4–§4, design node 106:31 (component
    `ProgressBar`, page `ProgressBar` 106:30: track 320 × 4 bound to s-05 and
    border/soft, fill rectangle 106:32 bound to accent/default, no radius).
    The track is the root: s-05 high (4px, §7 Q2), border/soft (kept at the
    checkpoint, with the text-counter guideline). The fill is an <svg> rect
    whose length is its width attribute (§3.4, §3.5 point 1), painted in the
-   live accent — it follows data-accent / data-role on any ancestor. Square
+   live accent: it follows data-accent / data-role on any ancestor. Square
    ends (no radius), no transition, no animation (§7 Q4). The bar fills the
-   width it is given — width: 100% is its container's width, nothing more;
+   width it is given: width: 100% is its container's width, nothing more;
    no margin, no alignment: the parent places it (manifest, "Placement and
    sizing"). Every value is a token (axiom 1). display is set on both
    elements: the library ships no reset (distribution contract), and an
@@ -471,7 +471,7 @@
   fill: var(--ll-accent);
 }
 
-/* SectionHead — SectionHead.rfc.md §3–§4, design node 109:9 (component set
+/* SectionHead: SectionHead.rfc.md §3–§4, design node 109:9 (component set
    `SectionHead`: Viewport=Desktop 106:34, Viewport=Mobile 109:2). A two-
    column grid: the number column s-8 wide (§7 Q6), the columns s-4 apart
    (§7 checkpoint row, the site's 32px). The number is the type/h1-italic
@@ -484,9 +484,9 @@
    is type/body in fg/dim, s-15 below the title (§7 Q12). Self-defensive:
    the library ships no reset, so the h2, p and em take their margins,
    weight and style from these rules, never from the host's. No layout
-   ships beyond the grid itself — no margin, padding or width: the page
+   ships beyond the grid itself: no margin, padding or width: the page
    places the head (§3.4). Every value is a token (axiom 1); the "no
-   layout" rule has no detector — the reviewer reads this file. */
+   layout" rule has no detector: the reviewer reads this file. */
 
 .ll-section-head {
   display: grid;
@@ -560,15 +560,15 @@
   }
 }
 
-/* Sigil — Sigil.rfc.md §3–§4, design node 89:4 (component `Sigil`, page
+/* Sigil: Sigil.rfc.md §3–§4, design node 89:4 (component `Sigil`, page
    `Sigil` 89:3: rings 89:5 / 89:6, art slot 92:7 inside the accent ring).
    The framed decorative square: 1px border, surface fill, colour = the live
    accent so the art inherits it (currentColor). Two rings as
    pseudo-elements (§7 Q2): the soft ring at s-15, the accent ring at s-3 at
-   opacity/ornament (§7 Q4, Q9 — Figma stores 25 %, the transform emits 0.25).
+   opacity/ornament (§7 Q4, Q9: Figma stores 25 %, the transform emits 0.25).
    The art slot is the square inside the accent ring (§7 Q11): a child, so it
-   paints above ::before and below ::after — the Figma layer order. No
-   layout ships beyond width: 100% and aspect-ratio: 1 — the parent grid
+   paints above ::before and below ::after: the Figma layer order. No
+   layout ships beyond width: 100% and aspect-ratio: 1. The parent grid
    sizes and places the square (§3.4). Every value is a token (axiom 1); the
    1px rules are the design language's fixed line weight, as in the Callout.
    box-sizing: border-box is structural, not a design value: the library
@@ -599,7 +599,7 @@
   opacity: var(--ll-opacity-ornament);
 }
 
-/* The art slot — the square inside the accent ring (§3.2). */
+/* The art slot: the square inside the accent ring (§3.2). */
 .ll-sigil-art {
   position: absolute;
   inset: var(--ll-s-3);

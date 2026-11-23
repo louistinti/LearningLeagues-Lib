@@ -90,14 +90,14 @@ for (const [key, t] of entries) {
 }
 lines.push("}");
 lines.push("");
-lines.push("/* Accent axis — the host sets [data-accent] on the root element or any subtree. */");
+lines.push("/* Accent axis: the host sets [data-accent] on the root element or any subtree. */");
 for (const a of accents) {
   lines.push(`[data-accent="${a}"] {`);
   lines.push(`  --ll-accent: var(--ll-accent-${a});`);
   lines.push("}");
 }
 lines.push("");
-lines.push("/* Role axis — placed AFTER [data-accent] so a role accent wins the cascade. */");
+lines.push("/* Role axis: placed AFTER [data-accent] so a role accent wins the cascade. */");
 for (const [role, accent] of Object.entries(ROLE_ACCENT)) {
   if (!accents.includes(accent))
     errors.push(`ROLE_ACCENT: role ${role} points at unknown accent ${accent}`);
@@ -106,7 +106,7 @@ for (const [role, accent] of Object.entries(ROLE_ACCENT)) {
   lines.push("}");
 }
 lines.push("");
-lines.push("/* utilities (agent-extensible zone) — none yet */");
+lines.push("/* utilities (agent-extensible zone): none yet */");
 
 if (errors.length) {
   console.error("transform: FAILED\n" + errors.map((e) => `  - ${e}`).join("\n"));

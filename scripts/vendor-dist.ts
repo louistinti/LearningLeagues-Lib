@@ -81,7 +81,7 @@ for (const f of FILES) {
   const dest = join(target, DEST_DIR, f);
   const header = `/* VENDORED from LearningLeagues-Lib @ ${sha} (dist/${f}).
  * GENERATED twice over: by \`pnpm dist:build\`, then pinned here by
- * \`node scripts/vendor-dist.ts --write\`. Never edit in this repository —
+ * \`node scripts/vendor-dist.ts --write\`. Never edit in this repository:
  * bump the pin by re-running the vendoring at a new lib commit. */\n\n`;
   const content = header + readFileSync(join("dist", f), "utf8");
   if (write) {

@@ -136,7 +136,7 @@
   --ll-type-meta-case: none;
 }
 
-/* Accent axis — the host sets [data-accent] on the root element or any subtree. */
+/* Accent axis: the host sets [data-accent] on the root element or any subtree. */
 [data-accent="ambre"] {
   --ll-accent: var(--ll-accent-ambre);
 }
@@ -153,7 +153,7 @@
   --ll-accent: var(--ll-accent-jade);
 }
 
-/* Role axis — placed AFTER [data-accent] so a role accent wins the cascade. */
+/* Role axis: placed AFTER [data-accent] so a role accent wins the cascade. */
 [data-role="support"] {
   --ll-accent: var(--ll-accent-ambre);
 }
@@ -170,4 +170,4 @@
   --ll-accent: var(--ll-accent-jade);
 }
 
-/* utilities (agent-extensible zone) — none yet */
+/* utilities (agent-extensible zone): none yet */

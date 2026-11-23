@@ -1,7 +1,7 @@
-/* Callout chrome — Callout.rfc.md §3–§4, design node 61:26.
+/* Callout chrome: Callout.rfc.md §3–§4, design node 61:26.
    Every colour, spacing and type value is a token (the tag follows
    --ll-accent across the accent axis; the label is the type/meta text
-   style, the title type/h3, the body type/body — arbitrated 2026-09-11,
+   style, the title type/h3, the body type/body: arbitrated 2026-09-11,
    RFC §7 Q1–Q2). Glyph geometry (10px box, 7px diamond, 1px ring, 5/9px
    triangle) is fixed ornament geometry, like the Button's brackets. */
 
@@ -15,7 +15,7 @@
   border: 1px solid var(--ll-border);
 }
 
-/* Tag — the type's label, uppercase by CSS (AT reads the author's casing). */
+/* Tag: the type's label, uppercase by CSS (AT reads the author's casing). */
 .ll-callout-tag {
   display: inline-flex;
   align-items: center;
@@ -33,7 +33,7 @@
   text-transform: uppercase;
 }
 
-/* Glyph — decorative (aria-hidden), one shape per type. */
+/* Glyph: decorative (aria-hidden), one shape per type. */
 .ll-callout-glyph {
   display: inline-block;
   flex: none;
@@ -59,7 +59,7 @@
   border-bottom: 9px solid var(--ll-accent);
 }
 
-/* Title — a fixed <h3>; margin reset is the self-defensive browser default
+/* Title: a fixed <h3>; margin reset is the self-defensive browser default
    the distribution contract requires (no global reset ships). */
 .ll-callout-title {
   margin: 0;
@@ -73,7 +73,7 @@
   text-transform: var(--ll-type-h3-case);
 }
 
-/* Body — rich inline content; emphasis lifts to the default foreground. */
+/* Body: rich inline content; emphasis lifts to the default foreground. */
 .ll-callout-body {
   color: var(--ll-fg-dim);
   font-family: var(--ll-type-body-family);
